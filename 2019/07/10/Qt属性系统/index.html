@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Qt属性系统 | .27t_lBZ4oZgg_</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.属性定义Qt提供了Q_PROPERTY()宏来定义属性，它是基于元对象系统来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。在QObject的子类中，用宏Q_PROPERTY()定义属性，格式是： 123456789101112Q_PROPERTY(type name           (READ getFunction [WRITE setFuncti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt属性系统">
+<meta property="og:url" content="http://yoursite.com/2019/07/10/Qt属性系统/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="1.属性定义Qt提供了Q_PROPERTY()宏来定义属性，它是基于元对象系统来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。在QObject的子类中，用宏Q_PROPERTY()定义属性，格式是： 123456789101112Q_PROPERTY(type name           (READ getFunction [WRITE setFuncti">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-10-16T11:12:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Qt属性系统">
+<meta name="twitter:description" content="1.属性定义Qt提供了Q_PROPERTY()宏来定义属性，它是基于元对象系统来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。在QObject的子类中，用宏Q_PROPERTY()定义属性，格式是： 123456789101112Q_PROPERTY(type name           (READ getFunction [WRITE setFuncti">
+  
+    <link rel="alternate" href="/atom.xml" title=".27t_lBZ4oZgg_" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">.27t_lBZ4oZgg_</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Qt属性系统" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/07/10/Qt属性系统/" class="article-date">
+  <time datetime="2019-07-10T07:12:12.000Z" itemprop="datePublished">2019-07-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Qt属性系统
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-属性定义"><a href="#1-属性定义" class="headerlink" title="1.属性定义"></a>1.属性定义</h2><p>Qt提供了<code>Q_PROPERTY()</code>宏来定义属性，它是基于<a href="https://zetzhang.github.io/2019/07/06/Qt%E5%85%83%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F/" target="_blank" rel="noopener">元对象系统</a>来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。<br>在QObject的子类中，用宏<code>Q_PROPERTY()</code>定义属性，格式是：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Q_PROPERTY(type name</span><br><span class="line">           (READ getFunction [WRITE setFunction] |</span><br><span class="line">            MEMBER memberName [(READ getFunction | WRITE setFunction)])</span><br><span class="line">           [RESET resetFunction]</span><br><span class="line">           [NOTIFY notifySignal]</span><br><span class="line">           [REVISION <span class="keyword">int</span>]</span><br><span class="line">           [DESIGNABLE <span class="keyword">bool</span>]</span><br><span class="line">           [SCRIPTABLE <span class="keyword">bool</span>]</span><br><span class="line">           [STORED <span class="keyword">bool</span>]</span><br><span class="line">           [USER <span class="keyword">bool</span>]</span><br><span class="line">           [CONSTANT]</span><br><span class="line">           [FINAL])</span><br></pre></td></tr></table></figure>
+
+<p><code>Q_PROPERTY</code>宏定义一个返回值类型为<code>type</code>，名称为<code>name</code>的属性，用<code>READ</code>、<code>WRITE</code>来作为属性的读/写操作，还有其他的一些关键字定义属性的一些操作特性。属性的类型可以是<code>QVariant</code>支持的任何类型，也可以用户自定义类型。<br><code>Q_PROPERTY</code>宏定义属性的一些主要关键字的意义如下：</p>
+<ul>
+<li><code>READ</code>指定一个读取属性值的函数，没有<code>MEMBER</code>关键字时必须设置<code>READ</code>。</li>
+<li><code>WRITE</code>指定一个设定属性值的函数，只读属性没有<code>WRITE</code>设置。</li>
+<li><code>MEMBER</code>指定一个成员变量与属性关联，成为可读可写的属性，无需再设置<code>READ</code>和<code>WRITE</code>。</li>
+<li><code>RESET</code>是可选的，用于指定一个设置属性缺省值的函数。</li>
+<li><code>NOTIFY</code>是可选的，用于设置一个信号，当属性值变化时发射此信号。</li>
+<li><code>DESIGNABLE</code>表示属性是否在Qt Designer里可见，缺省为<code>true</code>。</li>
+<li><code>CONSTANT</code>表示属性值是一个常数，对于一个对象实例，<code>READ</code>指定的函数返回值是常数，但是每个实例的返回值可以不一样。具有<code>CONSTANT</code>关键字的属性不能有<code>WRITE</code>和<code>NOTIFY</code>关键字。</li>
+<li><code>FINAL</code>表示所定义的属性不能被子类重载。</li>
+</ul>
+<p>QWidget 类定义属性的一些例子如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Q_PROPERTY(<span class="keyword">bool</span> focus READ hasFocus)</span><br><span class="line">Q_PROPERTY(<span class="keyword">bool</span> enabled READ isEnabled WRITE setEnabled)</span><br><span class="line">Q_PROPERTY(QCursor cursor READ cursor WRITE setCursor RESET unsetCursor)</span><br><span class="line">Q_PROPERTY(QString windowTitle READ windowTitle WRITE setWindowTitle NOTIFY windowTitleChanged DESIGNABLE isWindow)</span><br></pre></td></tr></table></figure>
+
+<p>上面最后这个声明包含了<code>NOTIFY windowTitleChanged</code>，表明当<code>windowTitle</code>属性发生变化时，会触发<code>windowTitleChanged</code>信号，相应的信号声明在QWidget中。(<code>this-&gt;setProperty(&quot;windowTitle&quot;, &quot;test&quot;)</code>)  </p>
+<hr>
+<p>关于<a href="http://blog.sina.com.cn/s/blog_c3c7614d0102wdm2.html" target="_blank" rel="noopener">如何使用NTOIFY和RESET——Qt爱好者</a></p>
+<hr>
+<h2 id="2-动态属性"><a href="#2-动态属性" class="headerlink" title="2.动态属性"></a>2.动态属性</h2><p>其中，不管有没有用<code>READ</code>和<code>WRITE</code>定义接口函数，只要知道属性名称，就可以通过<code>QObject::property()</code>和<code>QObject::setProperty()</code>读取和设置属性值。e.x.：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">QPushButton *button = <span class="keyword">new</span> QPushButton;</span><br><span class="line">QObject *object = button;</span><br><span class="line">object-&gt;setProperty(<span class="string">"flat"</span>, <span class="literal">true</span>);</span><br><span class="line"><span class="keyword">bool</span> isFlat = object-&gt;property(<span class="string">"flat"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这就是<font color="red">动态属性</font>，运行时通过<code>setProperty()</code>定义新属性，并用<code>property()</code>查询，它是针对类实例定义的。<br>在数据表编辑界面上，为了高亮显示一些必填字段，可以在初始化界面为这些字段关联组件定义新的required属性：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">editName-&gt;setProperty(<span class="string">"required"</span>, <span class="string">"true"</span>);</span><br><span class="line">comboSex-&gt;setProperty(<span class="string">"required"</span>, <span class="string">"true"</span>);</span><br><span class="line">checkAgree-&gt;setProperty(<span class="string">"required"</span>, <span class="string">"true"</span>);</span><br><span class="line"><span class="comment">// 应用样式定义将必填字段背景颜色设置为亮绿色</span></span><br><span class="line">*[required=<span class="string">"true"</span>] &#123;background-color: lime&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-类的附加属性"><a href="#3-类的附加属性" class="headerlink" title="3.类的附加属性"></a>3.类的附加属性</h2><p>属性系统还有一个宏<code>Q_CLASSINFO()</code>，可以为类的元对象定义“名称——值”信息，如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QMyClass</span>:</span><span class="keyword">public</span> QObject </span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">    Q_CLASSINFO(<span class="string">"author"</span>, <span class="string">"Wang"</span>)</span><br><span class="line">    Q_CLASSINFO (<span class="string">"company"</span>, <span class="string">"UPC"</span>)</span><br><span class="line">    Q_CLASSINFO(<span class="string">"version "</span>, <span class="string">"3.0.1"</span>)</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>用<code>Q_CLASSINFO()</code>宏定义附加类信息后，可以通过元对象的一些函数获取类的附加信息，如<code>classlnfo(int)</code>获取某个加信息，函数原型定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMetaClassInfo QMetaObject::classInfo(<span class="keyword">int</span> index) <span class="keyword">const</span></span><br></pre></td></tr></table></figure>
+
+<p>返回值是<code>QMetaClassInfo</code>类型，有<code>name()</code>和<code>value()</code>两个函数，可获得类附加信息的名称和值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置附加值</span></span><br><span class="line">Q_CLASSINFO(<span class="string">"First"</span>, <span class="string">"Second"</span>)</span><br><span class="line"><span class="comment">// 输出键值</span></span><br><span class="line">qDebug() &lt;&lt; <span class="keyword">this</span>-&gt;metaObject()-&gt;classInfo(<span class="number">0</span>).value() &lt;&lt; <span class="string">": "</span> &lt;&lt; <span class="keyword">this</span>-&gt;metaObject()-&gt;classInfo(<span class="number">0</span>).name();</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/07/10/Qt属性系统/" data-id="ck3v2ku26000230obzyopydgi" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/10/22/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hello World
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/07/07/Qt信号和槽/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Qt信号和槽</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Vim/" style="font-size: 10px;">Vim</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/12/07/vim-spf13-个人配置-vim-plug/">vim spf13 + 个人配置(vim-plug)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/10/Qt属性系统/">Qt属性系统</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/07/Qt信号和槽/">Qt信号和槽</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/06/Qt元对象系统/">Qt元对象系统</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Ichheit<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

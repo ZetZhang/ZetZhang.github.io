@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Qt元对象系统 | .27t_lBZ4oZgg_</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt元对象系统">
+<meta property="og:url" content="http://yoursite.com/2019/07/06/Qt元对象系统/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-10-16T11:12:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Qt元对象系统">
+<meta name="twitter:description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+  
+    <link rel="alternate" href="/atom.xml" title=".27t_lBZ4oZgg_" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">.27t_lBZ4oZgg_</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Qt元对象系统" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/07/06/Qt元对象系统/" class="article-date">
+  <time datetime="2019-07-06T05:01:04.000Z" itemprop="datePublished">2019-07-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Qt元对象系统
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="元对象系统"><a href="#元对象系统" class="headerlink" title="元对象系统"></a>元对象系统</h3><p>Qt的<font color="green">元对象编译器</font>(<font color="red">Meta-Object Compiler, MOC</font>)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个<code>Q_OBJECT</code>宏，MOC才对类中的信号与槽的代码进行预处理。<br>Qt的<font color="green">元对象系统</font>(<font color="red">Meta-Object System</font>)提供了对象之间通信的<strong>信号与槽机制</strong>、<strong>运行时类型信息</strong>和<strong>动态属性系统</strong>。<br>除了信号与槽机制，元对象还提供如下一些功能：</p>
+<ul>
+<li><p><code>QObject::metaObject()</code>：返回类关联的元对象，元对象类<code>QMetaObject</code>包含了访问元对象的接口函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g. 运行时返回类的名称字符串</span></span><br><span class="line">QObject *obj = <span class="keyword">new</span> QPushButton;</span><br><span class="line">obj-&gt;metaObject()-&gt;classNmae;   <span class="comment">// 返回"QPushButton"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>QMetaObject::newInstance()</code>：创建类的一个新的实例</p>
+</li>
+<li><p><code>QObject::inherits(const char *className)</code>：判断对象是否是名为className的类，或者QObject的子类的实例</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g.</span></span><br><span class="line">QTimer *timer = <span class="keyword">new</span> QTimer;</span><br><span class="line">timer-&gt;inherits(<span class="string">"Qtimer"</span>);          <span class="comment">// return true</span></span><br><span class="line">timer-&gt;inherits(<span class="string">"QObject"</span>);         <span class="comment">// return true</span></span><br><span class="line">timer-&gt;inherits(<span class="string">"QABstraactButton"</span>);<span class="comment">// return false</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>qobject_cast()</code>：dynamic cast功能</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g. 假设QMyWidget是QWidget的子类并且类中声明了Q_OBJECT宏</span></span><br><span class="line">QObject *obj = <span class="keyword">new</span> QMyWidget;</span><br><span class="line">QWidget *widget = qobject_cast&lt;QWidget *&gt;(obj);         <span class="comment">// 向上转型</span></span><br><span class="line">QMyWidget *myWidget = qobject_cast&lt;QMyWidget *&gt;(obj);   <span class="comment">// 向下转型</span></span><br><span class="line">QLabel *label = qobject_cast&lt;QLabel *&gt;(obj);            <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>QObject::tr()</code>和<code>QObject::trUtf8()</code>用于翻译字符串，用于多语言界面设计</p>
+</li>
+<li><p><code>QObject::setProperty()</code>和<code>QObject::property()</code>函数用于通过属性名称动态设置和获取属性值</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/07/06/Qt元对象系统/" data-id="ck3v2ku1z000030obg7putaid" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/07/07/Qt信号和槽/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Qt信号和槽
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/30/关于个人Blog的基础搭建/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">个人Blog</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Vim/" style="font-size: 10px;">Vim</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/12/07/vim-spf13-个人配置-vim-plug/">vim spf13 + 个人配置(vim-plug)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/10/Qt属性系统/">Qt属性系统</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/07/Qt信号和槽/">Qt信号和槽</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/06/Qt元对象系统/">Qt元对象系统</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 Ichheit<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
