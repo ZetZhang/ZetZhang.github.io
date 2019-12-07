@@ -37,6 +37,9 @@
 <li><a href="https://github.com/icymind/NeoSolarized" target="_blank" rel="noopener">NeoSolarized</a>：支持真彩色的solarized颜色方案</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>2019.12</category>
+      </categories>
       <tags>
         <tag>Vim</tag>
       </tags>
@@ -82,6 +85,9 @@
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 设置附加值</span></span><br><span class="line">Q_CLASSINFO(<span class="string">"First"</span>, <span class="string">"Second"</span>)</span><br><span class="line"><span class="comment">// 输出键值</span></span><br><span class="line">qDebug() &lt;&lt; <span class="keyword">this</span>-&gt;metaObject()-&gt;classInfo(<span class="number">0</span>).value() &lt;&lt; <span class="string">": "</span> &lt;&lt; <span class="keyword">this</span>-&gt;metaObject()-&gt;classInfo(<span class="number">0</span>).name();</span><br></pre></td></tr></table></figure>
 
 ]]></content>
+      <categories>
+        <category>2019.07</category>
+      </categories>
       <tags>
         <tag>Qt</tag>
         <tag>C++</tag>
@@ -144,6 +150,9 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
 <li>当信号被发射时，关联的槽函数会被立即执行，直到执行完毕才会执行余下的程序流程。</li>
 </ol>
 ]]></content>
+      <categories>
+        <category>2019.07</category>
+      </categories>
       <tags>
         <tag>Qt</tag>
         <tag>C++</tag>
@@ -171,6 +180,9 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>2019.07</category>
+      </categories>
       <tags>
         <tag>Qt</tag>
         <tag>C++</tag>
@@ -214,6 +226,9 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
 <p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hoex</a>文档说明</p>
 <p>Reference from <a href="https://www.codesheep.cn/" target="_blank" rel="noopener">codesheep</a></p>
 ]]></content>
+      <categories>
+        <category>2019.09</category>
+      </categories>
       <tags>
         <tag>Github</tag>
         <tag>hexo</tag>
@@ -291,6 +306,9 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
 
 <p>异步IO、共享内存、内存映射文件、内存锁定、实时性时钟和定时器、备选调度策略、实时性信号、消息队列、信号量</p>
 ]]></content>
+      <categories>
+        <category>2019.06</category>
+      </categories>
       <tags>
         <tag>unix</tag>
         <tag>Linux</tag>
