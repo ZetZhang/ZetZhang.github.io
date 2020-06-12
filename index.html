@@ -259,7 +259,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/07/vim-spf13-个人配置-vim-plug/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker的dockerfile编写/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ichheit">
@@ -278,7 +278,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/12/07/vim-spf13-个人配置-vim-plug/" itemprop="url">vim spf13 + 个人配置(vim-plug)</a></h1>
+                <a class="post-title-link" href="/2020/06/12/Docker的dockerfile编写/" itemprop="url">Docker的dockerfile编写</a></h1>
         
 
         <div class="post-meta">
@@ -290,8 +290,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-07T11:51:23+08:00">
-                2019-12-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T22:10:03+08:00">
+                2020-06-12
               </time>
             
 
@@ -313,8 +313,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2019-12/" itemprop="url" rel="index">
-                    <span itemprop="name">2019.12</span>
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
                   </a>
                 </span>
 
@@ -352,39 +352,1179 @@
       
         
           
-            <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -fLo ~/.vim/<span class="built_in">autoload</span>/plug.vim --create-dirshttps://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim</span><br></pre></td></tr></table></figure>
+            <h2 id="使用Dockerfile创建镜像"><a href="#使用Dockerfile创建镜像" class="headerlink" title="使用Dockerfile创建镜像"></a>使用Dockerfile创建镜像</h2><ul>
+<li>Dockerfile分为四部分<ul>
+<li>基础镜像信息</li>
+<li>维护者信息</li>
+<li>镜像操作指令</li>
+<li>容器启动时执行指令<h3 id="detail"><a href="#detail" class="headerlink" title="detail"></a>detail</h3><table>
+<thead>
+<tr>
+<th align="left">指令</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>FROM</code></td>
+<td align="left">指定基础镜像</td>
+</tr>
+<tr>
+<td align="left"><code>MAINTAINER</code></td>
+<td align="left">维护者信息</td>
+</tr>
+<tr>
+<td align="left"><code>RUN</code></td>
+<td align="left">运行命令</td>
+</tr>
+<tr>
+<td align="left"><code>CMD</code></td>
+<td align="left">启动容器时默认执行命令，最多只能执行一个命令</td>
+</tr>
+<tr>
+<td align="left"><code>LABEL</code></td>
+<td align="left">元数据标签信息</td>
+</tr>
+<tr>
+<td align="left"><code>EXPOSE</code></td>
+<td align="left">监听端口</td>
+</tr>
+<tr>
+<td align="left"><code>ENV</code></td>
+<td align="left">环境变量</td>
+</tr>
+<tr>
+<td align="left"><code>ADD</code></td>
+<td align="left">复制&lt;src&gt;到容器&lt;dest&gt;，如果是tar自动解压，src可以是URL</td>
+</tr>
+<tr>
+<td align="left"><code>COPY</code></td>
+<td align="left">复制本地&lt;src&gt;到容器&lt;dest&gt;</td>
+</tr>
+<tr>
+<td align="left"><code>ENTRYPOINT</code></td>
+<td align="left">指定镜像默认入口，最多只有一个，可以被<code>docker run --entrypoint</code>覆盖掉</td>
+</tr>
+<tr>
+<td align="left"><code>VOLUME</code></td>
+<td align="left">创建数据卷挂载点</td>
+</tr>
+<tr>
+<td align="left"><code>USER</code></td>
+<td align="left">指定运行容器时的USER或UID</td>
+</tr>
+<tr>
+<td align="left"><code>WORKDIR</code></td>
+<td align="left">为<code>RUN</code>、<code>CMD</code>和<code>ENTRYPOINT</code>指令配置工作目录</td>
+</tr>
+<tr>
+<td align="left"><code>ARG</code></td>
+<td align="left">指定一些镜像内使用的参数</td>
+</tr>
+<tr>
+<td align="left"><code>ONBUILD</code></td>
+<td align="left">当创建的镜像为其他镜像的基础镜像时执行的操作命令</td>
+</tr>
+<tr>
+<td align="left"><code>STOPSIGNAL</code></td>
+<td align="left">指定创建镜像启动的容器接收退出的信号值</td>
+</tr>
+<tr>
+<td align="left"><code>HEALTHCHECK</code></td>
+<td align="left">配置启动容器如何进行健康检查</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+<li>使用<code>.dockerignore</code>文件可以让Docker忽略匹配路径下的目录和文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># comment</span><br><span class="line">*/temp*</span><br><span class="line">*/*/temp*</span><br><span class="line">tmp?</span><br><span class="line">~*</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">call plug<span class="comment">#begin('~/.vim/plugged')</span></span><br><span class="line">Plug <span class="string">'itchyny/lightline.vim'</span></span><br><span class="line">Plug <span class="string">'scrooloose/nerdtree'</span></span><br><span class="line">Plug <span class="string">'majutsushi/tagbar'</span></span><br><span class="line">Plug <span class="string">'scrooloose/nerdcommenter'</span></span><br><span class="line">Plug <span class="string">'tpope/vim-fugitive'</span></span><br><span class="line">Plug <span class="string">'ctrlpvim/ctrlp.vim'</span></span><br><span class="line">Plug <span class="string">'easymotion/vim-easymotion'</span></span><br><span class="line">Plug <span class="string">'ycm-core/YouCompleteMe'</span></span><br><span class="line">Plug <span class="string">'/usr/bin/fzf'</span></span><br><span class="line">Plug <span class="string">'junegunn/fzf.vim'</span> <span class="comment"># pacman -S the_silver_searcher</span></span><br><span class="line">Plug <span class="string">'rking/ag.vim'</span></span><br><span class="line">Plug <span class="string">'jiangmiao/auto-pairs'</span></span><br><span class="line">Plug <span class="string">'vim-airline/vim-airline'</span></span><br><span class="line">Plug <span class="string">'vim-airline/vim-airline-themes'</span></span><br><span class="line">Plug <span class="string">'universal-ctags/ctags'</span></span><br><span class="line">Plug <span class="string">'skywind3000/asyncrun.vim'</span></span><br><span class="line">Plug <span class="string">'luochen1990/rainbow'</span></span><br><span class="line">Plug <span class="string">'yggdroot/indentline'</span></span><br><span class="line">Plug <span class="string">'w0ng/vim-hybrid'</span></span><br><span class="line">Plug <span class="string">'altercation/vim-colors-solarized'</span></span><br><span class="line">Plug <span class="string">'ludovicchabant/vim-gutentags'</span></span><br><span class="line">Plug <span class="string">'icymind/NeoSolarized'</span></span><br><span class="line">call plug<span class="comment">#end()</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="desc"><a href="#desc" class="headerlink" title="desc"></a>desc</h3><table>
+<thead>
+<tr>
+<th align="left">指令</th>
+<th align="left">格式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>FROM</code></td>
+<td align="left"><code>&lt;image&gt;:&lt;tag&gt;</code> || <code>&lt;image&gt;@&lt;digest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>MAINTAINER</code></td>
+<td align="left"><code>&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>RUN</code></td>
+<td align="left">shell:<code>&lt;command&gt;</code> || exec:<code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>CMD</code></td>
+<td align="left"><code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code> || <code>command param1 param2</code> || [“param1”, “param2”]</td>
+</tr>
+<tr>
+<td align="left"><code>LABEL</code></td>
+<td align="left"><code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>EXPOSE</code></td>
+<td align="left"><code>&lt;port&gt;[&lt;port&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>ENV</code></td>
+<td align="left"><code>&lt;key&gt; &lt;value&gt;</code> || <code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>ADD</code></td>
+<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>COPY</code></td>
+<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>ENTRYPOINT</code></td>
+<td align="left">shell:<code>command param1 param2</code> || exec: <code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>VOLUME</code></td>
+<td align="left"><code>[&quot;/data&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>USER</code></td>
+<td align="left"><code>daemon</code></td>
+</tr>
+<tr>
+<td align="left"><code>WORKDIR</code></td>
+<td align="left"><code>/path/to/workdir</code>，如果是相对路径，路径是基于前个<code>WORKDIR</code>的</td>
+</tr>
+<tr>
+<td align="left">### exampe</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM debian:jessie</span><br><span class="line">MAINTAINER NGINX Docker Maintainers &quot;docker-maint@nginx.com&quot;</span><br><span class="line">ENV NGINX_VERSION 1.10.1-1-jessie</span><br><span class="line">RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys ....</span><br><span class="line">RUN ln -sf /dev/stdout /var/log/nginx/access.log \</span><br><span class="line">        $$ ln -sf /dev/stderr /var/log/nginx/error.log</span><br><span class="line">EXPOSE 80 443</span><br><span class="line">CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</span><br></pre></td></tr></table></figure></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h3 id="sys"><a href="#sys" class="headerlink" title="sys"></a>sys</h3><h4 id="如果使用alpine镜像"><a href="#如果使用alpine镜像" class="headerlink" title="如果使用alpine镜像"></a>如果使用alpine镜像</h4><blockquote>
+<p>安装软件包需要用apk包管理器替换apt工具</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apk add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># YouCompleteMe配置</span></span><br><span class="line"><span class="comment"># 更换pypi源</span></span><br><span class="line">$ vim /etc/pip.con</span><br><span class="line">[global]</span><br><span class="line">index-url = https://mirrors.aliyun.com/pypi/simple/</span><br><span class="line">[install]</span><br><span class="line">trusted-host=mirrors.aliyun.com</span><br><span class="line"><span class="comment"># 通过以下测试文件自行安装依赖</span></span><br><span class="line">$ python3 run_tests.py</span><br><span class="line">$ sudo pip3 install flake8</span><br><span class="line">$ sudo pip3 install nose</span><br><span class="line">$ sudo pip3 install future</span><br><span class="line">$ sudo pip3 install mock</span><br><span class="line">$ sudo pacman -Ss python-pyhamcrest</span><br><span class="line"><span class="comment"># 开始编译</span></span><br><span class="line">$ python3 install.py --clang-completer</span><br><span class="line"><span class="comment"># 如果遇到CMake Error at ycm/CMakeLists.txt:107 (file): file DOWNLOAD HASH mismatch，则执行以下步骤重新安装</span></span><br><span class="line"><span class="comment"># cd /root/.vim/bundle/YouCompleteMe/third_party/ycmd/clang_archives</span></span><br><span class="line"><span class="comment"># 随便修改名字</span></span><br><span class="line"><span class="comment"># mv libclang-7.0.0-x86_64-unknown-linux-gnu.tar.bz2  rename</span></span><br><span class="line"><span class="comment"># 重新下载</span></span><br><span class="line"><span class="comment"># wget https://dl.bintray.com/micbou/libclang/libclang-7.0.0-x86_64-unknown-linux-gnu.tar.bz2</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>可以从<a href="https://pkgs.alpinelinux.org/packages" target="_blank" rel="noopener">alpine</a>搜索并确定安装包名称<br>如果需要指定社区的安装包，则：</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"http://dl-4.alpinelinux.org/alpine/edge/teseting"</span> &gt;&gt; /etc/apk/repositories</span><br><span class="line">$ apk --update add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line">pf13 + vim-plug的一些插件 ~/.vimrc.local</span><br><span class="line"><span class="string">"----------------------------------------------------------------------------------mine</span></span><br><span class="line"><span class="string">"</span><span class="built_in">set</span> rtp+=~/.vim/bundle/Vundle.vim</span><br><span class="line"><span class="string">"call vundle#begin()</span></span><br><span class="line"><span class="string">"</span>Plugin <span class="string">'vim-voom/VOoM'</span></span><br><span class="line"><span class="string">"call vundle#end()</span></span><br><span class="line"><span class="string">set tw=80</span></span><br><span class="line"><span class="string">set nu</span></span><br><span class="line"><span class="string">set cindent</span></span><br><span class="line"><span class="string">set tabstop=4</span></span><br><span class="line"><span class="string">set softtabstop=4</span></span><br><span class="line"><span class="string">set shiftwidth=4</span></span><br><span class="line"><span class="string">set expandtab</span></span><br><span class="line"><span class="string">set cursorline</span></span><br><span class="line"><span class="string">"</span><span class="built_in">set</span> cursorcolumn</span><br><span class="line"><span class="built_in">set</span> nocompatible</span><br><span class="line"><span class="built_in">set</span> completeopt=longest,menu</span><br><span class="line"><span class="built_in">let</span> g:indent_guides_enable_on_vim_startup=1</span><br><span class="line"><span class="built_in">let</span> g:indent_guides_start_level=2</span><br><span class="line"><span class="built_in">let</span> g:indent_guides_guide_size=1</span><br><span class="line">:nmap &lt;silent&gt; &lt;Leader&gt;i &lt;Plug&gt;IndentGuidesToggle</span><br><span class="line"><span class="built_in">set</span> foldenable</span><br><span class="line"><span class="built_in">set</span> foldmethod=syntax</span><br><span class="line">nnoremap &lt;space&gt; @=((foldclosed(line( <span class="string">'.'</span>  )) &lt; 0)? <span class="string">'zc'</span> : <span class="string">'zo'</span>)&lt;CR&gt;</span><br><span class="line"><span class="built_in">set</span> foldlevelstart=99</span><br><span class="line">inoremap &lt;C<span class="_">-l</span>&gt; &lt;Esc&gt;o</span><br><span class="line">inoremap &lt;C-z&gt; &lt;ESC&gt;ddk<span class="variable">$a</span></span><br><span class="line">inoremap &lt;c-b&gt; &lt;ESC&gt;ui</span><br><span class="line">inoremap &lt;c-_&gt; &lt;ESC&gt;&lt;C-r&gt;i</span><br><span class="line">inoremap &lt;c-g&gt; &lt;ESC&gt;Bi</span><br><span class="line">inoremap &lt;c-k&gt; &lt;ESC&gt;lWi</span><br><span class="line"><span class="string">"inoremap "</span> <span class="string">""</span>&lt;ESC&gt;i</span><br><span class="line"><span class="string">"inoremap ' ''&lt;ESC&gt;i</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> buffer switch</span><br><span class="line">nnoremap &lt;Leader&gt;bn :bn&lt;CR&gt;</span><br><span class="line">nnoremap &lt;Leader&gt;bp :bp&lt;CR&gt;</span><br><span class="line">nnoremap &lt;Leader&gt;bd :bd&lt;Space&gt;</span><br><span class="line">nnoremap &lt;Leader&gt;bb :Buffers&lt;CR&gt;    <span class="string">" fzf Buffers</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;r :!&lt;Space&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">set showtabline=1</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;te :tabedit&lt;Space&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;tN :tabnew&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;ts :tabs&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;tn :tabnext&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;tp :tabNext&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;tf :tabfirst&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;tl :tablast&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;tc :tabclose&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;to :tabo&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;tm :tabmove&lt;Space&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;tdo :tabdo&lt;Space&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;tp : tab split&lt;CR&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;1 1gt</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;2 2gt</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;3 3gt</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;4 4gt</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;5 5gt</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;6 6gt</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;7 7gt</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;8 8gt</span></span><br><span class="line"><span class="string">nnoremap &lt;Leader&gt;9 9gt</span></span><br><span class="line"><span class="string">"</span>----------------------------------------------------------------------------------mine</span><br><span class="line"><span class="string">" fzf</span></span><br><span class="line"><span class="string">nnoremap &lt;silent&gt; &lt;Leader&gt;bf :Files&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;silent&gt; &lt;Leader&gt;bL :Locate&lt;Space&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;silent&gt; &lt;Leader&gt;bgf :GFiles&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;silent&gt; &lt;Leader&gt;bl :Lines&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;silent&gt; &lt;Leader&gt;bbl :BLines&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;silent&gt; &lt;Leader&gt;ba :Ag&lt;CR&gt;</span></span><br><span class="line"><span class="string">nnoremap &lt;silent&gt; &lt;Leader&gt;bm :Marks&lt;CR&gt;</span></span><br><span class="line"><span class="string">"</span> [Buffers] Jump to the existing window <span class="keyword">if</span> possible</span><br><span class="line"><span class="built_in">let</span> g:fzf_buffers_jump = 1</span><br><span class="line"><span class="string">" [[B]Commits] Customize the options used by 'git log':</span></span><br><span class="line"><span class="string">let g:fzf_commits_log_options = '--graph --color=always --format="</span>%C(auto)%h%d</span><br><span class="line">%s %C(black)%C(bold)%cr<span class="string">"'</span></span><br><span class="line"><span class="string">"</span> [Tags] Command to generate tags file</span><br><span class="line"><span class="built_in">let</span> g:fzf_tags_command = <span class="string">'ctags -R'</span></span><br><span class="line"><span class="string">" [Commands] --expect expression for directly executing the command</span></span><br><span class="line"><span class="string">let g:fzf_commands_expect = 'alt-enter,ctrl-x'</span></span><br><span class="line"><span class="string">"</span> ag<span class="string">"</span></span><br><span class="line"><span class="string">command! -bang -nargs=* Ag</span></span><br><span class="line"><span class="string">  \ call fzf#vim#ag(&lt;q-args&gt;,</span></span><br><span class="line"><span class="string">  \                 &lt;bang&gt;0 ? fzf#vim#with_preview('up:60%')</span></span><br><span class="line"><span class="string">  \                         : fzf#vim#with_preview('right:50%:hidden', '?'),</span></span><br><span class="line"><span class="string">  \                 &lt;bang&gt;0)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> YCM</span><br><span class="line"><span class="built_in">let</span> g:ycm_add_preview_to_completeopt = 0</span><br><span class="line"><span class="built_in">let</span> g:ycm_show_diagnostics_ui = 0</span><br><span class="line"><span class="built_in">let</span> g:ycm_server_log_level = <span class="string">'info'</span></span><br><span class="line"><span class="built_in">let</span> g:ycm_min_num_identifier_candidate_chars = 2</span><br><span class="line"><span class="built_in">let</span> g:ycm_collect_identifiers_from_comments_and_strings = 1</span><br><span class="line"><span class="built_in">let</span> g:ycm_complete_in_strings=1</span><br><span class="line"><span class="built_in">let</span> g:ycm_key_invoke_completion = <span class="string">'&lt;c-z&gt;'</span></span><br><span class="line"><span class="built_in">set</span> completeopt=menu,menuone<span class="string">"</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">if has('patch-8.0.1000')</span></span><br><span class="line"><span class="string">        set completeopt=menu,menuone,noselect</span></span><br><span class="line"><span class="string">endif</span></span><br><span class="line"><span class="string">let g:ycm_semantic_triggers =  &#123;</span></span><br><span class="line"><span class="string">            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w&#123;2&#125;'],</span></span><br><span class="line"><span class="string">            \ 'cs,lua,javascript': ['re!\w&#123;2&#125;'],</span></span><br><span class="line"><span class="string">            \ &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span><span class="built_in">set</span> termguicolors<span class="string">"</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">let g:airline_powerline_fonts = 1</span></span><br><span class="line"><span class="string">if !exists('g:airline_symbols')</span></span><br><span class="line"><span class="string">    let g:airline_symbols = &#123;&#125;</span></span><br><span class="line"><span class="string">endif</span></span><br><span class="line"><span class="string">set t_Co=256</span></span><br><span class="line"><span class="string">"</span><span class="built_in">let</span> g:airline_theme=<span class="string">"jellybeans"</span></span><br><span class="line"><span class="string">"let g:airline_theme="</span>serene<span class="string">"</span></span><br><span class="line"><span class="string">let g:airline#extensions#tabline#enabled = 1</span></span><br><span class="line"><span class="string">"</span><span class="built_in">let</span> g:airline_left_sep = <span class="string">'▶'</span></span><br><span class="line"><span class="string">"let g:airline_left_alt_sep = '❯'</span></span><br><span class="line"><span class="string">"</span><span class="built_in">let</span> g:airline_right_sep = <span class="string">'◀'</span></span><br><span class="line"><span class="string">"let g:airline_right_alt_sep = '❮'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> Powerline symbols: unicode</span><br><span class="line"><span class="built_in">let</span> g:airline_left_sep = <span class="string">'»'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_left_sep = <span class="string">'▶'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_right_sep = <span class="string">'«'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_right_sep = <span class="string">'◀'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_symbols.linenr = <span class="string">'␊'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_symbols.linenr = <span class="string">'␤'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_symbols.linenr = <span class="string">'¶'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_symbols.branch = <span class="string">'⎇'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_symbols.paste = <span class="string">'ρ'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_symbols.paste = <span class="string">'Þ'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_symbols.paste = <span class="string">'∥'</span></span><br><span class="line"><span class="built_in">let</span> g:airline_symbols.whitespace = <span class="string">'Ξ'</span></span><br><span class="line">    </span><br><span class="line"><span class="string">" Powerline symbols: powerline fonts</span></span><br><span class="line"><span class="string">let g:airline_left_sep = ''</span></span><br><span class="line"><span class="string">let g:airline_left_alt_sep = ''</span></span><br><span class="line"><span class="string">let g:airline_right_sep = ''</span></span><br><span class="line"><span class="string">let g:airline_right_alt_sep = ''</span></span><br><span class="line"><span class="string">let g:airline_symbols.branch = ''</span></span><br><span class="line"><span class="string">let g:airline_symbols.readonly = ''</span></span><br><span class="line"><span class="string">let g:airline_symbols.linenr = ''</span></span><br><span class="line"><span class="string">"</span>git <span class="built_in">clone</span> https://github.com/Lokaltog/powerline-fonts.git</span><br></pre></td></tr></table></figure>
 
-<p><a href="https://github.com/skywind3000/vim" target="_blank" rel="noopener">vim方案</a></p>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.vim</span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/skywind3000/vim.git</span><br><span class="line"><span class="comment"># 编辑 ~/.vimrc 文件，里面加一行</span></span><br><span class="line">so ~/.vim/vim/asc.vim</span><br><span class="line">so ~/.vim/vim/skywind.vim</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker数据卷/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/12/Docker数据卷/" itemprop="url">Docker数据卷</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T21:00:57+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h2><blockquote>
+<p>使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作</p>
+</blockquote>
+<ul>
+<li>数据管理主要有两种方式：<ul>
+<li>数据卷（Data Volumes）：容器数据直接映射到本地主机环境</li>
+<li>数据卷容器（Data Volume Containers）：使用特定容器维护数据卷</li>
+</ul>
+</li>
+</ul>
+<h4 id="数据卷-1"><a href="#数据卷-1" class="headerlink" title="数据卷"></a>数据卷</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/webapp目录</span></span><br><span class="line"><span class="comment"># 创建数据卷，-P是映射本地临时端口</span></span><br><span class="line"><span class="comment"># 挂在主机目录为数据卷: from/path:to/path</span></span><br><span class="line"><span class="comment"># 指定数据卷读写权限: ro/rw</span></span><br><span class="line">$ docker run -d -P --name web -v /src/webapp:/opt/webapp:ro training/webapp python app.py</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据卷容器"><a href="#数据卷容器" class="headerlink" title="数据卷容器"></a>数据卷容器</h4><blockquote>
+<p>创建数据卷容器dbdata，创建数据卷挂载到容器dbdata</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it -v /dbdata --name dbdata ubuntu</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>其他容器对其进行挂载，之后三方任何一方修改各方都可见</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --volumes-from dbdata --name db1 ubuntu</span><br><span class="line">$ docker run -it --volumes-from dbdata --name db2 ubuntu</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>删除最后挂载容器需要使用<code>docker rm -v</code>同时删除关联容器</p>
+</blockquote>
+<hr>
+<h3 id="使用数据卷容器迁移数据"><a href="#使用数据卷容器迁移数据" class="headerlink" title="使用数据卷容器迁移数据"></a>使用数据卷容器迁移数据</h3><h4 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from dbdata -v $(<span class="built_in">pwd</span>):/backup --name worker ubuntu tar cvf /backup/backup.tar /dbdata</span><br></pre></td></tr></table></figure>
+
+<h4 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h4><blockquote>
+<p>首先创建容器dbdata2</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -v /dbupdate --name dbdata2 ubuntu ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>新容器挂载dbdata2，然后untar解压备份文件到所挂载的容器卷中</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from dbdata2 -v $(<span class="built_in">pwd</span>):/backup busybox tar xvf /backup/backup.tar</span><br></pre></td></tr></table></figure>
+
+<h2 id="端口映射和容器互联"><a href="#端口映射和容器互联" class="headerlink" title="端口映射和容器互联"></a>端口映射和容器互联</h2><h3 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以-p映射多端口-p po -p po</span></span><br><span class="line"><span class="comment"># 可以指定ip:po:po</span></span><br><span class="line"><span class="comment"># 还可以本地随机端口ip::po</span></span><br><span class="line"><span class="comment"># 还可以指定udp端口ip:po:po/udp</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="容器互联"><a href="#容器互联" class="headerlink" title="容器互联"></a>容器互联</h3><blockquote>
+<p>创建新容器</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d --name db training/postgres</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>创建新容器连接到db容器</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --link　name:alias</span></span><br><span class="line">$ docker run -d -P --name web --link db:db traning/webapp</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker基本使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/12/Docker基本使用/" itemprop="url">Docker基本使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T20:57:19+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="修改镜像源"><a href="#修改镜像源" class="headerlink" title="修改镜像源"></a>修改镜像源</h2><blockquote>
+<p>（manjaro）只需要添加配置文件/etc/docker/daemon.json</p>
+</blockquote>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"registry-mirrors"</span>: [<span class="string">"https://docker.mirrors.ustc.edu.cn"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="或者使用–registry-mirror选项"><a href="#或者使用–registry-mirror选项" class="headerlink" title="或者使用–registry-mirror选项"></a>或者使用–registry-mirror选项</h3><ul>
+<li>修改:/etc/default/docker</li>
+<li>添加:DOCKER_OPTS=”–registry-mirror=<a href="https://docker.mirrors.ustc.edu.cn&quot;" target="_blank" rel="noopener">https://docker.mirrors.ustc.edu.cn&quot;</a></li>
+<li><code>systemctl daemon-reload</code></li>
+<li><code>systemctl restart docker</code></li>
+</ul>
+<hr>
+<h2 id="一些Docker基础命令"><a href="#一些Docker基础命令" class="headerlink" title="一些Docker基础命令"></a>一些Docker基础命令</h2><h2 id="容器操作"><a href="#容器操作" class="headerlink" title="容器操作"></a><em>容器操作</em></h2><h3 id="run-通过运行镜像输出hello"><a href="#run-通过运行镜像输出hello" class="headerlink" title="run: 通过运行镜像输出hello"></a><font color="red">run</font>: 通过运行镜像输出hello</h3><blockquote>
+<p><code>docker run CONTAINER [COMMAND] [ARGS]</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 相当于先create再start</span></span><br><span class="line"><span class="comment"># e.g. docker run CONTAINER echo 'hello'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="启动交互式容器"><a href="#启动交互式容器" class="headerlink" title="启动交互式容器"></a>启动交互式容器</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># e.g.:指定ip:host进行后台运行</span></span><br><span class="line">$ docker run -it -d -p 127.0.0.1:12306:12306 --name postgres ichheitimg:9.1-deb /bin/bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="带名字的运行镜像"><a href="#带名字的运行镜像" class="headerlink" title="带名字的运行镜像"></a>带名字的运行镜像</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name=<span class="string">'name'</span> CONTAINER <span class="built_in">echo</span> <span class="string">'hello'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="守护形式运行容器"><a href="#守护形式运行容器" class="headerlink" title="守护形式运行容器"></a>守护形式运行容器</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># C^P C^Q退出，可docker ps查看守护容器</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="可直接启动后台"><a href="#可直接启动后台" class="headerlink" title="可直接启动后台"></a>可直接启动后台</h4><p><a href="https://docs.docker.com/reference/commandline/cli" target="_blank" rel="noopener">配置选项</a></p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行相关选项</span></span><br><span class="line"> <span class="comment"># -D, --debug=false</span></span><br><span class="line"> <span class="comment"># -e, --exec-driver="native"</span></span><br><span class="line"> <span class="comment"># -g, --graph="/var/lib/docker"</span></span><br><span class="line"> <span class="comment"># --icc=true</span></span><br><span class="line"> <span class="comment"># -l, --log-level="info"</span></span><br><span class="line"> <span class="comment"># --label=[]</span></span><br><span class="line"> <span class="comment"># -p, --pidfile="/var/run/docker.pid"</span></span><br><span class="line"> <span class="comment"># </span></span><br><span class="line">$ docker run -d CONTAINER [COMMAND] [ARG...]</span><br><span class="line"><span class="comment"># 服务器相关选项</span></span><br><span class="line"> <span class="comment"># -G, --group="docker"</span></span><br><span class="line"> <span class="comment"># -H, --host=[]</span></span><br><span class="line"> <span class="comment"># --tls=false</span></span><br><span class="line"> <span class="comment"># --tlscacert="/home/sven/.docker/ca.pem"</span></span><br><span class="line"> <span class="comment"># --tlscert="/home/sven/.docker/ca.pem"</span></span><br><span class="line"> <span class="comment"># --tlskey="/home/sven/.docker/ca.pem"</span></span><br><span class="line"> <span class="comment"># --tlsverify=false</span></span><br><span class="line"><span class="comment"># Remote API存储相关</span></span><br><span class="line"> <span class="comment"># -s, --storage-driver=""</span></span><br><span class="line"> <span class="comment"># --selinux-enabled=false</span></span><br><span class="line"> <span class="comment"># --storage-opt=[]</span></span><br><span class="line"><span class="comment"># Registry相关</span></span><br><span class="line"> <span class="comment"># --insecure-registry=[]</span></span><br><span class="line"> <span class="comment"># --registry-mirror=p[]</span></span><br><span class="line"><span class="comment"># 网络设置相关</span></span><br><span class="line"> <span class="comment"># -b, --bridge=""</span></span><br><span class="line"> <span class="comment"># --bip=""</span></span><br><span class="line"> <span class="comment"># --fixed-cidr=""</span></span><br><span class="line"> <span class="comment"># --fixed-cidr-v6=""</span></span><br><span class="line"> <span class="comment"># --dns=[]</span></span><br><span class="line"> <span class="comment"># --dns-search=[]</span></span><br><span class="line"> <span class="comment"># --ip=0</span></span><br><span class="line"> <span class="comment"># --ip-forward=true</span></span><br><span class="line"> <span class="comment"># --ip-masq=true</span></span><br><span class="line"> <span class="comment"># --iptables=true</span></span><br><span class="line"> <span class="comment"># --ipv6=false</span></span><br><span class="line"> <span class="comment"># --mtu=0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="设置容器的端口映射"><a href="#设置容器的端口映射" class="headerlink" title="设置容器的端口映射"></a>设置容器的端口映射</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># -p, --publish</span></span><br><span class="line"><span class="comment"># containerPort</span></span><br><span class="line">$ docker run -p 80 -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># hostPort:containerPort</span></span><br><span class="line">$ docker run -p 8080:80 -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># ip::containerPort</span></span><br><span class="line">$ docker run -p 0.0.0.0:80 -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># ip:hostPort:containerPort</span></span><br><span class="line">$ docker run -p 0.0.0.0:8080:80 -it CONTAINER /bin/bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="create-创建容器"><a href="#create-创建容器" class="headerlink" title="create: 创建容器"></a><font color="red">create</font>: 创建容器</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 新建新容器，如果没有指定镜像，会自动pull镜像</span></span><br><span class="line">$ docker create -it ubuntu:latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="start-启动容器"><a href="#start-启动容器" class="headerlink" title="start: 启动容器"></a><font color="red">start</font>: 启动容器</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 启动创建好的容器</span></span><br><span class="line">$ docker start XXXXXXX</span><br></pre></td></tr></table></figure>
+
+<h3 id="ps-查看容器"><a href="#ps-查看容器" class="headerlink" title="ps: 查看容器"></a><font color="red">ps</font>: 查看容器</h3><blockquote>
+<p><code>docker ps [OPT]</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -a 全部记录</span></span><br><span class="line"><span class="comment"># -l 最新记录</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="rm-删除容器"><a href="#rm-删除容器" class="headerlink" title="rm: 删除容器"></a><font color="red">rm</font>: 删除容器</h3><blockquote>
+<p><code>docker rm &#39;{IMAGE}&#39;</code></p>
+</blockquote>
+<h3 id="attach-继续运行后台守护容器"><a href="#attach-继续运行后台守护容器" class="headerlink" title="attach: 继续运行后台守护容器"></a><font color="red">attach</font>: 继续运行后台守护容器</h3><blockquote>
+<p><code>docker attach &#39;{IMAGE}&#39;</code><br><code>dokcer attach [--detach-keys[=[]]] [--no-stdin][--sig-proxy[=true]] 
+CONTAINER</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line"></span><br><span class="line"><span class="comment">### &lt;font color="red"&gt;logs&lt;/font&gt;: 查看容器日志</span></span><br><span class="line">&gt; `docker logs [OPT] <span class="string">'&#123;IMAGE&#125;'</span>`</span><br><span class="line">```zsh</span><br><span class="line"> <span class="comment"># -f --follows=true|false 默认false</span></span><br><span class="line"> <span class="comment"># -t --timestamps=true|false 默认false</span></span><br><span class="line"> <span class="comment"># --tail="all"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="exec-在已运行的容器中启动新进程"><a href="#exec-在已运行的容器中启动新进程" class="headerlink" title="exec: 在已运行的容器中启动新进程"></a><font color="red">exec</font>: 在已运行的容器中启动新进程</h3><blockquote>
+<p><code>docker exec [OPT] CONTAINER [COMMAND] {ARGS}</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -d</span></span><br><span class="line"><span class="comment"># -i </span></span><br><span class="line"><span class="comment"># -t</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="stop-kill-停止容器"><a href="#stop-kill-停止容器" class="headerlink" title="stop/kill: 停止容器"></a><font color="red">stop/kill</font>: 停止容器</h3><blockquote>
+<p><code>docker stop [-t | --time[=10]] CONTAINER</code><br><code>docker kill CONTAINER</code></p>
+</blockquote>
+<hr>
+<h2 id="镜像操作"><a href="#镜像操作" class="headerlink" title="镜像操作"></a><em>镜像操作</em></h2><h3 id="images-inspect-查看镜像"><a href="#images-inspect-查看镜像" class="headerlink" title="images/inspect: 查看镜像"></a><font color="red">images/inspect</font>: 查看镜像</h3><blockquote>
+<p><code>docker iamges [OPT] [REPOSITORY]</code><br><code>docker inspect [OPT] CONTAINER|IMAGE [...]</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -a, all=false</span></span><br><span class="line"><span class="comment"># -f, --filter=[]</span></span><br><span class="line"><span class="comment"># --no-trunc=false</span></span><br><span class="line"><span class="comment"># -q, --quiet=false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="search-查找镜像"><a href="#search-查找镜像" class="headerlink" title="search: 查找镜像"></a><a href="https://registry.hub.docker.com" target="_blank" rel="noopener"><font color="red">search</font>: 查找镜像</a></h3><blockquote>
+<p><code>docker search [OPT] TERM</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --automated=false</span></span><br><span class="line"><span class="comment"># --no-trunc=false</span></span><br><span class="line"><span class="comment"># -s, --stars=0</span></span><br><span class="line"><span class="comment"># --filter=stars=3</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="pull-拉取镜像"><a href="#pull-拉取镜像" class="headerlink" title="pull: 拉取镜像"></a><font color="red">pull</font>: 拉取镜像</h3><blockquote>
+<p><code>docker pull [OPT] NAME [:TAG]</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -a, --all-ags=false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h3><h4 id="commit-通过容器"><a href="#commit-通过容器" class="headerlink" title="commit: 通过容器"></a><font color="red">commit</font>: 通过容器</h4><blockquote>
+<p><code>docker commit [OPT] CONTAINER [REPOSITORY[:TAG]]</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># -a,--author=""</span></span><br><span class="line"> <span class="comment"># -m,--message=""</span></span><br><span class="line"> <span class="comment"># -p,--pause=true, 提交时暂停容器运行</span></span><br><span class="line"><span class="comment"># e.g.:提交本地deb容器</span></span><br><span class="line">$ docker commit deb ichheitimg:9.1-deb</span><br></pre></td></tr></table></figure>
+
+<h4 id="import-通过本地模板导入"><a href="#import-通过本地模板导入" class="headerlink" title="import: 通过本地模板导入"></a><font color="red">import</font>: 通过本地模板导入</h4><blockquote>
+<p><code>docker import [OPT] file |URL|[REPOSITORY[:TAG]]</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.:导入</span></span><br><span class="line">$ cat ubuntu-14.04-x86_64-minimal.tar.gz | docker import - ubuntu:14.04</span><br></pre></td></tr></table></figure>
+
+<h4 id="build-通过Dockerfile文件"><a href="#build-通过Dockerfile文件" class="headerlink" title="build: 通过Dockerfile文件"></a><font color="red">build</font>: 通过Dockerfile文件</h4><blockquote>
+<p><code>docker build</code></p>
+</blockquote>
+<h4 id="通过Dockerfile"><a href="#通过Dockerfile" class="headerlink" title="通过Dockerfile"></a>通过Dockerfile</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --force-rm=false</span></span><br><span class="line"> <span class="comment"># --no-cache=false</span></span><br><span class="line"> <span class="comment"># --pull=false</span></span><br><span class="line"> <span class="comment"># -q, --quiet=false</span></span><br><span class="line"> <span class="comment"># --rm=true</span></span><br><span class="line"> <span class="comment"># -t, --tag=""</span></span><br><span class="line">$ docker build [OPT] PATH | URL | -</span><br><span class="line"><span class="comment"># e.g. 在创建的目录中编写Dockerfile文件，然后使用$ docker build -t='name' .</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="Dockerfile格式："><a href="#Dockerfile格式：" class="headerlink" title="Dockerfile格式："></a>Dockerfile格式：</h5><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># First Dockerfile</span></span><br><span class="line">   FROM [CONTAINER]</span><br><span class="line">   MAINTAINER [MESSAGE]</span><br><span class="line">   [COMMAND...]</span><br><span class="line">   EXPOSE 80</span><br><span class="line">   CMD [<span class="string">"executable"</span>, <span class="string">"param1"</span>, <span class="string">"param2"</span>] (<span class="built_in">exec</span> mode)</span><br><span class="line">   CMD <span class="built_in">command</span> param1 param2 (shell mode)</span><br><span class="line">   CMD [<span class="string">"param1"</span>, <span class="string">"param2"</span>] (ENTRYPOINT指令搭配下的参数)</span><br><span class="line">   ENTRYPOINT [<span class="string">"executable"</span>, <span class="string">"param1"</span>, <span class="string">"param2"</span>] (<span class="built_in">exec</span> mode)</span><br><span class="line">   ENTRYPOINT <span class="built_in">command</span> param1 param2 (shell mode)</span><br><span class="line">   <span class="comment"># CMD与ENTRYPOINT的区别是后者命令不会被构建时命令所覆盖，也可以使用--entrypoint覆盖</span></span><br><span class="line">   ADD &lt;src&gt; .. &lt;dest&gt;</span><br><span class="line">   COPY &lt;src&gt; ... &lt;dest&gt;</span><br><span class="line">   VOLUMN [<span class="string">"/data"</span>]</span><br><span class="line">   (共享数据等作用，使用时在build构建前应使用--volumes-from选项挂在数据卷容器)</span><br><span class="line">   WORKDIR /path/to/workdir (指定工作目录)</span><br><span class="line">   ENV &lt;key&gt; &lt;value&gt;</span><br><span class="line">   ENV &lt;key&gt;=&lt;value&gt; ...</span><br><span class="line">   USER user (e.g. | USER user | USER user:group | USER user:gid |)</span><br><span class="line">   ONBUILD [INSTRUCTION] (添加触发器)</span><br></pre></td></tr></table></figure>
+
+<h5 id="Dockerfile构建过程"><a href="#Dockerfile构建过程" class="headerlink" title="Dockerfile构建过程"></a>Dockerfile构建过程</h5><ul>
+<li>从基础镜像运行容器</li>
+<li>执行指令，对容器做修改</li>
+<li>执行类docker commit操作，提交新镜像层</li>
+<li>基于新镜像运行新容器</li>
+<li>执行Dockerfile的下一指令直到所有指令执行完毕</li>
+</ul>
+<h3 id="save-存入镜像"><a href="#save-存入镜像" class="headerlink" title="save: 存入镜像"></a><font color="red">save</font>: 存入镜像</h3><blockquote>
+<p><code>docker save</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 导出本地的ubuntu:14.04为文件ubuntu_14.014.tar</span></span><br><span class="line">$ docker save -o ubuntu_14.04.tar ubuntu:14:04</span><br></pre></td></tr></table></figure>
+
+<h3 id="load-载入镜像"><a href="#load-载入镜像" class="headerlink" title="load: 载入镜像"></a><font color="red">load</font>: 载入镜像</h3><blockquote>
+<p><code>docker load</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 导出tar文件到本地镜像库</span></span><br><span class="line">$ docker load --input ubuntu_14.04.tar</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">$ docker load &lt; ubuntu_14.04.tar</span><br></pre></td></tr></table></figure>
+
+<h3 id="push-上传镜像"><a href="#push-上传镜像" class="headerlink" title="push: 上传镜像"></a><font color="red">push</font>: 上传镜像</h3><blockquote>
+<p><code>docker push NAME[: TAG] |REGISTRY_HOST[: REGISTRY_PORT]/NAME[: TAG]</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 用户user上传test:latest镜像到user/test:latest</span></span><br><span class="line">$ docker tag <span class="built_in">test</span>:latest user/<span class="built_in">test</span>:latest</span><br><span class="line">$ docker push user/<span class="built_in">test</span>:latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="rmi-删除镜像"><a href="#rmi-删除镜像" class="headerlink" title="rmi: 删除镜像"></a><font color="red">rmi</font>: 删除镜像</h3><blockquote>
+<p><code>docker rmi [OPT] IMAGE [...]</code></p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -f, --force=false</span></span><br><span class="line"><span class="comment"># --no-prune=false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker的C-S模式：Remote-API"><a href="#Docker的C-S模式：Remote-API" class="headerlink" title="Docker的C/S模式：Remote API"></a>Docker的C/S模式：<a href="https://docs.docker.com/reference/api/docker_remote_api/" target="_blank" rel="noopener">Remote API</a></h3><h4 id="连接方式"><a href="#连接方式" class="headerlink" title="连接方式"></a>连接方式</h4><ul>
+<li><code>unix:///var/run/docker.dock</code></li>
+<li><code>tcp://host:port</code></li>
+<li><code>fd://socketfd</code><h4 id="Docker的远程访问"><a href="#Docker的远程访问" class="headerlink" title="Docker的远程访问"></a>Docker的远程访问</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认配置-H unix:///var/run/docker.sock</span></span><br><span class="line"><span class="comment"># e.g.: docker -H tcp://ip:port COMMAND</span></span><br><span class="line"><span class="comment"># 可选择的环境变量DOCKER_HOST</span></span><br><span class="line"><span class="comment"># e.g.: export DOCKER_HOST="tcp://ip:port"</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="Docker容器互联"><a href="#Docker容器互联" class="headerlink" title="Docker容器互联"></a>Docker容器互联</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --icc=true，允许容器间互联</span></span><br><span class="line"><span class="comment"># 每次镜像重启都可能导致IP的变更，因此使用以下方式</span></span><br><span class="line"> <span class="comment"># --link</span></span><br><span class="line">$ docker run --link=[CONTAINER]:[ALIAS] [IMAGE][COMMAND]</span><br><span class="line"><span class="comment"># e.g. docker run -it --name test --link=other:alias img:test</span></span><br><span class="line"><span class="comment"># 只允许特定容器间连接</span></span><br><span class="line">$ --icc=<span class="literal">false</span> --iptables=<span class="literal">true</span></span><br><span class="line">$ --link</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker容器的数据卷"><a href="#Docker容器的数据卷" class="headerlink" title="Docker容器的数据卷"></a>Docker容器的数据卷</h3><h4 id="为容器添加数据卷"><a href="#为容器添加数据卷" class="headerlink" title="为容器添加数据卷"></a>为容器添加数据卷</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># -v local_catalogue:docker_catalogue:[ro]</span></span><br><span class="line"><span class="comment"># e.g.</span></span><br><span class="line">$ sudo dcoker run -v ~/container_data:/data -it ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+
+<h4 id="在Dockerfile中使用COLUMN下指定数据卷容器"><a href="#在Dockerfile中使用COLUMN下指定数据卷容器" class="headerlink" title="在Dockerfile中使用COLUMN下指定数据卷容器"></a>在Dockerfile中使用COLUMN下指定数据卷容器</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.:</span></span><br><span class="line"><span class="comment"># 编写Dockefile，指定VOLUME目录</span></span><br><span class="line">$ docker build -t dorman/dvt .</span><br><span class="line">$ docker run -it --name <span class="built_in">test</span> dorman/dvt</span><br><span class="line"><span class="comment"># 以下--volumes-from将共享Dockfile中的目录</span></span><br><span class="line">$ docker run -it --name test1 --volumes-from <span class="built_in">test</span> ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker数据卷的备份和还原"><a href="#Docker数据卷的备份和还原" class="headerlink" title="Docker数据卷的备份和还原"></a>Docker数据卷的备份和还原</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from [container name] -v local_catalogue:docker_catalogue ubuntu</span><br><span class="line">$ tar cvf /backup/backup.tar [container data volume]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Docker容器的跨主机连接"><a href="#Docker容器的跨主机连接" class="headerlink" title="Docker容器的跨主机连接"></a>Docker容器的跨主机连接</h3><h4 id="网桥实现"><a href="#网桥实现" class="headerlink" title="网桥实现"></a>网桥实现</h4><ul>
+<li>通过在主机和虚拟机之间使用同一个网段来跨主机连接</li>
+<li>需要网络配置并且配置Docker网桥，并通过–fixed-cidr指定网络范围</li>
+<li>(/etc/network/interfaces)</li>
+</ul>
+<h4 id="Open-vSwitch实现"><a href="#Open-vSwitch实现" class="headerlink" title="Open vSwitch实现"></a>Open vSwitch实现</h4><h5 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h5><ul>
+<li>双网卡，Host-Only &amp; NAT</li>
+<li>安装Open vSwitch和网桥管理工具bridge-utils</li>
+<li>同一网段的IP地址<h5 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h5></li>
+<li>建立ovs网桥</li>
+<li>添加gre连接</li>
+<li>配置docker容器虚拟网桥</li>
+<li>为虚拟网桥添加ovs接口</li>
+<li>添加不同DOcker容器网段路由</li>
+</ul>
+<h4 id="weave实现"><a href="#weave实现" class="headerlink" title="weave实现"></a>weave实现</h4>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/PostgreSQL安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/12/PostgreSQL安装/" itemprop="url">PostgreSQL安装.md</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T20:52:46+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://www.postgresql.org/" target="_blank" rel="noopener">PostgreSQL官网</a></p>
+<h3 id="安装依赖："><a href="#安装依赖：" class="headerlink" title="安装依赖："></a>安装依赖：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># centos</span></span><br><span class="line">$ yum -y install readline-devel zlib-devel gcc gcc-c++ zlib readline</span><br><span class="line"><span class="comment"># debian/ubuntu</span></span><br><span class="line">$ apt-get install -y gcc make</span><br><span class="line">$ apt-get install -y libreadline-dev zlib1g zlib1g.dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装PostgreSQL："><a href="#安装PostgreSQL：" class="headerlink" title="安装PostgreSQL："></a>安装PostgreSQL：</h3><p><a href="https://sandbox-experiment-resource-north-4.obs.cn-north-4.myhuaweicloud.com/postgresql-arm/postgresql-10.3.tar.gz" target="_blank" rel="noopener">postgresql-10.3(maybe too<br>old)</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://sandbox-experiment-resource-north-4.obs.cn-north-4.myhuaweicloud.com/postgresql-arm/postgresql-10.3.tar.gz</span><br><span class="line">$ tar -zxvf postgresql-10.3.tar.gz -C /opt/</span><br><span class="line">$ <span class="built_in">cd</span> /opt/postgresql-*/</span><br><span class="line">$ ./configure --build=arm-linux --host=arm-linux --prefix=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line"><span class="comment"># canuse：./configure --prefix=/usr/local/pgsql --with-blocksize=8 \</span></span><br><span class="line"><span class="comment"># --enable-dtrace --enable-debug --enable-thread-safety</span></span><br><span class="line"><span class="comment"># --with-libxml --with-python --with-openssl</span></span><br><span class="line"><span class="comment"># $ make world</span></span><br><span class="line"><span class="comment"># $ make check-world (by normal user)</span></span><br><span class="line"><span class="comment"># $ make install-world</span></span><br><span class="line">$ make &amp;&amp; make install &amp;&amp; make clean</span><br></pre></td></tr></table></figure>
+
+<h3 id="授权用户："><a href="#授权用户：" class="headerlink" title="授权用户："></a>授权用户：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ adduser postgres</span><br><span class="line">$ chown -R postgres:postgres /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ ls -ld /usr/<span class="built_in">local</span>/pgsql</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置环境变量："><a href="#配置环境变量：" class="headerlink" title="配置环境变量："></a>配置环境变量：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ su postgres</span><br><span class="line">$ vim ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>配置文件中加入：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> PGHOME=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ <span class="built_in">export</span> PGDATA=/usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line">$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$PGHOME</span>/bin</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>执行修改：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span>  ~/.bash_profile &amp;&amp; psql -V</span><br></pre></td></tr></table></figure>
+
+<h3 id="初始化数据库："><a href="#初始化数据库：" class="headerlink" title="初始化数据库："></a>初始化数据库：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ initdb -D <span class="variable">$PGDATA</span> -E UTF8 --locale=C -U postgres -W</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动日志服务："><a href="#启动日志服务：" class="headerlink" title="启动日志服务："></a>启动日志服务：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br><span class="line">$ chmod 755 /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="启动数据库："><a href="#启动数据库：" class="headerlink" title="启动数据库："></a>启动数据库：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span>  -l  <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br></pre></td></tr></table></figure>
+
+<h3 id="检查结果："><a href="#检查结果：" class="headerlink" title="检查结果："></a>检查结果：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ps -ef | grep <span class="string">"postgres"</span></span><br><span class="line">$ netstat -nlp | grep <span class="string">"postgres"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改数据库密码："><a href="#修改数据库密码：" class="headerlink" title="修改数据库密码："></a>修改数据库密码：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ psql中`\password postgres`可修改</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置为远程访问："><a href="#配置为远程访问：" class="headerlink" title="配置为远程访问："></a>配置为远程访问：</h3><blockquote>
+<p>将”listen_addresses=’localhost’”取消注释并修改为任意地址’*’</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /usr/<span class="built_in">local</span>/pgsql/data/postgresql.conf</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>修改访问地址控制设置：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /usr/<span class="built_in">local</span>/pgsql/data/pg_hba.conf</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在”IPv4 local connections”下构建规则：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host    all             all             0.0.0.0/0               md5</span><br></pre></td></tr></table></figure>
+
+<h3 id="重启生效："><a href="#重启生效：" class="headerlink" title="重启生效："></a>重启生效：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl restart</span><br></pre></td></tr></table></figure>
+
+<h2 id="在debian中"><a href="#在debian中" class="headerlink" title="在debian中"></a>在debian中</h2><h3 id="基本安装"><a href="#基本安装" class="headerlink" title="基本安装"></a>基本安装</h3><blockquote>
+<p>创建文件<code>/etc/apt/sources.list.d/pgdg.list</code>，里面添加：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 其中stretch-pgdg具体可以在https://www.postgresql.org/download/linux/debian/中选择具体版本得到</span></span><br><span class="line">deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Import the repository signing key, and update the package lists:</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ apt-get install -y gnupg gnupg1 gnupg2</span><br><span class="line">$ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -</span><br><span class="line">$ apt-get update</span><br><span class="line">$ apt-get install -y postgresql-10</span><br><span class="line"></span><br><span class="line">$ useradd -m -s /bin/bash postgres</span><br><span class="line">$ mkdir /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ chown postgres:postgres /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ sudo -u postgres /usr/lib/postgressql</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>数据库初始化：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /usr/lib/postgresql/11/bin/initdb -D <span class="variable">$PGDATA</span> -E UTF8 --locale=C -U postgres -W</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>vim ~/.bash_profile</code>配置：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PGHOME=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line"><span class="built_in">export</span> PGDATA=/usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/lib/postgresql/11/bin</span><br><span class="line"><span class="built_in">export</span> LANG=en_US.utf8</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>数据库日志：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 大可不必</span></span><br><span class="line">$ mkdir -p /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br><span class="line">$ chmod 755 /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><a href="https://github.com/scrooloose/nerdtree" target="_blank" rel="noopener">nerdtree</a>：侧边显示目录  </li>
-<li><a href="https://github.com/scrooloose/nerdcommenter" target="_blank" rel="noopener">nerdcommenter</a>：注释插件  </li>
-<li><a href="https://github.com/majutsushi/tagbar" target="_blank" rel="noopener">tagbar</a>：显示文档结构  </li>
-<li><a href="https://github.com/tpope/vim-fugitive" target="_blank" rel="noopener">fugitive</a>：git功能  </li>
-<li><a href="https://github.com/ctrlpvim/ctrlp.vim" target="_blank" rel="noopener">ctrlp</a>：ctrlp搜索功能  </li>
-<li><a href="https://github.com/easymotion/vim-easymotion" target="_blank" rel="noopener">easymotion</a>：光标跳转  </li>
-<li><a href="https://github.com/ycm-core/YouCompleteMe" target="_blank" rel="noopener">YouCompleteMe</a>：自动补全工具  </li>
-<li><a href="https://github.com/junegunn/fzf" target="_blank" rel="noopener">fzf</a>：命令行搜索工具  </li>
-<li><a href="https://github.com/rking/ag.vim" target="_blank" rel="noopener">rking/ag.vim</a>：也是个搜索工具  </li>
-<li><a href="https://github.com/jiangmiao/auto-pairs" target="_blank" rel="noopener">auto-pairs</a>：自动补全引号、圆括号、花括号等  </li>
-<li><a href="https://github.com/vim-airline/vim-airline" target="_blank" rel="noopener">vim-airline</a>：状态栏美化  </li>
-<li><a href="https://github.com/vim-airline/vim-airline-themes" target="_blank" rel="noopener">vim-airline-themes</a>  </li>
-<li><a href="https://github.com/universal-ctags/ctags" target="_blank" rel="noopener">universal-ctags</a>：ctags</li>
-<li><a href="https://github.com/skywind3000/asyncrun.vim" target="_blank" rel="noopener">asyncrun.vim</a>：异步执行后台  </li>
-<li><a href="https://github.com/luochen1990/rainbow" target="_blank" rel="noopener">rainbow</a>：彩虹括号  </li>
-<li><a href="https://github.com/yggdroot/indentline" target="_blank" rel="noopener">indentline</a>：缩进线  </li>
-<li><del><a href="https://github.com/w0ng/vim-hybrid" target="_blank" rel="noopener">w0ng/vim-hybrid</a>：颜色主题</del>  </li>
-<li><a href="https://github.com/altercation/vim-colors-solarized" target="_blank" rel="noopener">vim-colors-solarized</a>：颜色主题  </li>
-<li><a href="https://github.com/ludovicchabant/vim-gutentags" target="_blank" rel="noopener">vim-gutentags</a>：自动增量更新ctags索引  </li>
-<li><a href="https://github.com/icymind/NeoSolarized" target="_blank" rel="noopener">NeoSolarized</a>：支持真彩色的solarized颜色方案</li>
+<li>can start data server <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般启动</span></span><br><span class="line">$ /usr/lib/postgresql/11/bin/pg_ctl -D /usr/<span class="built_in">local</span>/pgsql/data -l logfile start</span><br><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span> -l <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br></pre></td></tr></table></figure>
+
+</li>
 </ul>
+<h4 id="通过配置文件"><a href="#通过配置文件" class="headerlink" title="通过配置文件"></a>通过配置文件</h4><blockquote>
+<p>启动，vim /etc/sysctl.conf中配置内核相关参数：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kernel.shmmni = 4096</span><br><span class="line">kernel.sem = 50100 64128000 50100 1280</span><br><span class="line">fs.file-max = 7672460</span><br><span class="line">net.ipv4.ip_local_port_range = 9000 65000</span><br><span class="line">net.core.rmem_default = 1048576</span><br><span class="line">net.core.rmem_max = 4194304</span><br><span class="line">net.core.wmem_default = 262144</span><br><span class="line">net.core.wmen_max = 1028576</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>vim /etc/sysconfig/iptables</code>进行防火墙设置：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-A RH-Firewall-1-INPUT -i lo -j ACCEPT</span><br><span class="line"># 允许源IP</span><br><span class="line">-A RH-Firewall-1-INPUT -s 192.168.0.0/16 -j ACCEPT</span><br><span class="line"># 允许源IP访问目标端口</span><br><span class="line">-A RH-Firewall-1-INPUT -s 192.168.1.0/24 -m state --state </span><br><span class="line">NEW -m tcp -p tcp --dport [PORT] -j ACCEPT</span><br><span class="line"># 允许任意IP访问目标端口</span><br><span class="line">-A RH-Firewall-1-INPUT -p tcp -m state --state NEW -m</span><br><span class="line">tcp --dport [PORT] -j ACCEPT</span><br><span class="line"># 不是很懂</span><br><span class="line"># 使用iptables -L -v -n查看出入规则</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在/etc/security/limits.conf配置。。。<blockquote>
+<p><code>vim /usr/local/pgsql/data/pg_hba.conf</code>中的IPv4 local<br>connections修改访问地址控制规则设置：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host    all             all             0.0.0.0/0               md5</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p><code>vim /usr/local/pgsql/data/postgresql.conf</code>中</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">将listen_addresses=<span class="string">'localhost'</span>取消注释并修改为任意地址<span class="string">'*0.0.0.0'</span></span><br><span class="line">superuser_reserved_connections超级用户最多连接改为13</span><br><span class="line">unix_socket_directories连接改为<span class="string">'.'</span>根目录下</span><br><span class="line">unix_socket_permissions权限为0700</span><br><span class="line"><span class="comment"># 心跳检测</span></span><br><span class="line">tcp_keepalives_idle = 60</span><br><span class="line">tcp_keepalives_interval = 10</span><br><span class="line">tcp_keepalives_count = 10</span><br><span class="line"><span class="comment"># 延迟</span></span><br><span class="line">vacuum_cost_delay = 10</span><br><span class="line">bgwritter_delay = 10ms</span><br><span class="line">wal_writer_delay = 200ms</span><br><span class="line"><span class="comment"># 归档</span></span><br><span class="line">hot_standby = on</span><br><span class="line"><span class="comment"># 日志</span></span><br><span class="line">log_destination = <span class="string">"csvlog"</span></span><br><span class="line">logging_collector = on</span><br><span class="line">log_directory = <span class="string">'pg_log'</span></span><br><span class="line">log_file_mode = 0600</span><br><span class="line">log_truncate_on_rotation = on等</span><br><span class="line"><span class="comment"># 还有checkpoint</span></span><br><span class="line">log_checkpoints = on</span><br><span class="line">log_connection = on</span><br><span class="line">log_disconnections = on</span><br><span class="line">log_error_verbosity = verbose</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>启动psql</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span> -l <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br><span class="line">$ psql -h localhost -U postgres</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/28/test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/28/test/" itemprop="url">Untitled</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-05-28T18:08:38+08:00">
+                2020-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="使用Dockerfile创建镜像"><a href="#使用Dockerfile创建镜像" class="headerlink" title="使用Dockerfile创建镜像"></a>使用Dockerfile创建镜像</h2><ul>
+<li>Dockerfile分为四部分<ul>
+<li>基础镜像信息</li>
+<li>维护者信息</li>
+<li>镜像操作指令</li>
+<li>容器启动时执行指令<h3 id="detail"><a href="#detail" class="headerlink" title="detail"></a>detail</h3><table>
+<thead>
+<tr>
+<th align="left">指令</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>FROM</code></td>
+<td align="left">指定基础镜像</td>
+</tr>
+<tr>
+<td align="left"><code>MAINTAINER</code></td>
+<td align="left">维护者信息</td>
+</tr>
+<tr>
+<td align="left"><code>RUN</code></td>
+<td align="left">运行命令</td>
+</tr>
+<tr>
+<td align="left"><code>CMD</code></td>
+<td align="left">启动容器时默认执行命令，最多只能执行一个命令</td>
+</tr>
+<tr>
+<td align="left"><code>LABEL</code></td>
+<td align="left">元数据标签信息</td>
+</tr>
+<tr>
+<td align="left"><code>EXPOSE</code></td>
+<td align="left">监听端口</td>
+</tr>
+<tr>
+<td align="left"><code>ENV</code></td>
+<td align="left">环境变量</td>
+</tr>
+<tr>
+<td align="left"><code>ADD</code></td>
+<td align="left">复制&lt;src&gt;到容器&lt;dest&gt;，如果是tar自动解压，src可以是URL</td>
+</tr>
+<tr>
+<td align="left"><code>COPY</code></td>
+<td align="left">复制本地&lt;src&gt;到容器&lt;dest&gt;</td>
+</tr>
+<tr>
+<td align="left"><code>ENTRYPOINT</code></td>
+<td align="left">指定镜像默认入口，最多只有一个，可以被<code>docker run --entrypoint</code>覆盖掉</td>
+</tr>
+<tr>
+<td align="left"><code>VOLUME</code></td>
+<td align="left">创建数据卷挂载点</td>
+</tr>
+<tr>
+<td align="left"><code>USER</code></td>
+<td align="left">指定运行容器时的USER或UID</td>
+</tr>
+<tr>
+<td align="left"><code>WORKDIR</code></td>
+<td align="left">为<code>RUN</code>、<code>CMD</code>和<code>ENTRYPOINT</code>指令配置工作目录</td>
+</tr>
+<tr>
+<td align="left"><code>ARG</code></td>
+<td align="left">指定一些镜像内使用的参数</td>
+</tr>
+<tr>
+<td align="left"><code>ONBUILD</code></td>
+<td align="left">当创建的镜像为其他镜像的基础镜像时执行的操作命令</td>
+</tr>
+<tr>
+<td align="left"><code>STOPSIGNAL</code></td>
+<td align="left">指定创建镜像启动的容器接收退出的信号值</td>
+</tr>
+<tr>
+<td align="left"><code>HEALTHCHECK</code></td>
+<td align="left">配置启动容器如何进行健康检查</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+<li>使用<code>.dockerignore</code>文件可以让Docker忽略匹配路径下的目录和文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># comment</span><br><span class="line">*/temp*</span><br><span class="line">*/*/temp*</span><br><span class="line">tmp?</span><br><span class="line">~*</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="desc"><a href="#desc" class="headerlink" title="desc"></a>desc</h3><table>
+<thead>
+<tr>
+<th align="left">指令</th>
+<th align="left">格式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>FROM</code></td>
+<td align="left"><code>&lt;image&gt;:&lt;tag&gt;</code> || <code>&lt;image&gt;@&lt;digest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>MAINTAINER</code></td>
+<td align="left"><code>&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>RUN</code></td>
+<td align="left">shell:<code>&lt;command&gt;</code> || exec:<code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>CMD</code></td>
+<td align="left"><code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code> || <code>command param1 param2</code> || [“param1”, “param2”]</td>
+</tr>
+<tr>
+<td align="left"><code>LABEL</code></td>
+<td align="left"><code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>EXPOSE</code></td>
+<td align="left"><code>&lt;port&gt;[&lt;port&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>ENV</code></td>
+<td align="left"><code>&lt;key&gt; &lt;value&gt;</code> || <code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>ADD</code></td>
+<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>COPY</code></td>
+<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>ENTRYPOINT</code></td>
+<td align="left">shell:<code>command param1 param2</code> || exec: <code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>VOLUME</code></td>
+<td align="left"><code>[&quot;/data&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>USER</code></td>
+<td align="left"><code>daemon</code></td>
+</tr>
+<tr>
+<td align="left"><code>WORKDIR</code></td>
+<td align="left"><code>/path/to/workdir</code>，如果是相对路径，路径是基于前个<code>WORKDIR</code>的</td>
+</tr>
+<tr>
+<td align="left">### exampe</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM debian:jessie</span><br><span class="line">MAINTAINER NGINX Docker Maintainers &quot;docker-maint@nginx.com&quot;</span><br><span class="line">ENV NGINX_VERSION 1.10.1-1-jessie</span><br><span class="line">RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys ....</span><br><span class="line">RUN ln -sf /dev/stdout /var/log/nginx/access.log \</span><br><span class="line">        $$ ln -sf /dev/stderr /var/log/nginx/error.log</span><br><span class="line">EXPOSE 80 443</span><br><span class="line">CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</span><br></pre></td></tr></table></figure></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h3 id="sys"><a href="#sys" class="headerlink" title="sys"></a>sys</h3><h4 id="如果使用alpine镜像"><a href="#如果使用alpine镜像" class="headerlink" title="如果使用alpine镜像"></a>如果使用alpine镜像</h4><blockquote>
+<p>安装软件包需要用apk包管理器替换apt工具</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apk add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可以从<a href="https://pkgs.alpinelinux.org/packages" target="_blank" rel="noopener">alpine</a>搜索并确定安装包名称<br>如果需要指定社区的安装包，则：</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"http://dl-4.alpinelinux.org/alpine/edge/teseting"</span> &gt;&gt; /etc/apk/repositories</span><br><span class="line">$ apk --update add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
+
 
           
         
@@ -1091,6 +2231,9 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
 
 <p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hoex</a>文档说明</p>
 <p>Reference from <a href="https://www.codesheep.cn/" target="_blank" rel="noopener">codesheep</a></p>
+<h3 id="hexo-console-rename插件安装"><a href="#hexo-console-rename插件安装" class="headerlink" title="hexo-console-rename插件安装"></a>hexo-console-rename插件安装</h3><p><a href="https://github.com/timnew/hexo-console-rename" target="_blank" rel="noopener">hexo-console-rename</a> install using npm</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-console-rename@3 --save</span><br></pre></td></tr></table></figure>
+
 
           
         
@@ -1382,7 +2525,7 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1404,7 +2547,7 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -1441,7 +2584,7 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

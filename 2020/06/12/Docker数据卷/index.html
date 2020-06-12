@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Qt,C++,">
+  <meta name="keywords" content="Linux,VM,Docker,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
-<meta name="keywords" content="Qt,C++">
+<meta name="description" content="数据卷 使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作   数据管理主要有两种方式： 数据卷（Data Volumes）：容器数据直接映射到本地主机环境 数据卷容器（Data Volume Containers）：使用特定容器维护数据卷    数据卷12345 # e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/">
+<meta name="keywords" content="Linux,VM,Docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Qt元对象系统">
-<meta property="og:url" content="http://yoursite.com/2019/07/06/Qt元对象系统/index.html">
+<meta property="og:title" content="Docker数据卷">
+<meta property="og:url" content="http://yoursite.com/2020/06/12/Docker数据卷/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+<meta property="og:description" content="数据卷 使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作   数据管理主要有两种方式： 数据卷（Data Volumes）：容器数据直接映射到本地主机环境 数据卷容器（Data Volume Containers）：使用特定容器维护数据卷    数据卷12345 # e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-12-07T08:14:37.395Z">
+<meta property="og:updated_time" content="2020-06-12T13:01:46.449Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Qt元对象系统">
-<meta name="twitter:description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+<meta name="twitter:title" content="Docker数据卷">
+<meta name="twitter:description" content="数据卷 使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作   数据管理主要有两种方式： 数据卷（Data Volumes）：容器数据直接映射到本地主机环境 数据卷容器（Data Volume Containers）：使用特定容器维护数据卷    数据卷12345 # e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/07/06/Qt元对象系统/">
+  <link rel="canonical" href="http://yoursite.com/2020/06/12/Docker数据卷/">
 
 
 
 
 
-  <title>Qt元对象系统 | .27t_lBZ4oZgg_</title>
+  <title>Docker数据卷 | .27t_lBZ4oZgg_</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/06/Qt元对象系统/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker数据卷/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ichheit">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Qt元对象系统</h1>
+          <h1 class="post-title" itemprop="name headline">Docker数据卷</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-06T13:01:04+08:00">
-                2019-07-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T21:00:57+08:00">
+                2020-06-12
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2019-07/" itemprop="url" rel="index">
-                    <span itemprop="name">2019.07</span>
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
                   </a>
                 </span>
 
@@ -352,24 +352,56 @@
       
 
       
-        <h3 id="元对象系统"><a href="#元对象系统" class="headerlink" title="元对象系统"></a>元对象系统</h3><p>Qt的<font color="green">元对象编译器</font>(<font color="red">Meta-Object Compiler, MOC</font>)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个<code>Q_OBJECT</code>宏，MOC才对类中的信号与槽的代码进行预处理。<br>Qt的<font color="green">元对象系统</font>(<font color="red">Meta-Object System</font>)提供了对象之间通信的<strong>信号与槽机制</strong>、<strong>运行时类型信息</strong>和<strong>动态属性系统</strong>。<br>除了信号与槽机制，元对象还提供如下一些功能：</p>
+        <h2 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h2><blockquote>
+<p>使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作</p>
+</blockquote>
 <ul>
-<li><p><code>QObject::metaObject()</code>：返回类关联的元对象，元对象类<code>QMetaObject</code>包含了访问元对象的接口函数</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g. 运行时返回类的名称字符串</span></span><br><span class="line">QObject *obj = <span class="keyword">new</span> QPushButton;</span><br><span class="line">obj-&gt;metaObject()-&gt;classNmae;   <span class="comment">// 返回"QPushButton"</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>QMetaObject::newInstance()</code>：创建类的一个新的实例</p>
-</li>
-<li><p><code>QObject::inherits(const char *className)</code>：判断对象是否是名为className的类，或者QObject的子类的实例</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g.</span></span><br><span class="line">QTimer *timer = <span class="keyword">new</span> QTimer;</span><br><span class="line">timer-&gt;inherits(<span class="string">"Qtimer"</span>);          <span class="comment">// return true</span></span><br><span class="line">timer-&gt;inherits(<span class="string">"QObject"</span>);         <span class="comment">// return true</span></span><br><span class="line">timer-&gt;inherits(<span class="string">"QABstraactButton"</span>);<span class="comment">// return false</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>qobject_cast()</code>：dynamic cast功能</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g. 假设QMyWidget是QWidget的子类并且类中声明了Q_OBJECT宏</span></span><br><span class="line">QObject *obj = <span class="keyword">new</span> QMyWidget;</span><br><span class="line">QWidget *widget = qobject_cast&lt;QWidget *&gt;(obj);         <span class="comment">// 向上转型</span></span><br><span class="line">QMyWidget *myWidget = qobject_cast&lt;QMyWidget *&gt;(obj);   <span class="comment">// 向下转型</span></span><br><span class="line">QLabel *label = qobject_cast&lt;QLabel *&gt;(obj);            <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>QObject::tr()</code>和<code>QObject::trUtf8()</code>用于翻译字符串，用于多语言界面设计</p>
-</li>
-<li><p><code>QObject::setProperty()</code>和<code>QObject::property()</code>函数用于通过属性名称动态设置和获取属性值</p>
+<li>数据管理主要有两种方式：<ul>
+<li>数据卷（Data Volumes）：容器数据直接映射到本地主机环境</li>
+<li>数据卷容器（Data Volume Containers）：使用特定容器维护数据卷</li>
+</ul>
 </li>
 </ul>
+<h4 id="数据卷-1"><a href="#数据卷-1" class="headerlink" title="数据卷"></a>数据卷</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/webapp目录</span></span><br><span class="line"><span class="comment"># 创建数据卷，-P是映射本地临时端口</span></span><br><span class="line"><span class="comment"># 挂在主机目录为数据卷: from/path:to/path</span></span><br><span class="line"><span class="comment"># 指定数据卷读写权限: ro/rw</span></span><br><span class="line">$ docker run -d -P --name web -v /src/webapp:/opt/webapp:ro training/webapp python app.py</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据卷容器"><a href="#数据卷容器" class="headerlink" title="数据卷容器"></a>数据卷容器</h4><blockquote>
+<p>创建数据卷容器dbdata，创建数据卷挂载到容器dbdata</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it -v /dbdata --name dbdata ubuntu</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>其他容器对其进行挂载，之后三方任何一方修改各方都可见</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --volumes-from dbdata --name db1 ubuntu</span><br><span class="line">$ docker run -it --volumes-from dbdata --name db2 ubuntu</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>删除最后挂载容器需要使用<code>docker rm -v</code>同时删除关联容器</p>
+</blockquote>
+<hr>
+<h3 id="使用数据卷容器迁移数据"><a href="#使用数据卷容器迁移数据" class="headerlink" title="使用数据卷容器迁移数据"></a>使用数据卷容器迁移数据</h3><h4 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from dbdata -v $(<span class="built_in">pwd</span>):/backup --name worker ubuntu tar cvf /backup/backup.tar /dbdata</span><br></pre></td></tr></table></figure>
+
+<h4 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h4><blockquote>
+<p>首先创建容器dbdata2</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -v /dbupdate --name dbdata2 ubuntu ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>新容器挂载dbdata2，然后untar解压备份文件到所挂载的容器卷中</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from dbdata2 -v $(<span class="built_in">pwd</span>):/backup busybox tar xvf /backup/backup.tar</span><br></pre></td></tr></table></figure>
+
+<h2 id="端口映射和容器互联"><a href="#端口映射和容器互联" class="headerlink" title="端口映射和容器互联"></a>端口映射和容器互联</h2><h3 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以-p映射多端口-p po -p po</span></span><br><span class="line"><span class="comment"># 可以指定ip:po:po</span></span><br><span class="line"><span class="comment"># 还可以本地随机端口ip::po</span></span><br><span class="line"><span class="comment"># 还可以指定udp端口ip:po:po/udp</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="容器互联"><a href="#容器互联" class="headerlink" title="容器互联"></a>容器互联</h3><blockquote>
+<p>创建新容器</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d --name db training/postgres</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>创建新容器连接到db容器</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --link　name:alias</span></span><br><span class="line">$ docker run -d -P --name web --link db:db traning/webapp</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -387,9 +419,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Qt/" rel="tag"># Qt</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
           
-            <a href="/tags/C/" rel="tag"># C++</a>
+            <a href="/tags/VM/" rel="tag"># VM</a>
+          
+            <a href="/tags/Docker/" rel="tag"># Docker</a>
           
         </div>
       
@@ -402,8 +436,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/06/30/关于个人Blog的基础搭建/" rel="next" title="个人Blog">
-                <i class="fa fa-chevron-left"></i> 个人Blog
+              <a href="/2020/06/12/Docker基本使用/" rel="next" title="Docker基本使用">
+                <i class="fa fa-chevron-left"></i> Docker基本使用
               </a>
             
           </div>
@@ -412,8 +446,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/07/07/Qt信号和槽/" rel="prev" title="Qt信号和槽">
-                Qt信号和槽 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/12/Docker的dockerfile编写/" rel="prev" title="Docker的dockerfile编写">
+                Docker的dockerfile编写 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -548,7 +582,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#元对象系统"><span class="nav-number">1.</span> <span class="nav-text">元对象系统</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据卷"><span class="nav-number">1.</span> <span class="nav-text">数据卷</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据卷-1"><span class="nav-number">1.0.1.</span> <span class="nav-text">数据卷</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据卷容器"><span class="nav-number">1.0.2.</span> <span class="nav-text">数据卷容器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用数据卷容器迁移数据"><span class="nav-number">1.1.</span> <span class="nav-text">使用数据卷容器迁移数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#备份"><span class="nav-number">1.1.1.</span> <span class="nav-text">备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复"><span class="nav-number">1.1.2.</span> <span class="nav-text">恢复</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#端口映射和容器互联"><span class="nav-number">2.</span> <span class="nav-text">端口映射和容器互联</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#端口映射"><span class="nav-number">2.1.</span> <span class="nav-text">端口映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器互联"><span class="nav-number">2.2.</span> <span class="nav-text">容器互联</span></a></li></ol></li></div>
             
 
           </div>

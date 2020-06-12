@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Qt,C++,">
+  <meta name="keywords" content="Linux,VM,Docker,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
-<meta name="keywords" content="Qt,C++">
+<meta name="description" content="使用Dockerfile创建镜像 Dockerfile分为四部分 基础镜像信息 维护者信息 镜像操作指令 容器启动时执行指令detail   指令 说明    FROM 指定基础镜像   MAINTAINER 维护者信息   RUN 运行命令   CMD 启动容器时默认执行命令，最多只能执行一个命令   LABEL 元数据标签信息   EXPOSE 监听端口   ENV 环境变量   ADD 复制">
+<meta name="keywords" content="Linux,VM,Docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Qt元对象系统">
-<meta property="og:url" content="http://yoursite.com/2019/07/06/Qt元对象系统/index.html">
+<meta property="og:title" content="Docker的dockerfile编写">
+<meta property="og:url" content="http://yoursite.com/2020/06/12/Docker的dockerfile编写/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+<meta property="og:description" content="使用Dockerfile创建镜像 Dockerfile分为四部分 基础镜像信息 维护者信息 镜像操作指令 容器启动时执行指令detail   指令 说明    FROM 指定基础镜像   MAINTAINER 维护者信息   RUN 运行命令   CMD 启动容器时默认执行命令，最多只能执行一个命令   LABEL 元数据标签信息   EXPOSE 监听端口   ENV 环境变量   ADD 复制">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-12-07T08:14:37.395Z">
+<meta property="og:updated_time" content="2020-06-12T14:11:18.365Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Qt元对象系统">
-<meta name="twitter:description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+<meta name="twitter:title" content="Docker的dockerfile编写">
+<meta name="twitter:description" content="使用Dockerfile创建镜像 Dockerfile分为四部分 基础镜像信息 维护者信息 镜像操作指令 容器启动时执行指令detail   指令 说明    FROM 指定基础镜像   MAINTAINER 维护者信息   RUN 运行命令   CMD 启动容器时默认执行命令，最多只能执行一个命令   LABEL 元数据标签信息   EXPOSE 监听端口   ENV 环境变量   ADD 复制">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/07/06/Qt元对象系统/">
+  <link rel="canonical" href="http://yoursite.com/2020/06/12/Docker的dockerfile编写/">
 
 
 
 
 
-  <title>Qt元对象系统 | .27t_lBZ4oZgg_</title>
+  <title>Docker的dockerfile编写 | .27t_lBZ4oZgg_</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/06/Qt元对象系统/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker的dockerfile编写/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ichheit">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Qt元对象系统</h1>
+          <h1 class="post-title" itemprop="name headline">Docker的dockerfile编写</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-06T13:01:04+08:00">
-                2019-07-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T22:10:03+08:00">
+                2020-06-12
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2019-07/" itemprop="url" rel="index">
-                    <span itemprop="name">2019.07</span>
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
                   </a>
                 </span>
 
@@ -352,24 +352,172 @@
       
 
       
-        <h3 id="元对象系统"><a href="#元对象系统" class="headerlink" title="元对象系统"></a>元对象系统</h3><p>Qt的<font color="green">元对象编译器</font>(<font color="red">Meta-Object Compiler, MOC</font>)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个<code>Q_OBJECT</code>宏，MOC才对类中的信号与槽的代码进行预处理。<br>Qt的<font color="green">元对象系统</font>(<font color="red">Meta-Object System</font>)提供了对象之间通信的<strong>信号与槽机制</strong>、<strong>运行时类型信息</strong>和<strong>动态属性系统</strong>。<br>除了信号与槽机制，元对象还提供如下一些功能：</p>
-<ul>
-<li><p><code>QObject::metaObject()</code>：返回类关联的元对象，元对象类<code>QMetaObject</code>包含了访问元对象的接口函数</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g. 运行时返回类的名称字符串</span></span><br><span class="line">QObject *obj = <span class="keyword">new</span> QPushButton;</span><br><span class="line">obj-&gt;metaObject()-&gt;classNmae;   <span class="comment">// 返回"QPushButton"</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>QMetaObject::newInstance()</code>：创建类的一个新的实例</p>
-</li>
-<li><p><code>QObject::inherits(const char *className)</code>：判断对象是否是名为className的类，或者QObject的子类的实例</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g.</span></span><br><span class="line">QTimer *timer = <span class="keyword">new</span> QTimer;</span><br><span class="line">timer-&gt;inherits(<span class="string">"Qtimer"</span>);          <span class="comment">// return true</span></span><br><span class="line">timer-&gt;inherits(<span class="string">"QObject"</span>);         <span class="comment">// return true</span></span><br><span class="line">timer-&gt;inherits(<span class="string">"QABstraactButton"</span>);<span class="comment">// return false</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>qobject_cast()</code>：dynamic cast功能</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g. 假设QMyWidget是QWidget的子类并且类中声明了Q_OBJECT宏</span></span><br><span class="line">QObject *obj = <span class="keyword">new</span> QMyWidget;</span><br><span class="line">QWidget *widget = qobject_cast&lt;QWidget *&gt;(obj);         <span class="comment">// 向上转型</span></span><br><span class="line">QMyWidget *myWidget = qobject_cast&lt;QMyWidget *&gt;(obj);   <span class="comment">// 向下转型</span></span><br><span class="line">QLabel *label = qobject_cast&lt;QLabel *&gt;(obj);            <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>QObject::tr()</code>和<code>QObject::trUtf8()</code>用于翻译字符串，用于多语言界面设计</p>
-</li>
-<li><p><code>QObject::setProperty()</code>和<code>QObject::property()</code>函数用于通过属性名称动态设置和获取属性值</p>
+        <h2 id="使用Dockerfile创建镜像"><a href="#使用Dockerfile创建镜像" class="headerlink" title="使用Dockerfile创建镜像"></a>使用Dockerfile创建镜像</h2><ul>
+<li>Dockerfile分为四部分<ul>
+<li>基础镜像信息</li>
+<li>维护者信息</li>
+<li>镜像操作指令</li>
+<li>容器启动时执行指令<h3 id="detail"><a href="#detail" class="headerlink" title="detail"></a>detail</h3><table>
+<thead>
+<tr>
+<th align="left">指令</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>FROM</code></td>
+<td align="left">指定基础镜像</td>
+</tr>
+<tr>
+<td align="left"><code>MAINTAINER</code></td>
+<td align="left">维护者信息</td>
+</tr>
+<tr>
+<td align="left"><code>RUN</code></td>
+<td align="left">运行命令</td>
+</tr>
+<tr>
+<td align="left"><code>CMD</code></td>
+<td align="left">启动容器时默认执行命令，最多只能执行一个命令</td>
+</tr>
+<tr>
+<td align="left"><code>LABEL</code></td>
+<td align="left">元数据标签信息</td>
+</tr>
+<tr>
+<td align="left"><code>EXPOSE</code></td>
+<td align="left">监听端口</td>
+</tr>
+<tr>
+<td align="left"><code>ENV</code></td>
+<td align="left">环境变量</td>
+</tr>
+<tr>
+<td align="left"><code>ADD</code></td>
+<td align="left">复制&lt;src&gt;到容器&lt;dest&gt;，如果是tar自动解压，src可以是URL</td>
+</tr>
+<tr>
+<td align="left"><code>COPY</code></td>
+<td align="left">复制本地&lt;src&gt;到容器&lt;dest&gt;</td>
+</tr>
+<tr>
+<td align="left"><code>ENTRYPOINT</code></td>
+<td align="left">指定镜像默认入口，最多只有一个，可以被<code>docker run --entrypoint</code>覆盖掉</td>
+</tr>
+<tr>
+<td align="left"><code>VOLUME</code></td>
+<td align="left">创建数据卷挂载点</td>
+</tr>
+<tr>
+<td align="left"><code>USER</code></td>
+<td align="left">指定运行容器时的USER或UID</td>
+</tr>
+<tr>
+<td align="left"><code>WORKDIR</code></td>
+<td align="left">为<code>RUN</code>、<code>CMD</code>和<code>ENTRYPOINT</code>指令配置工作目录</td>
+</tr>
+<tr>
+<td align="left"><code>ARG</code></td>
+<td align="left">指定一些镜像内使用的参数</td>
+</tr>
+<tr>
+<td align="left"><code>ONBUILD</code></td>
+<td align="left">当创建的镜像为其他镜像的基础镜像时执行的操作命令</td>
+</tr>
+<tr>
+<td align="left"><code>STOPSIGNAL</code></td>
+<td align="left">指定创建镜像启动的容器接收退出的信号值</td>
+</tr>
+<tr>
+<td align="left"><code>HEALTHCHECK</code></td>
+<td align="left">配置启动容器如何进行健康检查</td>
+</tr>
+</tbody></table>
 </li>
 </ul>
+</li>
+<li>使用<code>.dockerignore</code>文件可以让Docker忽略匹配路径下的目录和文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># comment</span><br><span class="line">*/temp*</span><br><span class="line">*/*/temp*</span><br><span class="line">tmp?</span><br><span class="line">~*</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="desc"><a href="#desc" class="headerlink" title="desc"></a>desc</h3><table>
+<thead>
+<tr>
+<th align="left">指令</th>
+<th align="left">格式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>FROM</code></td>
+<td align="left"><code>&lt;image&gt;:&lt;tag&gt;</code> || <code>&lt;image&gt;@&lt;digest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>MAINTAINER</code></td>
+<td align="left"><code>&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>RUN</code></td>
+<td align="left">shell:<code>&lt;command&gt;</code> || exec:<code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>CMD</code></td>
+<td align="left"><code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code> || <code>command param1 param2</code> || [“param1”, “param2”]</td>
+</tr>
+<tr>
+<td align="left"><code>LABEL</code></td>
+<td align="left"><code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>EXPOSE</code></td>
+<td align="left"><code>&lt;port&gt;[&lt;port&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>ENV</code></td>
+<td align="left"><code>&lt;key&gt; &lt;value&gt;</code> || <code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>ADD</code></td>
+<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>COPY</code></td>
+<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>ENTRYPOINT</code></td>
+<td align="left">shell:<code>command param1 param2</code> || exec: <code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>VOLUME</code></td>
+<td align="left"><code>[&quot;/data&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>USER</code></td>
+<td align="left"><code>daemon</code></td>
+</tr>
+<tr>
+<td align="left"><code>WORKDIR</code></td>
+<td align="left"><code>/path/to/workdir</code>，如果是相对路径，路径是基于前个<code>WORKDIR</code>的</td>
+</tr>
+<tr>
+<td align="left">### exampe</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM debian:jessie</span><br><span class="line">MAINTAINER NGINX Docker Maintainers &quot;docker-maint@nginx.com&quot;</span><br><span class="line">ENV NGINX_VERSION 1.10.1-1-jessie</span><br><span class="line">RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys ....</span><br><span class="line">RUN ln -sf /dev/stdout /var/log/nginx/access.log \</span><br><span class="line">        $$ ln -sf /dev/stderr /var/log/nginx/error.log</span><br><span class="line">EXPOSE 80 443</span><br><span class="line">CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</span><br></pre></td></tr></table></figure></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h3 id="sys"><a href="#sys" class="headerlink" title="sys"></a>sys</h3><h4 id="如果使用alpine镜像"><a href="#如果使用alpine镜像" class="headerlink" title="如果使用alpine镜像"></a>如果使用alpine镜像</h4><blockquote>
+<p>安装软件包需要用apk包管理器替换apt工具</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apk add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可以从<a href="https://pkgs.alpinelinux.org/packages" target="_blank" rel="noopener">alpine</a>搜索并确定安装包名称<br>如果需要指定社区的安装包，则：</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"http://dl-4.alpinelinux.org/alpine/edge/teseting"</span> &gt;&gt; /etc/apk/repositories</span><br><span class="line">$ apk --update add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -387,9 +535,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Qt/" rel="tag"># Qt</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
           
-            <a href="/tags/C/" rel="tag"># C++</a>
+            <a href="/tags/VM/" rel="tag"># VM</a>
+          
+            <a href="/tags/Docker/" rel="tag"># Docker</a>
           
         </div>
       
@@ -402,8 +552,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/06/30/关于个人Blog的基础搭建/" rel="next" title="个人Blog">
-                <i class="fa fa-chevron-left"></i> 个人Blog
+              <a href="/2020/06/12/Docker数据卷/" rel="next" title="Docker数据卷">
+                <i class="fa fa-chevron-left"></i> Docker数据卷
               </a>
             
           </div>
@@ -411,10 +561,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/07/07/Qt信号和槽/" rel="prev" title="Qt信号和槽">
-                Qt信号和槽 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -548,7 +694,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#元对象系统"><span class="nav-number">1.</span> <span class="nav-text">元对象系统</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Dockerfile创建镜像"><span class="nav-number">1.</span> <span class="nav-text">使用Dockerfile创建镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#detail"><span class="nav-number">1.1.</span> <span class="nav-text">detail</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#desc"><span class="nav-number">1.2.</span> <span class="nav-text">desc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sys"><span class="nav-number">1.3.</span> <span class="nav-text">sys</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如果使用alpine镜像"><span class="nav-number">1.3.1.</span> <span class="nav-text">如果使用alpine镜像</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
