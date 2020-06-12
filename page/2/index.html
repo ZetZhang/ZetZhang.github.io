@@ -259,6 +259,430 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/PostgreSQL安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/12/PostgreSQL安装/" itemprop="url">PostgreSQL安装.md</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T20:52:46+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a href="https://www.postgresql.org/" target="_blank" rel="noopener">PostgreSQL官网</a></p>
+<h3 id="安装依赖："><a href="#安装依赖：" class="headerlink" title="安装依赖："></a>安装依赖：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># centos</span></span><br><span class="line">$ yum -y install readline-devel zlib-devel gcc gcc-c++ zlib readline</span><br><span class="line"><span class="comment"># debian/ubuntu</span></span><br><span class="line">$ apt-get install -y gcc make</span><br><span class="line">$ apt-get install -y libreadline-dev zlib1g zlib1g.dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装PostgreSQL："><a href="#安装PostgreSQL：" class="headerlink" title="安装PostgreSQL："></a>安装PostgreSQL：</h3><p><a href="https://sandbox-experiment-resource-north-4.obs.cn-north-4.myhuaweicloud.com/postgresql-arm/postgresql-10.3.tar.gz" target="_blank" rel="noopener">postgresql-10.3(maybe too<br>old)</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://sandbox-experiment-resource-north-4.obs.cn-north-4.myhuaweicloud.com/postgresql-arm/postgresql-10.3.tar.gz</span><br><span class="line">$ tar -zxvf postgresql-10.3.tar.gz -C /opt/</span><br><span class="line">$ <span class="built_in">cd</span> /opt/postgresql-*/</span><br><span class="line">$ ./configure --build=arm-linux --host=arm-linux --prefix=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line"><span class="comment"># canuse：./configure --prefix=/usr/local/pgsql --with-blocksize=8 \</span></span><br><span class="line"><span class="comment"># --enable-dtrace --enable-debug --enable-thread-safety</span></span><br><span class="line"><span class="comment"># --with-libxml --with-python --with-openssl</span></span><br><span class="line"><span class="comment"># $ make world</span></span><br><span class="line"><span class="comment"># $ make check-world (by normal user)</span></span><br><span class="line"><span class="comment"># $ make install-world</span></span><br><span class="line">$ make &amp;&amp; make install &amp;&amp; make clean</span><br></pre></td></tr></table></figure>
+
+<h3 id="授权用户："><a href="#授权用户：" class="headerlink" title="授权用户："></a>授权用户：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ adduser postgres</span><br><span class="line">$ chown -R postgres:postgres /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ ls -ld /usr/<span class="built_in">local</span>/pgsql</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置环境变量："><a href="#配置环境变量：" class="headerlink" title="配置环境变量："></a>配置环境变量：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ su postgres</span><br><span class="line">$ vim ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>配置文件中加入：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> PGHOME=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ <span class="built_in">export</span> PGDATA=/usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line">$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$PGHOME</span>/bin</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>执行修改：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span>  ~/.bash_profile &amp;&amp; psql -V</span><br></pre></td></tr></table></figure>
+
+<h3 id="初始化数据库："><a href="#初始化数据库：" class="headerlink" title="初始化数据库："></a>初始化数据库：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ initdb -D <span class="variable">$PGDATA</span> -E UTF8 --locale=C -U postgres -W</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动日志服务："><a href="#启动日志服务：" class="headerlink" title="启动日志服务："></a>启动日志服务：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br><span class="line">$ chmod 755 /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="启动数据库："><a href="#启动数据库：" class="headerlink" title="启动数据库："></a>启动数据库：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span>  -l  <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br></pre></td></tr></table></figure>
+
+<h3 id="检查结果："><a href="#检查结果：" class="headerlink" title="检查结果："></a>检查结果：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ps -ef | grep <span class="string">"postgres"</span></span><br><span class="line">$ netstat -nlp | grep <span class="string">"postgres"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改数据库密码："><a href="#修改数据库密码：" class="headerlink" title="修改数据库密码："></a>修改数据库密码：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ psql中`\password postgres`可修改</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置为远程访问："><a href="#配置为远程访问：" class="headerlink" title="配置为远程访问："></a>配置为远程访问：</h3><blockquote>
+<p>将”listen_addresses=’localhost’”取消注释并修改为任意地址’*’</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /usr/<span class="built_in">local</span>/pgsql/data/postgresql.conf</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>修改访问地址控制设置：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /usr/<span class="built_in">local</span>/pgsql/data/pg_hba.conf</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在”IPv4 local connections”下构建规则：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host    all             all             0.0.0.0/0               md5</span><br></pre></td></tr></table></figure>
+
+<h3 id="重启生效："><a href="#重启生效：" class="headerlink" title="重启生效："></a>重启生效：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl restart</span><br></pre></td></tr></table></figure>
+
+<h2 id="在debian中"><a href="#在debian中" class="headerlink" title="在debian中"></a>在debian中</h2><h3 id="基本安装"><a href="#基本安装" class="headerlink" title="基本安装"></a>基本安装</h3><blockquote>
+<p>创建文件<code>/etc/apt/sources.list.d/pgdg.list</code>，里面添加：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 其中stretch-pgdg具体可以在https://www.postgresql.org/download/linux/debian/中选择具体版本得到</span></span><br><span class="line">deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Import the repository signing key, and update the package lists:</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ apt-get install -y gnupg gnupg1 gnupg2</span><br><span class="line">$ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -</span><br><span class="line">$ apt-get update</span><br><span class="line">$ apt-get install -y postgresql-10</span><br><span class="line"></span><br><span class="line">$ useradd -m -s /bin/bash postgres</span><br><span class="line">$ mkdir /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ chown postgres:postgres /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ sudo -u postgres /usr/lib/postgressql</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>数据库初始化：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /usr/lib/postgresql/11/bin/initdb -D <span class="variable">$PGDATA</span> -E UTF8 --locale=C -U postgres -W</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>vim ~/.bash_profile</code>配置：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PGHOME=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line"><span class="built_in">export</span> PGDATA=/usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/lib/postgresql/11/bin</span><br><span class="line"><span class="built_in">export</span> LANG=en_US.utf8</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>数据库日志：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 大可不必</span></span><br><span class="line">$ mkdir -p /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br><span class="line">$ chmod 755 /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>can start data server <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般启动</span></span><br><span class="line">$ /usr/lib/postgresql/11/bin/pg_ctl -D /usr/<span class="built_in">local</span>/pgsql/data -l logfile start</span><br><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span> -l <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="通过配置文件"><a href="#通过配置文件" class="headerlink" title="通过配置文件"></a>通过配置文件</h4><blockquote>
+<p>启动，vim /etc/sysctl.conf中配置内核相关参数：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kernel.shmmni = 4096</span><br><span class="line">kernel.sem = 50100 64128000 50100 1280</span><br><span class="line">fs.file-max = 7672460</span><br><span class="line">net.ipv4.ip_local_port_range = 9000 65000</span><br><span class="line">net.core.rmem_default = 1048576</span><br><span class="line">net.core.rmem_max = 4194304</span><br><span class="line">net.core.wmem_default = 262144</span><br><span class="line">net.core.wmen_max = 1028576</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>vim /etc/sysconfig/iptables</code>进行防火墙设置：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-A RH-Firewall-1-INPUT -i lo -j ACCEPT</span><br><span class="line"># 允许源IP</span><br><span class="line">-A RH-Firewall-1-INPUT -s 192.168.0.0/16 -j ACCEPT</span><br><span class="line"># 允许源IP访问目标端口</span><br><span class="line">-A RH-Firewall-1-INPUT -s 192.168.1.0/24 -m state --state </span><br><span class="line">NEW -m tcp -p tcp --dport [PORT] -j ACCEPT</span><br><span class="line"># 允许任意IP访问目标端口</span><br><span class="line">-A RH-Firewall-1-INPUT -p tcp -m state --state NEW -m</span><br><span class="line">tcp --dport [PORT] -j ACCEPT</span><br><span class="line"># 不是很懂</span><br><span class="line"># 使用iptables -L -v -n查看出入规则</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在/etc/security/limits.conf配置。。。<blockquote>
+<p><code>vim /usr/local/pgsql/data/pg_hba.conf</code>中的IPv4 local<br>connections修改访问地址控制规则设置：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host    all             all             0.0.0.0/0               md5</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p><code>vim /usr/local/pgsql/data/postgresql.conf</code>中</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">将listen_addresses=<span class="string">'localhost'</span>取消注释并修改为任意地址<span class="string">'*0.0.0.0'</span></span><br><span class="line">superuser_reserved_connections超级用户最多连接改为13</span><br><span class="line">unix_socket_directories连接改为<span class="string">'.'</span>根目录下</span><br><span class="line">unix_socket_permissions权限为0700</span><br><span class="line"><span class="comment"># 心跳检测</span></span><br><span class="line">tcp_keepalives_idle = 60</span><br><span class="line">tcp_keepalives_interval = 10</span><br><span class="line">tcp_keepalives_count = 10</span><br><span class="line"><span class="comment"># 延迟</span></span><br><span class="line">vacuum_cost_delay = 10</span><br><span class="line">bgwritter_delay = 10ms</span><br><span class="line">wal_writer_delay = 200ms</span><br><span class="line"><span class="comment"># 归档</span></span><br><span class="line">hot_standby = on</span><br><span class="line"><span class="comment"># 日志</span></span><br><span class="line">log_destination = <span class="string">"csvlog"</span></span><br><span class="line">logging_collector = on</span><br><span class="line">log_directory = <span class="string">'pg_log'</span></span><br><span class="line">log_file_mode = 0600</span><br><span class="line">log_truncate_on_rotation = on等</span><br><span class="line"><span class="comment"># 还有checkpoint</span></span><br><span class="line">log_checkpoints = on</span><br><span class="line">log_connection = on</span><br><span class="line">log_disconnections = on</span><br><span class="line">log_error_verbosity = verbose</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>启动psql</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span> -l <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br><span class="line">$ psql -h localhost -U postgres</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/10/Qt属性系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/07/10/Qt属性系统/" itemprop="url">Qt属性系统</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-10T15:12:12+08:00">
+                2019-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-07/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.07</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="1-属性定义"><a href="#1-属性定义" class="headerlink" title="1.属性定义"></a>1.属性定义</h2><p>Qt提供了<code>Q_PROPERTY()</code>宏来定义属性，它是基于<a href="https://zetzhang.github.io/2019/07/06/Qt%E5%85%83%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F/" target="_blank" rel="noopener">元对象系统</a>来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。<br>在QObject的子类中，用宏<code>Q_PROPERTY()</code>定义属性，格式是：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Q_PROPERTY(type name</span><br><span class="line">           (READ getFunction [WRITE setFunction] |</span><br><span class="line">            MEMBER memberName [(READ getFunction | WRITE setFunction)])</span><br><span class="line">           [RESET resetFunction]</span><br><span class="line">           [NOTIFY notifySignal]</span><br><span class="line">           [REVISION <span class="keyword">int</span>]</span><br><span class="line">           [DESIGNABLE <span class="keyword">bool</span>]</span><br><span class="line">           [SCRIPTABLE <span class="keyword">bool</span>]</span><br><span class="line">           [STORED <span class="keyword">bool</span>]</span><br><span class="line">           [USER <span class="keyword">bool</span>]</span><br><span class="line">           [CONSTANT]</span><br><span class="line">           [FINAL])</span><br></pre></td></tr></table></figure>
+
+<p><code>Q_PROPERTY</code>宏定义一个返回值类型为<code>type</code>，名称为<code>name</code>的属性，用<code>READ</code>、<code>WRITE</code>来作为属性的读/写操作，还有其他的一些关键字定义属性的一些操作特性。属性的类型可以是<code>QVariant</code>支持的任何类型，也可以用户自定义类型。<br><code>Q_PROPERTY</code>宏定义属性的一些主要关键字的意义如下：</p>
+<ul>
+<li><code>READ</code>指定一个读取属性值的函数，没有<code>MEMBER</code>关键字时必须设置<code>READ</code>。</li>
+<li><code>WRITE</code>指定一个设定属性值的函数，只读属性没有<code>WRITE</code>设置。</li>
+<li><code>MEMBER</code>指定一个成员变量与属性关联，成为可读可写的属性，无需再设置<code>READ</code>和<code>WRITE</code>。</li>
+<li><code>RESET</code>是可选的，用于指定一个设置属性缺省值的函数。</li>
+<li><code>NOTIFY</code>是可选的，用于设置一个信号，当属性值变化时发射此信号。</li>
+<li><code>DESIGNABLE</code>表示属性是否在Qt Designer里可见，缺省为<code>true</code>。</li>
+<li><code>CONSTANT</code>表示属性值是一个常数，对于一个对象实例，<code>READ</code>指定的函数返回值是常数，但是每个实例的返回值可以不一样。具有<code>CONSTANT</code>关键字的属性不能有<code>WRITE</code>和<code>NOTIFY</code>关键字。</li>
+<li><code>FINAL</code>表示所定义的属性不能被子类重载。</li>
+</ul>
+<p>QWidget 类定义属性的一些例子如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Q_PROPERTY(<span class="keyword">bool</span> focus READ hasFocus)</span><br><span class="line">Q_PROPERTY(<span class="keyword">bool</span> enabled READ isEnabled WRITE setEnabled)</span><br><span class="line">Q_PROPERTY(QCursor cursor READ cursor WRITE setCursor RESET unsetCursor)</span><br><span class="line">Q_PROPERTY(QString windowTitle READ windowTitle WRITE setWindowTitle NOTIFY windowTitleChanged DESIGNABLE isWindow)</span><br></pre></td></tr></table></figure>
+
+<p>上面最后这个声明包含了<code>NOTIFY windowTitleChanged</code>，表明当<code>windowTitle</code>属性发生变化时，会触发<code>windowTitleChanged</code>信号，相应的信号声明在QWidget中。(<code>this-&gt;setProperty(&quot;windowTitle&quot;, &quot;test&quot;)</code>)  </p>
+<hr>
+<p>关于<a href="http://blog.sina.com.cn/s/blog_c3c7614d0102wdm2.html" target="_blank" rel="noopener">如何使用NTOIFY和RESET——Qt爱好者</a></p>
+<hr>
+<h2 id="2-动态属性"><a href="#2-动态属性" class="headerlink" title="2.动态属性"></a>2.动态属性</h2><p>其中，不管有没有用<code>READ</code>和<code>WRITE</code>定义接口函数，只要知道属性名称，就可以通过<code>QObject::property()</code>和<code>QObject::setProperty()</code>读取和设置属性值。e.x.：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">QPushButton *button = <span class="keyword">new</span> QPushButton;</span><br><span class="line">QObject *object = button;</span><br><span class="line">object-&gt;setProperty(<span class="string">"flat"</span>, <span class="literal">true</span>);</span><br><span class="line"><span class="keyword">bool</span> isFlat = object-&gt;property(<span class="string">"flat"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这就是<font color="red">动态属性</font>，运行时通过<code>setProperty()</code>定义新属性，并用<code>property()</code>查询，它是针对类实例定义的。<br>在数据表编辑界面上，为了高亮显示一些必填字段，可以在初始化界面为这些字段关联组件定义新的required属性：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">editName-&gt;setProperty(<span class="string">"required"</span>, <span class="string">"true"</span>);</span><br><span class="line">comboSex-&gt;setProperty(<span class="string">"required"</span>, <span class="string">"true"</span>);</span><br><span class="line">checkAgree-&gt;setProperty(<span class="string">"required"</span>, <span class="string">"true"</span>);</span><br><span class="line"><span class="comment">// 应用样式定义将必填字段背景颜色设置为亮绿色</span></span><br><span class="line">*[required=<span class="string">"true"</span>] &#123;background-color: lime&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-类的附加属性"><a href="#3-类的附加属性" class="headerlink" title="3.类的附加属性"></a>3.类的附加属性</h2><p>属性系统还有一个宏<code>Q_CLASSINFO()</code>，可以为类的元对象定义“名称——值”信息，如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QMyClass</span>:</span><span class="keyword">public</span> QObject </span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">    Q_CLASSINFO(<span class="string">"author"</span>, <span class="string">"Wang"</span>)</span><br><span class="line">    Q_CLASSINFO (<span class="string">"company"</span>, <span class="string">"UPC"</span>)</span><br><span class="line">    Q_CLASSINFO(<span class="string">"version "</span>, <span class="string">"3.0.1"</span>)</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>用<code>Q_CLASSINFO()</code>宏定义附加类信息后，可以通过元对象的一些函数获取类的附加信息，如<code>classlnfo(int)</code>获取某个加信息，函数原型定义如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMetaClassInfo QMetaObject::classInfo(<span class="keyword">int</span> index) <span class="keyword">const</span></span><br></pre></td></tr></table></figure>
+
+<p>返回值是<code>QMetaClassInfo</code>类型，有<code>name()</code>和<code>value()</code>两个函数，可获得类附加信息的名称和值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置附加值</span></span><br><span class="line">Q_CLASSINFO(<span class="string">"First"</span>, <span class="string">"Second"</span>)</span><br><span class="line"><span class="comment">// 输出键值</span></span><br><span class="line">qDebug() &lt;&lt; <span class="keyword">this</span>-&gt;metaObject()-&gt;classInfo(<span class="number">0</span>).value() &lt;&lt; <span class="string">": "</span> &lt;&lt; <span class="keyword">this</span>-&gt;metaObject()-&gt;classInfo(<span class="number">0</span>).name();</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/07/Qt信号和槽/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1037,7 +1461,7 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

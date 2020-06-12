@@ -259,6 +259,556 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/第七章-站在对象模型的尖端/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/12/第七章-站在对象模型的尖端/" itemprop="url">第七章 站在对象模型的尖端</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T23:03:38+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是<font color="red">template</font>、<font color="red">exception<br>handing（<strong>EH</strong>）</font>和<font color="red">runtime type<br>identification（<strong>RTTI</strong>）</font>（RTTI可以想象成EH的一个副作用）。</li>
+</ul>
+<h4 id="7-1-Template"><a href="#7-1-Template" class="headerlink" title="7.1 Template"></a>7.1 Template</h4><ul>
+<li>template原本被视为是对container classes的支持，但现在成为STL的基础。它也被用于<strong>属性混合</strong>（如内存分配机制）或<strong>互斥（mutual exclusion）机制</strong>（使用于线程同步化控制）。它设置被用于<strong>template metaprograms</strong>技术：class expression templates将在编译时期而非执行期被评估（evaluated），因而带来效率提升。</li>
+</ul>
+<h5 id="Template的“实例化”行为（Template-Instantiation）"><a href="#Template的“实例化”行为（Template-Instantiation）" class="headerlink" title="Template的“实例化”行为（Template Instantiation）"></a>Template的“实例化”行为（Template Instantiation）</h5><ul>
+<li><p>下面的template Point class：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">Type</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">Point</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">enum</span> Status &#123; unallocated, normalized &#125;;</span><br><span class="line">    Point(Type x = <span class="number">0.0</span>, Type y = <span class="number">0.0</span>, Type z = <span class="number">0.0</span>);</span><br><span class="line">    ~Point();</span><br><span class="line">    <span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span>*, <span class="keyword">size_t</span>)</span></span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> Piont&lt;Type&gt; *freeList;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> chunkSize;</span><br><span class="line">    Type _x, _y, _z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>  实际程序中，static data members并不可用，nested enum或enumerators也一样。它们每个<font color="red">只能通过template Point class的某个实例来存取或操作</font>：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ok</span></span><br><span class="line">Point&lt;<span class="keyword">float</span>&gt;::Status s;</span><br><span class="line"><span class="comment">// error</span></span><br><span class="line">Point::Status s;</span><br></pre></td></tr></table></figure>
+
+<p>  如果定义一个指针，指向特定实例：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Point&lt;<span class="keyword">float</span>&gt; *ptr = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>  什么也没发生。<strong>因为指向class object的指针，本身并不是class object，编译器不需要直到与该class有关的任何members数据或object布局数据</strong>。如果不是pointer而是reference，又如何：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Point&lt;<span class="keyword">float</span>&gt; &amp;ref = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 内部扩展</span></span><br><span class="line">Point&lt;<span class="keyword">float</span>&gt; temporary(<span class="keyword">float</span>(<span class="number">0</span>));</span><br><span class="line"><span class="keyword">const</span> Point&lt;<span class="keyword">float</span>&gt; &amp;ref = temporary;</span><br></pre></td></tr></table></figure>
+
+<p>  所以一个class object的定义，不论是由编译器暗中地做或是程序员显式地做，都会导致template class的实例化。也就是Point中的三个nonstatic members都会被绑定。然而member functions（未被使用过的）不应该被实例化。只有在需要时才实例化。但编译器不遵循这项要求，所以由使用者来主导<font color="red">实例化</font>（<font color="green">instantiation</font>），主要有两个原因：</p>
+<ol>
+<li><strong>空间和时间效率的考虑</strong>。</li>
+<li><strong>尚未实现的机能</strong>。</li>
+</ol>
+</li>
+</ul>
+<h5 id="Template的错误报告（Error-Reporting-within-a-Template）"><a href="#Template的错误报告（Error-Reporting-within-a-Template）" class="headerlink" title="Template的错误报告（Error Reporting within a Template）"></a>Template的错误报告（Error Reporting within a Template）</h5><h5 id="Template中的名称决议法（Name-Resolution-within-a-Template）"><a href="#Template中的名称决议法（Name-Resolution-within-a-Template）" class="headerlink" title="Template中的名称决议法（Name Resolution within a Template）"></a>Template中的名称决议法（Name Resolution within a Template）</h5><ul>
+<li><p>template的两种意义：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// scope of the template definition</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">double</span> <span class="title">foo</span><span class="params">(<span class="keyword">double</span>)</span></span>;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">type</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">ScopeRules</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">invariant</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        _member = foo(_val);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">type <span class="title">type_dependent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> foo(_member);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> _val;</span><br><span class="line">    type _member;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// scope of the template declareation</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">double</span> <span class="title">foo</span><span class="params">(<span class="keyword">double</span>)</span></span>;</span><br><span class="line"><span class="comment">// scope of the template instantiation</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="comment">// ....</span></span><br><span class="line">ScopeFules&lt;<span class="keyword">int</span>&gt; sr0;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>Template中，一个nonmember name的决议结果，是根据name的使用是否与实例化该template的参数类型有关而决定的。如果无关，就以scope of the template declareation决定name，否则以scope of the template instantiation决定name。</strong><br>  ScopeFules template中有两个foo()调用操作。它会调用foo(double)的版本，<strong>此外，_val的类型是int。因为函数的决议结果只和函数的原型（signature）有关，和函数的返回值没有关系</strong>。因此_member的类型不会影响哪一个foo()实例被选中。在scope中，只有一个foo()候选者。调用操作由scope of the template declareation决议。如果按以下方式：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sr0.type_dependent();</span><br></pre></td></tr></table></figure>
+
+<p>  它由scope of the template instantiation决议。它会调用int版本，被type把持。<br>  这意味着编译器必须保持两个scope contexts：</p>
+<ol>
+<li><strong>“scope of the template “，用于专注一般的template class</strong>。</li>
+<li><strong>“scope of the template instantiation”，用于专注特定的实例</strong>。</li>
+</ol>
+</li>
+</ul>
+<h5 id="Member-Function的实例化行为（Member-Function-Instantiation）"><a href="#Member-Function的实例化行为（Member-Function-Instantiation）" class="headerlink" title="Member Function的实例化行为（Member Function Instantiation）"></a>Member Function的实例化行为（Member Function Instantiation）</h5><ul>
+<li>对于template function的实例化（instantiation）。编译器提供了两个策略：一个是<font color="red">编译时期策略</font>，程序代码在program text file中备妥可用；另一个是<font color="red">链接时期策略</font>。</li>
+<li>如果virtual function被实例化（instantiated），其实例化点紧跟在class的实例化点后。</li>
+<li>template instantiation似乎拒绝全面自动化，虽然工作做对了，但产生出来的object files重新编译成本可能太高，以手动方式在个别object module中完成预先实例化操作（pre-instantiation）是唯一有效率的方法。</li>
+</ul>
+<h4 id="7-2-异常处理（Exception-Handing）"><a href="#7-2-异常处理（Exception-Handing）" class="headerlink" title="7.2 异常处理（Exception Handing）"></a>7.2 异常处理（Exception Handing）</h4><ul>
+<li>想要支持exception handing，编译器的主要工作就是找出catch子句，以处理被抛出的exception。这需要<strong>追踪</strong>程序堆栈中的每个函数的目前作用区域，同时编译器需要提供某种<strong>查询</strong>exception objects的方法，以直到实际类型（RTTI）。还需要某种机制<strong>管理</strong>被抛出的object，包括产生、存储、析构、清理和一般存取。</li>
+</ul>
+<h5 id="Exception-Handing快速检阅"><a href="#Exception-Handing快速检阅" class="headerlink" title="Exception Handing快速检阅"></a>Exception Handing快速检阅</h5><ul>
+<li>exception handing由三个主要组件构成：throw子句、catch子句和try区段。当一个exception被抛出去，控制权会从函数调用中释放出来，并寻找吻合的catch子句。如果没有，则调用terminate()中断例程。当控制权被放弃后，堆栈中每个函数调用也被推理（popped up）。</li>
+</ul>
+<h5 id="对Exception-Handing的支持"><a href="#对Exception-Handing的支持" class="headerlink" title="对Exception Handing的支持"></a>对Exception Handing的支持</h5><ul>
+<li>当exception发生时，编译系统完成以下事情：<ol>
+<li>检验发生throw操作的函数。</li>
+<li>决定throw操作是否在try区段中。</li>
+<li>把exception type拿来和每个catch子句比较。</li>
+<li>流程控制交到吻合的匹配的catch子句手中。</li>
+<li>如果throw不发生在try区段中，或没有catch子句吻合。那么：<ol>
+<li>摧毁active local objects。</li>
+<li>堆栈中将函数unwind掉</li>
+<li>进行堆栈的下一个函数，然后重复2·5。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<h5 id="决定throw是否发生在一个try区段中"><a href="#决定throw是否发生在一个try区段中" class="headerlink" title="决定throw是否发生在一个try区段中"></a>决定throw是否发生在一个try区段中</h5><ul>
+<li>一个函数可以想象为好几个区域：<ul>
+<li>try区段以外的区域，没有active local objects。</li>
+<li>try区段以外的区域，但有一个（或以上）的active local objects需要析构。</li>
+<li>try区段以内的区域。</li>
+</ul>
+</li>
+</ul>
+<h5 id="将exception的类型和每一个catch子句的类型做比较"><a href="#将exception的类型和每一个catch子句的类型做比较" class="headerlink" title="将exception的类型和每一个catch子句的类型做比较"></a>将exception的类型和每一个catch子句的类型做比较</h5><ul>
+<li>对于每个被抛出来的exception，编译器产生一个类型描述器，对exception的类型进行编码。如果那是derived type，编码内容包含所有base class的类型信息。</li>
+<li>类型描述器（type derscriptor）是必要的。因为exception是在执行期被处理的，object必须有自己的类型信息。RTTI正是因为支持EH而获得的副产品。</li>
+</ul>
+<h5 id="当一个实际对象在程序执行时被抛出，会发生什么事？"><a href="#当一个实际对象在程序执行时被抛出，会发生什么事？" class="headerlink" title="当一个实际对象在程序执行时被抛出，会发生什么事？"></a>当一个实际对象在程序执行时被抛出，会发生什么事？</h5><h4 id="7-3-执行期类型识别（Runtime-Type-Identification，RTTI）"><a href="#7-3-执行期类型识别（Runtime-Type-Identification，RTTI）" class="headerlink" title="7.3 执行期类型识别（Runtime Type Identification，RTTI）"></a>7.3 执行期类型识别（Runtime Type Identification，RTTI）</h4><ul>
+<li><h5 id="Type-Safe-Downcast（保证安全的向下转换操作）"><a href="#Type-Safe-Downcast（保证安全的向下转换操作）" class="headerlink" title="Type-Safe Downcast（保证安全的向下转换操作）"></a>Type-Safe Downcast（保证安全的向下转换操作）</h5></li>
+</ul>
+<h5 id="Type-Safe-Dynamic-Cast（保证安全的动态转换）"><a href="#Type-Safe-Dynamic-Cast（保证安全的动态转换）" class="headerlink" title="Type-Safe Dynamic Cast（保证安全的动态转换）"></a>Type-Safe Dynamic Cast（保证安全的动态转换）</h5><h5 id="Reference并不是Pointers"><a href="#Reference并不是Pointers" class="headerlink" title="Reference并不是Pointers"></a>Reference并不是Pointers</h5><h5 id="Typeid运算符"><a href="#Typeid运算符" class="headerlink" title="Typeid运算符"></a>Typeid运算符</h5><h4 id="7-4-效率有了，弹性呢？"><a href="#7-4-效率有了，弹性呢？" class="headerlink" title="7.4 效率有了，弹性呢？"></a>7.4 效率有了，弹性呢？</h4><h5 id="动态共享函数库（Dynamic-Shared-Libraries）"><a href="#动态共享函数库（Dynamic-Shared-Libraries）" class="headerlink" title="动态共享函数库（Dynamic Shared Libraries）"></a>动态共享函数库（Dynamic Shared Libraries）</h5><h5 id="共享内存（Shared-Memory）"><a href="#共享内存（Shared-Memory）" class="headerlink" title="共享内存（Shared Memory）"></a>共享内存（Shared Memory）</h5>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/第六章-执行期语意学/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/12/第六章-执行期语意学/" itemprop="url">第六章 执行期语意学</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T23:02:33+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><p>有个简单的式子：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (yy == xx.getValue())) ...</span><br></pre></td></tr></table></figure>
+
+<p>  其中xx和yy的定义：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Y</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Y();</span><br><span class="line">    ~Y();</span><br><span class="line">    <span class="keyword">bool</span> oeprator==(<span class="keyword">const</span> Y&amp;) <span class="keyword">const</span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    X();</span><br><span class="line">    ~X();</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">Y</span><span class="params">()</span> <span class="keyword">const</span></span>; <span class="comment">// conversion运算符</span></span><br><span class="line">    <span class="function">X <span class="title">getValue</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>  当使用equality（等号）运算符时，xx被resolves为“被overloaded的Y成员实例”。下面是该式子的转换：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// resolution of intended operator</span></span><br><span class="line"><span class="keyword">if</span> (yy.<span class="keyword">operator</span>==(xx.getValue()))</span><br></pre></td></tr></table></figure>
+
+<p>  Y的等号运算符需要一个类型为Y的参数，而getValue()传回的是一个类型为X的object。这时提供<font color="red">conversion运算符</font>，把一个X object转换为一个Y object，它<strong>施行于getValue()的返回值身上</strong>。下面是第二次转换：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// conversion of getValue()'s return value</span></span><br><span class="line"><span class="keyword">if</span> (yy.<span class="keyword">operator</span>==(xx.getalue().<span class="keyword">operator</span> Y()))</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<h4 id="6-1-对象的构造和析构（Object-Construction-and-Destruction）"><a href="#6-1-对象的构造和析构（Object-Construction-and-Destruction）" class="headerlink" title="6.1 对象的构造和析构（Object Construction and Destruction）"></a>6.1 对象的构造和析构（Object Construction and Destruction）</h4><ul>
+<li><p>一般constructor和destructor的安插都如下：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    Point point;</span><br><span class="line">    <span class="comment">// point.point::Point();</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// point.point::~Point();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  如果一个区段或函数有一个以上的离开点，情况就会混乱一些，Destructor必须被放在每一个离开点（object还存活）之前。</p>
+</li>
+</ul>
+<h5 id="全局对象（Global-Objects）"><a href="#全局对象（Global-Objects）" class="headerlink" title="全局对象（Global Objects）"></a>全局对象（Global Objects）</h5><ul>
+<li><p>C++保证在第一次使用global数据前之前，将它构造出来，而在结束前把identity摧毁掉。<strong>如果global object如果有constructor和destructor的话，它需要静态的初始化操作和内存释放操作</strong>。所有的global obejct都被放置在程序的data segment中。如果不显式指定值，则内存内容为0（C略有不同，C并不自动设定初值）。C语言中一个global object只能被一个常量表达式（可在编译时期求值）设定初值。虽然class object在编译时期可以被放置data segment中并且内容为0，<strong>但constructor一直要到程序启动（startup）时才会实施。而必须对放置program data segment中的object的初始化表达式做评估（evaluate），这就是一个object需要静态初始化的原因</strong>。</p>
+</li>
+<li><p><font color="red"><strong>munch</strong></font><strong>是一个可移植但成本颇高的静态初始化（以及内存释放）方法</strong>。munch策略：</p>
+<ol>
+<li><p><strong>为每个需要静态初始化的文件产生<font color="red">__sti()函数</font>(sti是static initialization)，内含constructor调用操作或inline expansions</strong>。一个global对象identity会在matrix.c中产生：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">__sti_matrix_c__identity() &#123;</span><br><span class="line">    identity.Matrix::Matrix();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> matrix_c是文件名编码，_identity表示文件中所定义的static object。</p>
+</li>
+<li><p><strong>在每个需要静态的内存释放操作（static deallocation）的文件中，产生一个<font color="red">__std()函数</font>(std是static deallocation)，内含必要的destructor调用操作，或是inline expansions</strong>。比如以上identity对象会调用Matrix destructor。</p>
+</li>
+<li><p><strong>提供一组<font color="red">rumtime library “munch”函数</font>：一个_mani()函数(call __sti()，一个exit()函数(call __std())</strong>。</p>
+</li>
+</ol>
+</li>
+<li><p><em>最后一个需要解决的问题是，如何收集程序中各个object files的__sti()函数和__std()函数。解决方法是使用<font color="red">nm命令</font>，nm会dump出object file的<font color="red">符号表格项目</font>（<font color="green">symbol table entries</font>）。*</em>nm<strong>施行于可执行文件上，输出</strong>piped into<strong>到munch程序中。munch程序则搜寻__sti或__std开头的名称，然后把函数名称加到</strong>jump table*<em>中，然后把表格写到<font colorr="ed">program text</font>文件中，CC命令被重新激活，将内含表格的文件编译，整个可执行文件被重新链接。_main()和exit()在各个表格上走访一遍，轮流调用每一个项目（代表一个函数地址）</em>。但这方法离正统计科太远了……</p>
+</li>
+<li><p>当特性平台的C++编译器出现，更有效率的方法也随之出现，因为各平台上扩充链接器和目的文件格式（object file format），以直接支持静态初始化和内存释放操作。例如System V的Executable and Linking Format(ELF)被扩充以增加支持.init和.fini两个sections，两个sections内含的对象所需的信息，分别对应静态初始化和释放操作。编译器特定的startup函数会完成平台特定的支持。</p>
+</li>
+<li><p>使用被静态初始化的objects，<font color="red"><strong>有缺点</strong></font>。如果exception handing被支持，那些objects将不能被放置于try区段之内。因为任何的throw操作必然将触发exception handing library的默认terminate()函数以致于结束程序，这对于被静态调用的constructors可能是特别无法接受的。<font color="red"><strong>另一个缺点</strong></font>是为了控制跨模块静态初始化的objects的依赖顺序，而形成的复杂度。建议根本不要用需要静态初始化的global objects（虽然这建议不普遍为C程序员接受）。</p>
+</li>
+</ul>
+<h5 id="局部静态对象（Local-Static-Objects）"><a href="#局部静态对象（Local-Static-Objects）" class="headerlink" title="局部静态对象（Local Static Objects）"></a>局部静态对象（Local Static Objects）</h5><ul>
+<li><p>假设有以下程序片段：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">const</span> Matrix&amp; <span class="title">identity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> Matrix mat_identity;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">return</span> mat_identity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  <font color="red">Local static class object</font>保证了什么样的语意？</p>
+<ul>
+<li><strong>mat_identity的constructor只能执行一次，虽然函数可能被调用多次</strong>。</li>
+<li><strong>mat_identity的destructor只能施行一次，虽然函数可能会被调用多次</strong>。</li>
+</ul>
+</li>
+<li><p>编译器的无条件构造对象会导致即使函数不曾被调用过也被程序起始时被初始化。cfont的做法是，用一个临时性对象保护mat_identity的初始化操作。第一次调用时，临时对象被评估为false，constructor被调用，然后临时对象改为true。而destructor判断则反过来。困难的是，没办法在静态的内存释放函数中存取local对象。取出local object的地址就好了……</p>
+</li>
+</ul>
+<h5 id="对象数组（Array-of-Objects）"><a href="#对象数组（Array-of-Objects）" class="headerlink" title="对象数组（Array of Objects）"></a>对象数组（Array of Objects）</h5><ul>
+<li><p>假如有数组定义：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Point knots[<span class="number">10</span>];</span><br></pre></td></tr></table></figure>
+
+<p>  如果Point没有定义constructor也没有定义destructor，那么工作不会比（<font color>build-in</font>）类型的数组更多。然而它的确定义了一个default destructor，所以这个操作轮流施行每个元素上。cfont中，使用一个叫vec_new()的函数，产生以class object构造成的数组。一些新编译器则提供了两个函数，一个分别处理有和没有内含virtual base class的class。vec_vnew()用于内含virtual base class函数的class。当然不同平台有差异：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">vec_new</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params"><span class="keyword">void</span> *<span class="built_in">array</span>,        <span class="comment">// 数组起始地址</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="keyword">size_t</span> elem_size,   <span class="comment">// class object的大小</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="keyword">int</span> elem_count,     <span class="comment">// 元素个数</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="keyword">void</span> (*constructor)(<span class="keyword">void</span>*), <span class="comment">// 函数指针</span></span></span></span><br><span class="line"><span class="function"><span class="params"><span class="keyword">void</span> (*destructor)(<span class="keyword">void</span>*, <span class="keyword">char</span>)</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>  <strong>参数array如果持有不具名数组地址（knots），就是0，意味着数组经由应用程序new运算符动态配置于heap中</strong>。<br>  下面是编译器可能针对10个Point元素所做的vec_new()调用操作：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Point knots[<span class="number">10</span>];</span><br><span class="line">vec_new(&amp;knots, <span class="keyword">sizeof</span>(Point), <span class="number">10</span>, &amp;Point::Point, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>  如果Point定义了一个destructor，当knots结束时destructor也施行于10个Point元素身上。这时经由一个类似vec_delete()的<font color="red">runtime library</font>：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">vec_delete</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">void</span> *<span class="built_in">array</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">size_t</span> elem_size,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">int</span> elem_count,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">void</span> (*destructor)(<span class="keyword">void</span>*, <span class="keyword">char</span>)</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>  对于以下的组成方式：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Point knots[<span class="number">10</span>] = &#123;</span><br><span class="line">    Point(),</span><br><span class="line">    Point(<span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">0.5</span>),</span><br><span class="line">    <span class="number">-1.0</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>  对于明显获得初值的元素，vec_new()不再有必要。对于尚未初始化的元素，施行方式则像没有explicit initialization list的class elemnts一样：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++伪码</span></span><br><span class="line">Point knots[<span class="number">10</span>];</span><br><span class="line">Point::Point(&amp;knots[<span class="number">0</span>]);</span><br><span class="line">Point::Point(&amp;knots[<span class="number">1</span>], <span class="number">1.0</span>, <span class="number">1.0</span>, <span class="number">0.5</span>);</span><br><span class="line">Point::Point(&amp;knots[<span class="number">2</span>], <span class="number">-1.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>);</span><br><span class="line"><span class="comment">// 初始化剩余7个元素</span></span><br><span class="line">vec_new(&amp;knots+<span class="number">3</span>, <span class="keyword">sizeof</span>(Point), <span class="number">7</span>, &amp;Point:Piont, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h5 id="Default-Constructors和数组"><a href="#Default-Constructors和数组" class="headerlink" title="Default Constructors和数组"></a>Default Constructors和数组</h5><h4 id="6-2-new和delete运算符"><a href="#6-2-new和delete运算符" class="headerlink" title="6.2 new和delete运算符"></a>6.2 new和delete运算符</h4><ul>
+<li><p>运算符new的使用，看起来似乎是单一运算，像这样：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *pi = <span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<p>  它由两个<font color="red">步骤完成</font>：</p>
+<ol>
+<li><p><strong>通过new运算符函数实例，分配内存</strong>。</p>
+</li>
+<li><p><strong>为配置的内存初始化</strong>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *pi;</span><br><span class="line"><span class="keyword">if</span> (pi = __new(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)))</span><br><span class="line">    *pi = <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>pi所指对象的生命因delete而结束。所有后继对pi的参考操作不再保证有良好的行为。虽然地址上的对象不再合法，地址本身仍然代表一个合法的程序空间。因此pi能继续被使用，但不是个合法的编程风格。</p>
+</li>
+</ol>
+</li>
+<li><p>以constructor分配一个class object，情况类似：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Ponit3d *origin = <span class="keyword">new</span> Point3d;</span><br><span class="line"><span class="comment">// 转换</span></span><br><span class="line">Point3d *origin;</span><br><span class="line"><span class="keyword">if</span> (origin = __new(<span class="keyword">sizeof</span>(Point3d)))</span><br><span class="line">    origin = Point3d::Point3d(origin);</span><br><span class="line"><span class="comment">// 如果有exception hading，情况会复杂</span></span><br><span class="line"><span class="keyword">if</span> (origin = __new(<span class="keyword">sizeof</span>(Point3d))) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        origin = Point3d::Point3d(origin);</span><br><span class="line">    &#125; <span class="keyword">catch</span> ( ... ) &#123;</span><br><span class="line">        __delete(origin);</span><br><span class="line">        <span class="keyword">throw</span>;  <span class="comment">// 继续抛出</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  Destructor情况类似：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> origin;</span><br><span class="line"><span class="comment">// 变成</span></span><br><span class="line"><span class="keyword">if</span> (origin != <span class="number">0</span>) &#123;</span><br><span class="line">    Point3d::~Point3d(origin);</span><br><span class="line">    __delete(origin);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 如果有exception handing</span></span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>  new运算符实现：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (size == <span class="number">0</span>)</span><br><span class="line">        size = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">void</span> *last_alloc;</span><br><span class="line">    <span class="keyword">while</span> (!(last_alloc = <span class="built_in">malloc</span>(size)))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_new_handler)</span><br><span class="line">            (*_new_handler)();</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> last_alloc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  虽然这么写是合法的：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> T[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>但语言要求每次new调用都返回独一无二的指针。解决问题的传统方法是传回一个指针，指向一个默认为1-byte的内存区块（这就是为什么程序代码中size被设为1的原因）</strong>。这个程序的有趣之处在于，它允许使用者提供一个属于自己的_new_handler()函数。</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">extern</span> vodi <span class="keyword">operator</span> <span class="title">edlete</span><span class="params">(<span class="keyword">void</span> *ptr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ptr)</span><br><span class="line">        <span class="built_in">free</span>((<span class="keyword">char</span>*)ptr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h5 id="针对数组的new语意"><a href="#针对数组的new语意" class="headerlink" title="针对数组的new语意"></a>针对数组的new语意</h5><ul>
+<li><p>new一个数组；</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p_array = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>];</span><br><span class="line"><span class="comment">// 转化</span></span><br><span class="line"><span class="keyword">int</span> *p_array = (<span class="keyword">int</span>*)__new(<span class="number">5</span> * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br></pre></td></tr></table></figure>
+
+<p>  vec_new()不会被调用，因为它主要功能是把default constructor施行于class objects所组成的数组的每个元素身上。</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Point3d *p_array = <span class="keyword">new</span> Point3d[<span class="number">10</span>];</span><br><span class="line"><span class="comment">// 编译</span></span><br><span class="line">Point3d *p_array;</span><br><span class="line">p_array = vec_new(<span class="number">0</span>, <span class="keyword">sizeof</span>(Point3d), <span class="number">10</span>, &amp;Point3d::Point3d, &amp;Point3d::~Point3d);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>应该如何记录元素个数？一个方法是为vec_new()传回的每个内存块配置一个额外的word，然后元素个数藏在word中，这叫<font color="red">cookie</font>。原始编译器有两个用来存取cookie：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> *pv;</span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> __insert_new_array(PV array_key, <span class="keyword">int</span> elem_count);</span><br><span class="line"><span class="comment">// 表格中取出并移除array_key，传回不是elem_count则传回-1</span></span><br><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> __remove_old_array(PV array_key);</span><br><span class="line"><span class="comment">// cfront vec_new()</span></span><br><span class="line">PV __vec_new(PV ptr_array, <span class="keyword">int</span> elem_count, <span class="keyword">int</span> size, PV construct)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 如果ptr_array是0，从heap中配置数组。</span></span><br><span class="line">    <span class="keyword">int</span> alloc = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> array_sz = elem_count == <span class="number">0</span>)</span><br><span class="line">        ptr_array = PV(<span class="keyword">new</span> <span class="keyword">char</span>[array_sz]);</span><br><span class="line">    <span class="keyword">if</span> (ptr_array == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 把数组元素个数放到cache中</span></span><br><span class="line">    <span class="keyword">int</span> status = __insert_new_array(ptr_array, elem_count);</span><br><span class="line">    <span class="keyword">if</span> (status === <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (alloc)</span><br><span class="line">            <span class="keyword">delete</span> ptr_array;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (construct) &#123;</span><br><span class="line">        <span class="keyword">register</span> <span class="keyword">char</span>* elem = (<span class="keyword">char</span>*)ptr_array;</span><br><span class="line">        <span class="keyword">register</span> <span class="keyword">char</span>* lim = elem + array_sz;</span><br><span class="line">        <span class="comment">// PF是typedef，代表函数指针</span></span><br><span class="line">        <span class="keyword">register</span> PF fp = PF(constructor);</span><br><span class="line">        <span class="keyword">while</span> (elem &lt; lim) &#123;</span><br><span class="line">            (*fp)((<span class="keyword">void</span>*)elem);</span><br><span class="line">            <span class="comment">// 下一个元素</span></span><br><span class="line">            elem += size;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> PV(ptr_array);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h5 id="Placement-Operator-new的语意"><a href="#Placement-Operator-new的语意" class="headerlink" title="Placement Operator new的语意"></a>Placement Operator new的语意</h5><ul>
+<li><p>有一个预先定义好的重载的（overloaded）new运算符，称为<font colorr="red"><strong>placement oeprator new</strong></font>。它需要第二个参数，类型为void*，调用方式如下:</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Point2w *ptw = <span class="keyword">new</span>(arena) Point2w;</span><br></pre></td></tr></table></figure>
+
+<p>  arena指向内存中的区块，用来放置新的Point2w object。placement operator new的实现方法很平凡：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span>, <span class="keyword">void</span> *p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  placement new operator的强大之处在于，编译系统保证object的constructor会施行于其上：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Point2w *ptw = (Point2w*)arena;</span><br><span class="line"><span class="keyword">if</span> (ptw != <span class="number">0</span>)</span><br><span class="line">    ptw-&gt;Point2w::Point2w();</span><br></pre></td></tr></table></figure>
+
+<p>  对于arena表现的真正指针的类型，derived class很明显不在支持之列。对于derived class，或是其他没有关联的类型，行为虽然并非不合法，却也未经定义：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 可以这么配置</span></span><br><span class="line"><span class="keyword">char</span> *arena = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="keyword">sizeof</span>(Point2w)];</span><br><span class="line"><span class="comment">// 相同object可以这么获得</span></span><br><span class="line">Point2sw *arena = <span class="keyword">new</span> Point2w;</span><br><span class="line"><span class="comment">// 一般placement new operator并不支持多态。</span></span><br><span class="line"><span class="comment">// 如果derived class比base class大，Point3w的constructor会导致严重破坏。</span></span><br><span class="line">Point2w *p2w = <span class="keyword">new</span> (arena) Point3w;</span><br></pre></td></tr></table></figure>
+
+<p>  Placement new operator引入C++2.0时，最晦涩难懂的问题就是：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Base</span> &#123;</span> <span class="keyword">int</span> j; <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>; &#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Derived</span> :</span> Base &#123; <span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span></span>; &#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fooBar</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Base b;</span><br><span class="line">    b.f();      <span class="comment">// Base::f()被调用</span></span><br><span class="line">    b.~Base();</span><br><span class="line">    <span class="keyword">new</span>(&amp;b) Derived;    </span><br><span class="line">    b.f();      <span class="comment">// 哪个f()被调用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="6-3-临时性对象（Temporary-Objects）"><a href="#6-3-临时性对象（Temporary-Objects）" class="headerlink" title="6.3 临时性对象（Temporary Objects）"></a>6.3 临时性对象（Temporary Objects）</h4><ul>
+<li><p>如果有函数：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">T <span class="keyword">operator</span>+(<span class="keyword">const</span> T&amp;, <span class="keyword">const</span> T&amp;);</span><br></pre></td></tr></table></figure>
+
+<p>  那么两个此对象的a和b进行<code>a+b;</code>。会产生临时变量放置传回的对象。详细过程是产生临时性对象，放置结果，使用T的copy constructor，把临时性对象当作c的初始值。当然，视operator+()定义而定，NRV优化可能实施起来。这导致直接求表达式结果，避免执行copy constructor和具名对象的destructor。至于会用哪种方式初始化，C++ Standard允许编译器有临时性对象的完全自由度：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">T c = a + b;</span><br><span class="line"><span class="comment">// 而其中的加法运算符被定义为</span></span><br><span class="line">T <span class="keyword">operator</span>+(<span class="keyword">const</span> T&amp;, <span class="keyword">const</span> T&amp;);</span><br><span class="line"><span class="comment">// 或</span></span><br><span class="line">T T::<span class="keyword">operator</span>+(<span class="keyword">const</span> T&amp;);</span><br></pre></td></tr></table></figure>
+
+<p>  那么实现根本<font color="red">不产生临时性变量</font>。如果以：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c = a + b;</span><br></pre></td></tr></table></figure>
+
+<p>  不能够忽略，它会导致下面结果：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">T temp;</span><br><span class="line">temp.<span class="keyword">operator</span>+(a, b);   （<span class="number">1</span>）</span><br><span class="line">c.<span class="keyword">operator</span>=(temp);      （<span class="number">2</span>）</span><br><span class="line">temp.T::~T();</span><br></pre></td></tr></table></figure>
+
+<p>  （1）那行意味着为构造的临时对象赋值给operator+()。意思是要么<strong>表达式结果被copy constructed到临时对象中</strong>，要么<strong>以临时对象取代NRV</strong>。然而不管哪一种情况都有问题。运算符函数并不为外加参数调用destructor（它期望新内存），所以需要在调用前先调用destructor。然而，<strong>转换语意被用来把copy assignment运算符的隐式调用操作和destructor和copy constructor来代替assignment操作</strong>。</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c.T::~T();</span><br><span class="line">c.T::T(a + b);</span><br></pre></td></tr></table></figure>
+
+<p>  而以上操作都可以由使用者供应，而且它还会产生临时变量。</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">T c = a + b;</span><br><span class="line"><span class="comment">// 上面的比下面的操作更有效率被编译器转化</span></span><br><span class="line">c = a + b;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三种形式是，没有目标对象：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a + b</span><br><span class="line"><span class="comment">// 不论怎么种情况</span></span><br><span class="line">String v;</span><br><span class="line">v = s + t + u;</span><br><span class="line"><span class="comment">// 或</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%s\n"</span>, s + t);</span><br></pre></td></tr></table></figure>
+
+<p> 都会产生临时对象，与s+t相关联。上述的printf可能不保证安全，因为它的正确性和s+t何时被摧毁有关。（malloc(0)）。例如对于该算式的一个可能的pre-Standard转换，可能造成重大灾难：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++伪码</span></span><br><span class="line"><span class="comment">// 临时性对象被摧毁得太快（太早）了。</span></span><br><span class="line">String temp1 = <span class="keyword">operator</span>+(s, t);</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span> *temp2 = temp1.<span class="keyword">operator</span> <span class="keyword">const</span> <span class="keyword">char</span>*();</span><br><span class="line">temp1.~String();</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%s\n"</span>, temp2);  <span class="comment">// temp2来自何方？</span></span><br></pre></td></tr></table></figure>
+
+<p> 一种转换方式是在调用printf()之后实施String destructor。<font color="red">标准规格上</font>说：<font color="red"><strong>临时性对象的被摧毁，应该是对完整表达式（full-expression）求值过程种的最后一个步骤。该完整表达式造成临时对象的产生</strong></font>。<strong>完整表达式是被包裹的表达式种最外围的那个表达式</strong>。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// tertiary full expression with 5 sub-expressions</span></span><br><span class="line">((objA &gt; <span class="number">1024</span>) &amp;&amp; (objB &gt; <span class="number">1024</span>)) ? objA + objB : foo(objA, objB);</span><br></pre></td></tr></table></figure>
+
+<p> 五个子算式内含在“？：完整表达式”中。<strong>任何子表达式所产生的任何临时对象，都应该在完整表达式被求值完成后，才可以毁去</strong>。  p273</p>
+</li>
+<li><p>临时性对象的生命规则有两个例外：</p>
+<ul>
+<li><p><strong>第一个例外发生在表达式被用来初始化一个object时</strong>。如果某个对象progNameVersion的初始化需要调用copy constructor，那么临时性对象的析构就不是我们期望的。C++ Standard要求说：<font color="red"><strong>凡持有表达式执行结果的临时性对象，应该存留到object的初始化操作完成为止</strong></font>。</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* progNameVersion = progName + progVersion;</span><br><span class="line"><span class="comment">// C++ pseudo Code</span></span><br><span class="line">String temp;</span><br><span class="line"><span class="keyword">operator</span>+(temp, progName, progVersion);</span><br><span class="line">progNmaeVersion = temp.String::<span class="keyword">operator</span> <span class="keyword">char</span>*();</span><br><span class="line">temp.String::~String();</span><br></pre></td></tr></table></figure>
+
+<p>  progNameVersion指向未定义的heap内存。</p>
+</li>
+<li><p><strong>第二个例外是当一个临时性对象被一个reference绑定时</strong>，例如：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> String &amp;space = <span class="string">" "</span>;</span><br><span class="line"><span class="comment">// 产生代码</span></span><br><span class="line"><span class="comment">// C++ pseudo Code</span></span><br><span class="line">String temp;</span><br><span class="line">temp.String::String(<span class="string">" "</span>);</span><br><span class="line"><span class="keyword">const</span> String &amp;space = temp;</span><br></pre></td></tr></table></figure>
+
+<p>  很明晰那，临时性对象被摧毁，reference就没什么用了。所以Standard说：<br>  <font color="red"><strong>如果临时性对象被绑定与reference，对象将残留，直到reference的生命结束，直到临时对象的生命范畴（scope）结束</strong></font>。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="临时性对象的迷思（神话、传说）"><a href="#临时性对象的迷思（神话、传说）" class="headerlink" title="临时性对象的迷思（神话、传说）"></a>临时性对象的迷思（神话、传说）</h5>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/第五章-构造、析构、拷贝语意学/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3044,430 +3594,6 @@ CONTAINER</code></p>
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/PostgreSQL安装/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/12/PostgreSQL安装/" itemprop="url">PostgreSQL安装.md</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T20:52:46+08:00">
-                2020-06-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2020-06/" itemprop="url" rel="index">
-                    <span itemprop="name">2020.06</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a href="https://www.postgresql.org/" target="_blank" rel="noopener">PostgreSQL官网</a></p>
-<h3 id="安装依赖："><a href="#安装依赖：" class="headerlink" title="安装依赖："></a>安装依赖：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># centos</span></span><br><span class="line">$ yum -y install readline-devel zlib-devel gcc gcc-c++ zlib readline</span><br><span class="line"><span class="comment"># debian/ubuntu</span></span><br><span class="line">$ apt-get install -y gcc make</span><br><span class="line">$ apt-get install -y libreadline-dev zlib1g zlib1g.dev</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装PostgreSQL："><a href="#安装PostgreSQL：" class="headerlink" title="安装PostgreSQL："></a>安装PostgreSQL：</h3><p><a href="https://sandbox-experiment-resource-north-4.obs.cn-north-4.myhuaweicloud.com/postgresql-arm/postgresql-10.3.tar.gz" target="_blank" rel="noopener">postgresql-10.3(maybe too<br>old)</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://sandbox-experiment-resource-north-4.obs.cn-north-4.myhuaweicloud.com/postgresql-arm/postgresql-10.3.tar.gz</span><br><span class="line">$ tar -zxvf postgresql-10.3.tar.gz -C /opt/</span><br><span class="line">$ <span class="built_in">cd</span> /opt/postgresql-*/</span><br><span class="line">$ ./configure --build=arm-linux --host=arm-linux --prefix=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line"><span class="comment"># canuse：./configure --prefix=/usr/local/pgsql --with-blocksize=8 \</span></span><br><span class="line"><span class="comment"># --enable-dtrace --enable-debug --enable-thread-safety</span></span><br><span class="line"><span class="comment"># --with-libxml --with-python --with-openssl</span></span><br><span class="line"><span class="comment"># $ make world</span></span><br><span class="line"><span class="comment"># $ make check-world (by normal user)</span></span><br><span class="line"><span class="comment"># $ make install-world</span></span><br><span class="line">$ make &amp;&amp; make install &amp;&amp; make clean</span><br></pre></td></tr></table></figure>
-
-<h3 id="授权用户："><a href="#授权用户：" class="headerlink" title="授权用户："></a>授权用户：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ adduser postgres</span><br><span class="line">$ chown -R postgres:postgres /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ ls -ld /usr/<span class="built_in">local</span>/pgsql</span><br></pre></td></tr></table></figure>
-
-<h3 id="配置环境变量："><a href="#配置环境变量：" class="headerlink" title="配置环境变量："></a>配置环境变量：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ su postgres</span><br><span class="line">$ vim ~/.bash_profile</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>配置文件中加入：</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> PGHOME=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ <span class="built_in">export</span> PGDATA=/usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line">$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$PGHOME</span>/bin</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>执行修改：</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span>  ~/.bash_profile &amp;&amp; psql -V</span><br></pre></td></tr></table></figure>
-
-<h3 id="初始化数据库："><a href="#初始化数据库：" class="headerlink" title="初始化数据库："></a>初始化数据库：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ initdb -D <span class="variable">$PGDATA</span> -E UTF8 --locale=C -U postgres -W</span><br></pre></td></tr></table></figure>
-
-<h3 id="启动日志服务："><a href="#启动日志服务：" class="headerlink" title="启动日志服务："></a>启动日志服务：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br><span class="line">$ chmod 755 /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="启动数据库："><a href="#启动数据库：" class="headerlink" title="启动数据库："></a>启动数据库：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span>  -l  <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br></pre></td></tr></table></figure>
-
-<h3 id="检查结果："><a href="#检查结果：" class="headerlink" title="检查结果："></a>检查结果：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ps -ef | grep <span class="string">"postgres"</span></span><br><span class="line">$ netstat -nlp | grep <span class="string">"postgres"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="修改数据库密码："><a href="#修改数据库密码：" class="headerlink" title="修改数据库密码："></a>修改数据库密码：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ psql中`\password postgres`可修改</span><br></pre></td></tr></table></figure>
-
-<h3 id="配置为远程访问："><a href="#配置为远程访问：" class="headerlink" title="配置为远程访问："></a>配置为远程访问：</h3><blockquote>
-<p>将”listen_addresses=’localhost’”取消注释并修改为任意地址’*’</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /usr/<span class="built_in">local</span>/pgsql/data/postgresql.conf</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>修改访问地址控制设置：</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /usr/<span class="built_in">local</span>/pgsql/data/pg_hba.conf</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>在”IPv4 local connections”下构建规则：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host    all             all             0.0.0.0/0               md5</span><br></pre></td></tr></table></figure>
-
-<h3 id="重启生效："><a href="#重启生效：" class="headerlink" title="重启生效："></a>重启生效：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl restart</span><br></pre></td></tr></table></figure>
-
-<h2 id="在debian中"><a href="#在debian中" class="headerlink" title="在debian中"></a>在debian中</h2><h3 id="基本安装"><a href="#基本安装" class="headerlink" title="基本安装"></a>基本安装</h3><blockquote>
-<p>创建文件<code>/etc/apt/sources.list.d/pgdg.list</code>，里面添加：</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 其中stretch-pgdg具体可以在https://www.postgresql.org/download/linux/debian/中选择具体版本得到</span></span><br><span class="line">deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Import the repository signing key, and update the package lists:</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ apt-get install -y gnupg gnupg1 gnupg2</span><br><span class="line">$ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -</span><br><span class="line">$ apt-get update</span><br><span class="line">$ apt-get install -y postgresql-10</span><br><span class="line"></span><br><span class="line">$ useradd -m -s /bin/bash postgres</span><br><span class="line">$ mkdir /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ chown postgres:postgres /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ sudo -u postgres /usr/lib/postgressql</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>数据库初始化：</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /usr/lib/postgresql/11/bin/initdb -D <span class="variable">$PGDATA</span> -E UTF8 --locale=C -U postgres -W</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>vim ~/.bash_profile</code>配置：</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PGHOME=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line"><span class="built_in">export</span> PGDATA=/usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/lib/postgresql/11/bin</span><br><span class="line"><span class="built_in">export</span> LANG=en_US.utf8</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>数据库日志：</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 大可不必</span></span><br><span class="line">$ mkdir -p /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br><span class="line">$ chmod 755 /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>can start data server <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般启动</span></span><br><span class="line">$ /usr/lib/postgresql/11/bin/pg_ctl -D /usr/<span class="built_in">local</span>/pgsql/data -l logfile start</span><br><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span> -l <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="通过配置文件"><a href="#通过配置文件" class="headerlink" title="通过配置文件"></a>通过配置文件</h4><blockquote>
-<p>启动，vim /etc/sysctl.conf中配置内核相关参数：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kernel.shmmni = 4096</span><br><span class="line">kernel.sem = 50100 64128000 50100 1280</span><br><span class="line">fs.file-max = 7672460</span><br><span class="line">net.ipv4.ip_local_port_range = 9000 65000</span><br><span class="line">net.core.rmem_default = 1048576</span><br><span class="line">net.core.rmem_max = 4194304</span><br><span class="line">net.core.wmem_default = 262144</span><br><span class="line">net.core.wmen_max = 1028576</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>vim /etc/sysconfig/iptables</code>进行防火墙设置：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-A RH-Firewall-1-INPUT -i lo -j ACCEPT</span><br><span class="line"># 允许源IP</span><br><span class="line">-A RH-Firewall-1-INPUT -s 192.168.0.0/16 -j ACCEPT</span><br><span class="line"># 允许源IP访问目标端口</span><br><span class="line">-A RH-Firewall-1-INPUT -s 192.168.1.0/24 -m state --state </span><br><span class="line">NEW -m tcp -p tcp --dport [PORT] -j ACCEPT</span><br><span class="line"># 允许任意IP访问目标端口</span><br><span class="line">-A RH-Firewall-1-INPUT -p tcp -m state --state NEW -m</span><br><span class="line">tcp --dport [PORT] -j ACCEPT</span><br><span class="line"># 不是很懂</span><br><span class="line"># 使用iptables -L -v -n查看出入规则</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在/etc/security/limits.conf配置。。。<blockquote>
-<p><code>vim /usr/local/pgsql/data/pg_hba.conf</code>中的IPv4 local<br>connections修改访问地址控制规则设置：</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host    all             all             0.0.0.0/0               md5</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<blockquote>
-<p><code>vim /usr/local/pgsql/data/postgresql.conf</code>中</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">将listen_addresses=<span class="string">'localhost'</span>取消注释并修改为任意地址<span class="string">'*0.0.0.0'</span></span><br><span class="line">superuser_reserved_connections超级用户最多连接改为13</span><br><span class="line">unix_socket_directories连接改为<span class="string">'.'</span>根目录下</span><br><span class="line">unix_socket_permissions权限为0700</span><br><span class="line"><span class="comment"># 心跳检测</span></span><br><span class="line">tcp_keepalives_idle = 60</span><br><span class="line">tcp_keepalives_interval = 10</span><br><span class="line">tcp_keepalives_count = 10</span><br><span class="line"><span class="comment"># 延迟</span></span><br><span class="line">vacuum_cost_delay = 10</span><br><span class="line">bgwritter_delay = 10ms</span><br><span class="line">wal_writer_delay = 200ms</span><br><span class="line"><span class="comment"># 归档</span></span><br><span class="line">hot_standby = on</span><br><span class="line"><span class="comment"># 日志</span></span><br><span class="line">log_destination = <span class="string">"csvlog"</span></span><br><span class="line">logging_collector = on</span><br><span class="line">log_directory = <span class="string">'pg_log'</span></span><br><span class="line">log_file_mode = 0600</span><br><span class="line">log_truncate_on_rotation = on等</span><br><span class="line"><span class="comment"># 还有checkpoint</span></span><br><span class="line">log_checkpoints = on</span><br><span class="line">log_connection = on</span><br><span class="line">log_disconnections = on</span><br><span class="line">log_error_verbosity = verbose</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>启动psql</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span> -l <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br><span class="line">$ psql -h localhost -U postgres</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/10/Qt属性系统/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/07/10/Qt属性系统/" itemprop="url">Qt属性系统</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-10T15:12:12+08:00">
-                2019-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2019-07/" itemprop="url" rel="index">
-                    <span itemprop="name">2019.07</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="1-属性定义"><a href="#1-属性定义" class="headerlink" title="1.属性定义"></a>1.属性定义</h2><p>Qt提供了<code>Q_PROPERTY()</code>宏来定义属性，它是基于<a href="https://zetzhang.github.io/2019/07/06/Qt%E5%85%83%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F/" target="_blank" rel="noopener">元对象系统</a>来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。<br>在QObject的子类中，用宏<code>Q_PROPERTY()</code>定义属性，格式是：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Q_PROPERTY(type name</span><br><span class="line">           (READ getFunction [WRITE setFunction] |</span><br><span class="line">            MEMBER memberName [(READ getFunction | WRITE setFunction)])</span><br><span class="line">           [RESET resetFunction]</span><br><span class="line">           [NOTIFY notifySignal]</span><br><span class="line">           [REVISION <span class="keyword">int</span>]</span><br><span class="line">           [DESIGNABLE <span class="keyword">bool</span>]</span><br><span class="line">           [SCRIPTABLE <span class="keyword">bool</span>]</span><br><span class="line">           [STORED <span class="keyword">bool</span>]</span><br><span class="line">           [USER <span class="keyword">bool</span>]</span><br><span class="line">           [CONSTANT]</span><br><span class="line">           [FINAL])</span><br></pre></td></tr></table></figure>
-
-<p><code>Q_PROPERTY</code>宏定义一个返回值类型为<code>type</code>，名称为<code>name</code>的属性，用<code>READ</code>、<code>WRITE</code>来作为属性的读/写操作，还有其他的一些关键字定义属性的一些操作特性。属性的类型可以是<code>QVariant</code>支持的任何类型，也可以用户自定义类型。<br><code>Q_PROPERTY</code>宏定义属性的一些主要关键字的意义如下：</p>
-<ul>
-<li><code>READ</code>指定一个读取属性值的函数，没有<code>MEMBER</code>关键字时必须设置<code>READ</code>。</li>
-<li><code>WRITE</code>指定一个设定属性值的函数，只读属性没有<code>WRITE</code>设置。</li>
-<li><code>MEMBER</code>指定一个成员变量与属性关联，成为可读可写的属性，无需再设置<code>READ</code>和<code>WRITE</code>。</li>
-<li><code>RESET</code>是可选的，用于指定一个设置属性缺省值的函数。</li>
-<li><code>NOTIFY</code>是可选的，用于设置一个信号，当属性值变化时发射此信号。</li>
-<li><code>DESIGNABLE</code>表示属性是否在Qt Designer里可见，缺省为<code>true</code>。</li>
-<li><code>CONSTANT</code>表示属性值是一个常数，对于一个对象实例，<code>READ</code>指定的函数返回值是常数，但是每个实例的返回值可以不一样。具有<code>CONSTANT</code>关键字的属性不能有<code>WRITE</code>和<code>NOTIFY</code>关键字。</li>
-<li><code>FINAL</code>表示所定义的属性不能被子类重载。</li>
-</ul>
-<p>QWidget 类定义属性的一些例子如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Q_PROPERTY(<span class="keyword">bool</span> focus READ hasFocus)</span><br><span class="line">Q_PROPERTY(<span class="keyword">bool</span> enabled READ isEnabled WRITE setEnabled)</span><br><span class="line">Q_PROPERTY(QCursor cursor READ cursor WRITE setCursor RESET unsetCursor)</span><br><span class="line">Q_PROPERTY(QString windowTitle READ windowTitle WRITE setWindowTitle NOTIFY windowTitleChanged DESIGNABLE isWindow)</span><br></pre></td></tr></table></figure>
-
-<p>上面最后这个声明包含了<code>NOTIFY windowTitleChanged</code>，表明当<code>windowTitle</code>属性发生变化时，会触发<code>windowTitleChanged</code>信号，相应的信号声明在QWidget中。(<code>this-&gt;setProperty(&quot;windowTitle&quot;, &quot;test&quot;)</code>)  </p>
-<hr>
-<p>关于<a href="http://blog.sina.com.cn/s/blog_c3c7614d0102wdm2.html" target="_blank" rel="noopener">如何使用NTOIFY和RESET——Qt爱好者</a></p>
-<hr>
-<h2 id="2-动态属性"><a href="#2-动态属性" class="headerlink" title="2.动态属性"></a>2.动态属性</h2><p>其中，不管有没有用<code>READ</code>和<code>WRITE</code>定义接口函数，只要知道属性名称，就可以通过<code>QObject::property()</code>和<code>QObject::setProperty()</code>读取和设置属性值。e.x.：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">QPushButton *button = <span class="keyword">new</span> QPushButton;</span><br><span class="line">QObject *object = button;</span><br><span class="line">object-&gt;setProperty(<span class="string">"flat"</span>, <span class="literal">true</span>);</span><br><span class="line"><span class="keyword">bool</span> isFlat = object-&gt;property(<span class="string">"flat"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>这就是<font color="red">动态属性</font>，运行时通过<code>setProperty()</code>定义新属性，并用<code>property()</code>查询，它是针对类实例定义的。<br>在数据表编辑界面上，为了高亮显示一些必填字段，可以在初始化界面为这些字段关联组件定义新的required属性：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">editName-&gt;setProperty(<span class="string">"required"</span>, <span class="string">"true"</span>);</span><br><span class="line">comboSex-&gt;setProperty(<span class="string">"required"</span>, <span class="string">"true"</span>);</span><br><span class="line">checkAgree-&gt;setProperty(<span class="string">"required"</span>, <span class="string">"true"</span>);</span><br><span class="line"><span class="comment">// 应用样式定义将必填字段背景颜色设置为亮绿色</span></span><br><span class="line">*[required=<span class="string">"true"</span>] &#123;background-color: lime&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="3-类的附加属性"><a href="#3-类的附加属性" class="headerlink" title="3.类的附加属性"></a>3.类的附加属性</h2><p>属性系统还有一个宏<code>Q_CLASSINFO()</code>，可以为类的元对象定义“名称——值”信息，如：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QMyClass</span>:</span><span class="keyword">public</span> QObject </span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">    Q_CLASSINFO(<span class="string">"author"</span>, <span class="string">"Wang"</span>)</span><br><span class="line">    Q_CLASSINFO (<span class="string">"company"</span>, <span class="string">"UPC"</span>)</span><br><span class="line">    Q_CLASSINFO(<span class="string">"version "</span>, <span class="string">"3.0.1"</span>)</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>用<code>Q_CLASSINFO()</code>宏定义附加类信息后，可以通过元对象的一些函数获取类的附加信息，如<code>classlnfo(int)</code>获取某个加信息，函数原型定义如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMetaClassInfo QMetaObject::classInfo(<span class="keyword">int</span> index) <span class="keyword">const</span></span><br></pre></td></tr></table></figure>
-
-<p>返回值是<code>QMetaClassInfo</code>类型，有<code>name()</code>和<code>value()</code>两个函数，可获得类附加信息的名称和值。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置附加值</span></span><br><span class="line">Q_CLASSINFO(<span class="string">"First"</span>, <span class="string">"Second"</span>)</span><br><span class="line"><span class="comment">// 输出键值</span></span><br><span class="line">qDebug() &lt;&lt; <span class="keyword">this</span>-&gt;metaObject()-&gt;classInfo(<span class="number">0</span>).value() &lt;&lt; <span class="string">": "</span> &lt;&lt; <span class="keyword">this</span>-&gt;metaObject()-&gt;classInfo(<span class="number">0</span>).name();</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3520,7 +3646,7 @@ CONTAINER</code></p>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

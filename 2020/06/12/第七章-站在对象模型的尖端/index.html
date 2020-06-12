@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,C++对象模型,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是template、exceptionhanding（EH）和runtime typeidentification（RTTI）（RTTI可以想象成EH的一个副作用）。  7.1 Template template原本被视为是对container classes的支持，但现在成为STL的基础。它也被用于属性混合（如内存分配机制）或互斥（m">
+<meta name="keywords" content="C++,C++对象模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第七章 站在对象模型的尖端">
+<meta property="og:url" content="http://yoursite.com/2020/06/12/第七章-站在对象模型的尖端/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是template、exceptionhanding（EH）和runtime typeidentification（RTTI）（RTTI可以想象成EH的一个副作用）。  7.1 Template template原本被视为是对container classes的支持，但现在成为STL的基础。它也被用于属性混合（如内存分配机制）或互斥（m">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-12T15:04:50.092Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第七章 站在对象模型的尖端">
+<meta name="twitter:description" content="有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是template、exceptionhanding（EH）和runtime typeidentification（RTTI）（RTTI可以想象成EH的一个副作用）。  7.1 Template template原本被视为是对container classes的支持，但现在成为STL的基础。它也被用于属性混合（如内存分配机制）或互斥（m">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/12/第七章-站在对象模型的尖端/">
+
+
+
+
+
+  <title>第七章 站在对象模型的尖端 | .27t_lBZ4oZgg_</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">.27t_lBZ4oZgg_</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/第七章-站在对象模型的尖端/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">第七章 站在对象模型的尖端</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T23:03:38+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是<font color="red">template</font>、<font color="red">exception<br>handing（<strong>EH</strong>）</font>和<font color="red">runtime type<br>identification（<strong>RTTI</strong>）</font>（RTTI可以想象成EH的一个副作用）。</li>
+</ul>
+<h4 id="7-1-Template"><a href="#7-1-Template" class="headerlink" title="7.1 Template"></a>7.1 Template</h4><ul>
+<li>template原本被视为是对container classes的支持，但现在成为STL的基础。它也被用于<strong>属性混合</strong>（如内存分配机制）或<strong>互斥（mutual exclusion）机制</strong>（使用于线程同步化控制）。它设置被用于<strong>template metaprograms</strong>技术：class expression templates将在编译时期而非执行期被评估（evaluated），因而带来效率提升。</li>
+</ul>
+<h5 id="Template的“实例化”行为（Template-Instantiation）"><a href="#Template的“实例化”行为（Template-Instantiation）" class="headerlink" title="Template的“实例化”行为（Template Instantiation）"></a>Template的“实例化”行为（Template Instantiation）</h5><ul>
+<li><p>下面的template Point class：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">Type</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">Point</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">enum</span> Status &#123; unallocated, normalized &#125;;</span><br><span class="line">    Point(Type x = <span class="number">0.0</span>, Type y = <span class="number">0.0</span>, Type z = <span class="number">0.0</span>);</span><br><span class="line">    ~Point();</span><br><span class="line">    <span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span>*, <span class="keyword">size_t</span>)</span></span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> Piont&lt;Type&gt; *freeList;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> chunkSize;</span><br><span class="line">    Type _x, _y, _z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>  实际程序中，static data members并不可用，nested enum或enumerators也一样。它们每个<font color="red">只能通过template Point class的某个实例来存取或操作</font>：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ok</span></span><br><span class="line">Point&lt;<span class="keyword">float</span>&gt;::Status s;</span><br><span class="line"><span class="comment">// error</span></span><br><span class="line">Point::Status s;</span><br></pre></td></tr></table></figure>
+
+<p>  如果定义一个指针，指向特定实例：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Point&lt;<span class="keyword">float</span>&gt; *ptr = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>  什么也没发生。<strong>因为指向class object的指针，本身并不是class object，编译器不需要直到与该class有关的任何members数据或object布局数据</strong>。如果不是pointer而是reference，又如何：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Point&lt;<span class="keyword">float</span>&gt; &amp;ref = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 内部扩展</span></span><br><span class="line">Point&lt;<span class="keyword">float</span>&gt; temporary(<span class="keyword">float</span>(<span class="number">0</span>));</span><br><span class="line"><span class="keyword">const</span> Point&lt;<span class="keyword">float</span>&gt; &amp;ref = temporary;</span><br></pre></td></tr></table></figure>
+
+<p>  所以一个class object的定义，不论是由编译器暗中地做或是程序员显式地做，都会导致template class的实例化。也就是Point中的三个nonstatic members都会被绑定。然而member functions（未被使用过的）不应该被实例化。只有在需要时才实例化。但编译器不遵循这项要求，所以由使用者来主导<font color="red">实例化</font>（<font color="green">instantiation</font>），主要有两个原因：</p>
+<ol>
+<li><strong>空间和时间效率的考虑</strong>。</li>
+<li><strong>尚未实现的机能</strong>。</li>
+</ol>
+</li>
+</ul>
+<h5 id="Template的错误报告（Error-Reporting-within-a-Template）"><a href="#Template的错误报告（Error-Reporting-within-a-Template）" class="headerlink" title="Template的错误报告（Error Reporting within a Template）"></a>Template的错误报告（Error Reporting within a Template）</h5><h5 id="Template中的名称决议法（Name-Resolution-within-a-Template）"><a href="#Template中的名称决议法（Name-Resolution-within-a-Template）" class="headerlink" title="Template中的名称决议法（Name Resolution within a Template）"></a>Template中的名称决议法（Name Resolution within a Template）</h5><ul>
+<li><p>template的两种意义：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// scope of the template definition</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">double</span> <span class="title">foo</span><span class="params">(<span class="keyword">double</span>)</span></span>;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">type</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">ScopeRules</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">invariant</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        _member = foo(_val);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">type <span class="title">type_dependent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> foo(_member);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> _val;</span><br><span class="line">    type _member;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// scope of the template declareation</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">double</span> <span class="title">foo</span><span class="params">(<span class="keyword">double</span>)</span></span>;</span><br><span class="line"><span class="comment">// scope of the template instantiation</span></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">foo</span><span class="params">(<span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="comment">// ....</span></span><br><span class="line">ScopeFules&lt;<span class="keyword">int</span>&gt; sr0;</span><br></pre></td></tr></table></figure>
+
+<p>  <strong>Template中，一个nonmember name的决议结果，是根据name的使用是否与实例化该template的参数类型有关而决定的。如果无关，就以scope of the template declareation决定name，否则以scope of the template instantiation决定name。</strong><br>  ScopeFules template中有两个foo()调用操作。它会调用foo(double)的版本，<strong>此外，_val的类型是int。因为函数的决议结果只和函数的原型（signature）有关，和函数的返回值没有关系</strong>。因此_member的类型不会影响哪一个foo()实例被选中。在scope中，只有一个foo()候选者。调用操作由scope of the template declareation决议。如果按以下方式：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sr0.type_dependent();</span><br></pre></td></tr></table></figure>
+
+<p>  它由scope of the template instantiation决议。它会调用int版本，被type把持。<br>  这意味着编译器必须保持两个scope contexts：</p>
+<ol>
+<li><strong>“scope of the template “，用于专注一般的template class</strong>。</li>
+<li><strong>“scope of the template instantiation”，用于专注特定的实例</strong>。</li>
+</ol>
+</li>
+</ul>
+<h5 id="Member-Function的实例化行为（Member-Function-Instantiation）"><a href="#Member-Function的实例化行为（Member-Function-Instantiation）" class="headerlink" title="Member Function的实例化行为（Member Function Instantiation）"></a>Member Function的实例化行为（Member Function Instantiation）</h5><ul>
+<li>对于template function的实例化（instantiation）。编译器提供了两个策略：一个是<font color="red">编译时期策略</font>，程序代码在program text file中备妥可用；另一个是<font color="red">链接时期策略</font>。</li>
+<li>如果virtual function被实例化（instantiated），其实例化点紧跟在class的实例化点后。</li>
+<li>template instantiation似乎拒绝全面自动化，虽然工作做对了，但产生出来的object files重新编译成本可能太高，以手动方式在个别object module中完成预先实例化操作（pre-instantiation）是唯一有效率的方法。</li>
+</ul>
+<h4 id="7-2-异常处理（Exception-Handing）"><a href="#7-2-异常处理（Exception-Handing）" class="headerlink" title="7.2 异常处理（Exception Handing）"></a>7.2 异常处理（Exception Handing）</h4><ul>
+<li>想要支持exception handing，编译器的主要工作就是找出catch子句，以处理被抛出的exception。这需要<strong>追踪</strong>程序堆栈中的每个函数的目前作用区域，同时编译器需要提供某种<strong>查询</strong>exception objects的方法，以直到实际类型（RTTI）。还需要某种机制<strong>管理</strong>被抛出的object，包括产生、存储、析构、清理和一般存取。</li>
+</ul>
+<h5 id="Exception-Handing快速检阅"><a href="#Exception-Handing快速检阅" class="headerlink" title="Exception Handing快速检阅"></a>Exception Handing快速检阅</h5><ul>
+<li>exception handing由三个主要组件构成：throw子句、catch子句和try区段。当一个exception被抛出去，控制权会从函数调用中释放出来，并寻找吻合的catch子句。如果没有，则调用terminate()中断例程。当控制权被放弃后，堆栈中每个函数调用也被推理（popped up）。</li>
+</ul>
+<h5 id="对Exception-Handing的支持"><a href="#对Exception-Handing的支持" class="headerlink" title="对Exception Handing的支持"></a>对Exception Handing的支持</h5><ul>
+<li>当exception发生时，编译系统完成以下事情：<ol>
+<li>检验发生throw操作的函数。</li>
+<li>决定throw操作是否在try区段中。</li>
+<li>把exception type拿来和每个catch子句比较。</li>
+<li>流程控制交到吻合的匹配的catch子句手中。</li>
+<li>如果throw不发生在try区段中，或没有catch子句吻合。那么：<ol>
+<li>摧毁active local objects。</li>
+<li>堆栈中将函数unwind掉</li>
+<li>进行堆栈的下一个函数，然后重复2·5。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<h5 id="决定throw是否发生在一个try区段中"><a href="#决定throw是否发生在一个try区段中" class="headerlink" title="决定throw是否发生在一个try区段中"></a>决定throw是否发生在一个try区段中</h5><ul>
+<li>一个函数可以想象为好几个区域：<ul>
+<li>try区段以外的区域，没有active local objects。</li>
+<li>try区段以外的区域，但有一个（或以上）的active local objects需要析构。</li>
+<li>try区段以内的区域。</li>
+</ul>
+</li>
+</ul>
+<h5 id="将exception的类型和每一个catch子句的类型做比较"><a href="#将exception的类型和每一个catch子句的类型做比较" class="headerlink" title="将exception的类型和每一个catch子句的类型做比较"></a>将exception的类型和每一个catch子句的类型做比较</h5><ul>
+<li>对于每个被抛出来的exception，编译器产生一个类型描述器，对exception的类型进行编码。如果那是derived type，编码内容包含所有base class的类型信息。</li>
+<li>类型描述器（type derscriptor）是必要的。因为exception是在执行期被处理的，object必须有自己的类型信息。RTTI正是因为支持EH而获得的副产品。</li>
+</ul>
+<h5 id="当一个实际对象在程序执行时被抛出，会发生什么事？"><a href="#当一个实际对象在程序执行时被抛出，会发生什么事？" class="headerlink" title="当一个实际对象在程序执行时被抛出，会发生什么事？"></a>当一个实际对象在程序执行时被抛出，会发生什么事？</h5><h4 id="7-3-执行期类型识别（Runtime-Type-Identification，RTTI）"><a href="#7-3-执行期类型识别（Runtime-Type-Identification，RTTI）" class="headerlink" title="7.3 执行期类型识别（Runtime Type Identification，RTTI）"></a>7.3 执行期类型识别（Runtime Type Identification，RTTI）</h4><ul>
+<li><h5 id="Type-Safe-Downcast（保证安全的向下转换操作）"><a href="#Type-Safe-Downcast（保证安全的向下转换操作）" class="headerlink" title="Type-Safe Downcast（保证安全的向下转换操作）"></a>Type-Safe Downcast（保证安全的向下转换操作）</h5></li>
+</ul>
+<h5 id="Type-Safe-Dynamic-Cast（保证安全的动态转换）"><a href="#Type-Safe-Dynamic-Cast（保证安全的动态转换）" class="headerlink" title="Type-Safe Dynamic Cast（保证安全的动态转换）"></a>Type-Safe Dynamic Cast（保证安全的动态转换）</h5><h5 id="Reference并不是Pointers"><a href="#Reference并不是Pointers" class="headerlink" title="Reference并不是Pointers"></a>Reference并不是Pointers</h5><h5 id="Typeid运算符"><a href="#Typeid运算符" class="headerlink" title="Typeid运算符"></a>Typeid运算符</h5><h4 id="7-4-效率有了，弹性呢？"><a href="#7-4-效率有了，弹性呢？" class="headerlink" title="7.4 效率有了，弹性呢？"></a>7.4 效率有了，弹性呢？</h4><h5 id="动态共享函数库（Dynamic-Shared-Libraries）"><a href="#动态共享函数库（Dynamic-Shared-Libraries）" class="headerlink" title="动态共享函数库（Dynamic Shared Libraries）"></a>动态共享函数库（Dynamic Shared Libraries）</h5><h5 id="共享内存（Shared-Memory）"><a href="#共享内存（Shared-Memory）" class="headerlink" title="共享内存（Shared Memory）"></a>共享内存（Shared Memory）</h5>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/C-对象模型/" rel="tag"># C++对象模型</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/12/第六章-执行期语意学/" rel="next" title="第六章 执行期语意学">
+                <i class="fa fa-chevron-left"></i> 第六章 执行期语意学
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/MY.jpg" alt="Ichheit">
+            
+              <p class="site-author-name" itemprop="name">Ichheit</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-1-Template"><span class="nav-number">1.</span> <span class="nav-text">7.1 Template</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Template的“实例化”行为（Template-Instantiation）"><span class="nav-number">1.1.</span> <span class="nav-text">Template的“实例化”行为（Template Instantiation）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Template的错误报告（Error-Reporting-within-a-Template）"><span class="nav-number">1.2.</span> <span class="nav-text">Template的错误报告（Error Reporting within a Template）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Template中的名称决议法（Name-Resolution-within-a-Template）"><span class="nav-number">1.3.</span> <span class="nav-text">Template中的名称决议法（Name Resolution within a Template）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Member-Function的实例化行为（Member-Function-Instantiation）"><span class="nav-number">1.4.</span> <span class="nav-text">Member Function的实例化行为（Member Function Instantiation）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-2-异常处理（Exception-Handing）"><span class="nav-number">2.</span> <span class="nav-text">7.2 异常处理（Exception Handing）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Exception-Handing快速检阅"><span class="nav-number">2.1.</span> <span class="nav-text">Exception Handing快速检阅</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对Exception-Handing的支持"><span class="nav-number">2.2.</span> <span class="nav-text">对Exception Handing的支持</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#决定throw是否发生在一个try区段中"><span class="nav-number">2.3.</span> <span class="nav-text">决定throw是否发生在一个try区段中</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#将exception的类型和每一个catch子句的类型做比较"><span class="nav-number">2.4.</span> <span class="nav-text">将exception的类型和每一个catch子句的类型做比较</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#当一个实际对象在程序执行时被抛出，会发生什么事？"><span class="nav-number">2.5.</span> <span class="nav-text">当一个实际对象在程序执行时被抛出，会发生什么事？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-执行期类型识别（Runtime-Type-Identification，RTTI）"><span class="nav-number">3.</span> <span class="nav-text">7.3 执行期类型识别（Runtime Type Identification，RTTI）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Type-Safe-Downcast（保证安全的向下转换操作）"><span class="nav-number">3.1.</span> <span class="nav-text">Type-Safe Downcast（保证安全的向下转换操作）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Type-Safe-Dynamic-Cast（保证安全的动态转换）"><span class="nav-number">3.2.</span> <span class="nav-text">Type-Safe Dynamic Cast（保证安全的动态转换）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Reference并不是Pointers"><span class="nav-number">3.3.</span> <span class="nav-text">Reference并不是Pointers</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Typeid运算符"><span class="nav-number">3.4.</span> <span class="nav-text">Typeid运算符</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-4-效率有了，弹性呢？"><span class="nav-number">4.</span> <span class="nav-text">7.4 效率有了，弹性呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#动态共享函数库（Dynamic-Shared-Libraries）"><span class="nav-number">4.1.</span> <span class="nav-text">动态共享函数库（Dynamic Shared Libraries）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#共享内存（Shared-Memory）"><span class="nav-number">4.2.</span> <span class="nav-text">共享内存（Shared Memory）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ichheit</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
