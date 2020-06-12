@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Linux,unix,APUE,TLPI,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -79,18 +79,13 @@
 
 
 
-<meta name="description" content="12345678910111213// IEEE POSIX头文件#include &amp;lt;pthread.h&amp;gt;    // POSIX线程#include &amp;lt;semaphore.h&amp;gt;  // 信号量#include &amp;lt;sys/sem.h&amp;gt;    // 有名信号量(system v)#include &amp;lt;sys/wait.h&amp;gt;   // 进程控制#inclu">
-<meta name="keywords" content="Linux,unix,APUE,TLPI">
-<meta property="og:type" content="article">
-<meta property="og:title" content="pthread_N_IPC ">
-<meta property="og:url" content="http://yoursite.com/2019/06/30/pthread-N-IPC/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content=".27t_lBZ4oZgg_">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="12345678910111213// IEEE POSIX头文件#include &amp;lt;pthread.h&amp;gt;    // POSIX线程#include &amp;lt;semaphore.h&amp;gt;  // 信号量#include &amp;lt;sys/sem.h&amp;gt;    // 有名信号量(system v)#include &amp;lt;sys/wait.h&amp;gt;   // 进程控制#inclu">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-12-07T08:14:19.458Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pthread_N_IPC ">
-<meta name="twitter:description" content="12345678910111213// IEEE POSIX头文件#include &amp;lt;pthread.h&amp;gt;    // POSIX线程#include &amp;lt;semaphore.h&amp;gt;  // 信号量#include &amp;lt;sys/sem.h&amp;gt;    // 有名信号量(system v)#include &amp;lt;sys/wait.h&amp;gt;   // 进程控制#inclu">
+<meta name="twitter:title" content=".27t_lBZ4oZgg_">
 
 
 
@@ -120,13 +115,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/06/30/pthread-N-IPC/">
+  <link rel="canonical" href="http://yoursite.com/page/2/">
 
 
 
 
 
-  <title>pthread_N_IPC  | .27t_lBZ4oZgg_</title>
+  <title>.27t_lBZ4oZgg_</title>
   
 
 
@@ -145,7 +140,8 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -248,9 +244,540 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/07/Qt信号和槽/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/07/07/Qt信号和槽/" itemprop="url">Qt信号和槽</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-07T01:38:01+08:00">
+                2019-07-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-07/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.07</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是<font color="blue">对象间通信</font>的机制，由Qt的元对象系统的支持才能实现。<br><font color="red">信号(Signal)</font>会在某种特定情况或动作下被触发。就是特殊情况下被发射的事件，而GUI程序设计的主要内容就是对界面上各组件信号的响应。<br><font color="red">槽(Slot)</font>则等同于接收并处理信号的函数。它跟一般的C++函数是一样的，可以直接被调用。但槽函数与普通函数不同的是，槽函数与一个信号关联，当信号被发射时，关联的槽函数会自动执行。<br>对于这种对象间通信，Qt隐藏了复杂的底层实现。Qt的信号与槽机制类似于“事件——响应”，但更灵活。  </p>
+<hr>
+<h2 id="1-connect-函数的不同参数形式"><a href="#1-connect-函数的不同参数形式" class="headerlink" title="1.connect()函数的不同参数形式"></a>1.connect()函数的不同参数形式</h2><ul>
+<li><code>QObject::connect()</code>函数多重函数形式，一种参数原型是：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/×</span><br><span class="line">sender是发送信号的对象名称</span><br><span class="line">signal()是信号名称，根据SIGNAL宏展开成相应字符串</span><br><span class="line">receiver是接受信号的对象名称</span><br><span class="line">slot()是槽函数名称，根据SLOT宏展开成字符串</span><br><span class="line">×/</span><br><span class="line">QMetaObject::Connection QObject::connect(<span class="keyword">const</span> QObject *sender, <span class="keyword">const</span> <span class="keyword">char</span> *signal, <span class="keyword">const</span> QObject *receiver, <span class="keyword">const</span> <span class="keyword">char</span> *method, Qt::ConnectionType type = Qt::AutoConnection)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>一般语法如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// connect()是QObject类中的一个静态函数，QObject又是所有Qt类的基类，实际调用可以忽略前面的限定符</span></span><br><span class="line"><span class="comment">// 宏SIGNAL()指信号，SLOT()指槽函数</span></span><br><span class="line">QObject::connection(sender, SIGNAL(signal()), receiver, SLOT(slot()));</span><br><span class="line"><span class="comment">// 如果带有参数，标明参数类型</span></span><br><span class="line">QObject::connection(spinNum, SIGNAL(valueChanged(<span class="keyword">int</span>)), <span class="keyword">this</span>, SLOT(updateStatus(<span class="keyword">int</span>));</span><br></pre></td></tr></table></figure>
+
+<hr>
+<ul>
+<li>另一种参数形式的connect()函数原型是：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMetaObject::Connection QObject::connect(<span class="keyword">const</span> QObject *sender, <span class="keyword">const</span> QMetaMethod &amp;signal, <span class="keyword">const</span> QObject *receiver, <span class="keyword">const</span> QMetaMethod, &amp;method, Qt::ConnectionType type = Qt::Auto Connection)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>这种具有默认参数，信号名称是唯一的，可以使用这种函数指针形式进行关联，语法如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// QLineEdit只有一个textChanged(QString)信号，通过在窗体类widget里定义一个槽函数可以将它们关联，语法如下：</span></span><br><span class="line">QObject::connection(lineEdit, &amp;QLineEdit::textChanged, <span class="keyword">this</span>, &amp;widget::on_textChanged);</span><br></pre></td></tr></table></figure>
+
+<p>但如果说类中定义有不同参数的同名信号就不能用函数指针的方式来关联信号和槽了：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// QSpinBox有两个valueChanged()信号</span></span><br><span class="line"><span class="keyword">void</span> QSpinBox::valueChanged(<span class="keyword">int</span> i);</span><br><span class="line"><span class="keyword">void</span> QSpinBox::valueChanged(<span class="keyword">const</span> QString &amp;text);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在窗体中定义一个槽函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">onValueChanged</span><span class="params">(<span class="keyword">int</span> i)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>Ctrl+B编译时将会出错：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QObject::connect(spinNum, &amp;QSpinBox::valueChanged, <span class="keyword">this</span>, &amp;widget::onValueChanged); <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><code>connect()</code>函数最后都有一个<code>Qt::ConnectionType
+type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::ConnectionType</code>是枚举类型，表示信号与槽的关联方式：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 缺省值，在信号触发时自动确定关联方式。如果发射者和接受者在同一线程，使用Qt::DirectConnection；否则使用Qt::QueuedConnection</span></span><br><span class="line">Qt::AutoConnection type;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 信号被发射时槽函数立刻执行</span></span><br><span class="line">Qt::DirectConnection type;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件循环回到接受者线程后执行槽函数</span></span><br><span class="line">Qt::QueuedConnection type;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 与Qt::QueuedConnection相似，但信号线程会阻塞到槽函数执行完毕。</span></span><br><span class="line"><span class="comment">// 注意在同一线程时不用这种方式，会死锁</span></span><br><span class="line">Qt::BlockingQueuedConnection type;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-使用sender-获得信号发送者"><a href="#2-使用sender-获得信号发送者" class="headerlink" title="2.使用sender()获得信号发送者"></a>2.使用sender()获得信号发送者</h2><p>在槽函数里，使用QObject::sender()可以获取信号发送者的指针，知道发射者的类型就可以将它类型转换成确定的类型。  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// QSpinBox的valueChanged(int)信号里可以通过sender()和qobject_cast去的发射者指针然后对发射者进行操作：</span></span><br><span class="line">QSpinBox *spinBox = qobject_cast&lt;QSpinBox *&gt;(sender());</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过sender返回并打印Button的text值</span></span><br><span class="line">QObject::connect(button1, &amp;QPushButton::clicked, [<span class="keyword">this</span>]&#123;</span><br><span class="line">    QPushButton *button = qobject_cast&lt;QPushButton *&gt;(sender());</span><br><span class="line">    qDebug() &lt;&lt; button-&gt;text();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-自定义信号及其使用"><a href="#3-自定义信号及其使用" class="headerlink" title="3.自定义信号及其使用"></a>3.自定义信号及其使用</h2><p>通过在自己设计的类中自定义信号，这个信号就是声明的函数，但这个函数不用实现，只需要发射（emit）：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在类中定义一个 ageChanged(int)</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QPerson</span> :</span> <span class="keyword">public</span> QObject</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> m_age = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">incAge</span><span class="params">()</span></span>;</span><br><span class="line">signals:</span><br><span class="line">    <span class="comment">// void返回类型，可以多参数，但函数无需实现</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ageChanged</span><span class="params">(<span class="keyword">int</span> value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在incAge()函数中发射信号,当m_age改变时，就emit信号。至于有无信号关联的槽函数，发射者不管</span></span><br><span class="line"><span class="keyword">void</span> QPerson::incAge()</span><br><span class="line">&#123;</span><br><span class="line">    m_age++;</span><br><span class="line">    <span class="function">emit <span class="title">ageChanged</span><span class="params">(m_age)</span></span>; <span class="comment">// emit signal</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-关于信号和槽的使用上的规则"><a href="#4-关于信号和槽的使用上的规则" class="headerlink" title="4.关于信号和槽的使用上的规则"></a>4.关于信号和槽的使用上的规则</h2><ol>
+<li>一个信号可以连接多个槽</li>
+<li>多个信号可以连接同一个槽</li>
+<li>一个信号可以连接另一个信号</li>
+<li>信号与槽的个数和类型需要一致，至少信号的参数不能少于槽的参数</li>
+<li>使用信号和槽的类中，需要在类定义中加入宏Q_OBJECT</li>
+<li>当信号被发射时，关联的槽函数会被立即执行，直到执行完毕才会执行余下的程序流程。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/06/Qt元对象系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/07/06/Qt元对象系统/" itemprop="url">Qt元对象系统</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-07-06T13:01:04+08:00">
+                2019-07-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-07/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.07</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="元对象系统"><a href="#元对象系统" class="headerlink" title="元对象系统"></a>元对象系统</h3><p>Qt的<font color="green">元对象编译器</font>(<font color="red">Meta-Object Compiler, MOC</font>)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个<code>Q_OBJECT</code>宏，MOC才对类中的信号与槽的代码进行预处理。<br>Qt的<font color="green">元对象系统</font>(<font color="red">Meta-Object System</font>)提供了对象之间通信的<strong>信号与槽机制</strong>、<strong>运行时类型信息</strong>和<strong>动态属性系统</strong>。<br>除了信号与槽机制，元对象还提供如下一些功能：</p>
+<ul>
+<li><p><code>QObject::metaObject()</code>：返回类关联的元对象，元对象类<code>QMetaObject</code>包含了访问元对象的接口函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g. 运行时返回类的名称字符串</span></span><br><span class="line">QObject *obj = <span class="keyword">new</span> QPushButton;</span><br><span class="line">obj-&gt;metaObject()-&gt;classNmae;   <span class="comment">// 返回"QPushButton"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>QMetaObject::newInstance()</code>：创建类的一个新的实例</p>
+</li>
+<li><p><code>QObject::inherits(const char *className)</code>：判断对象是否是名为className的类，或者QObject的子类的实例</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g.</span></span><br><span class="line">QTimer *timer = <span class="keyword">new</span> QTimer;</span><br><span class="line">timer-&gt;inherits(<span class="string">"Qtimer"</span>);          <span class="comment">// return true</span></span><br><span class="line">timer-&gt;inherits(<span class="string">"QObject"</span>);         <span class="comment">// return true</span></span><br><span class="line">timer-&gt;inherits(<span class="string">"QABstraactButton"</span>);<span class="comment">// return false</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>qobject_cast()</code>：dynamic cast功能</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g. 假设QMyWidget是QWidget的子类并且类中声明了Q_OBJECT宏</span></span><br><span class="line">QObject *obj = <span class="keyword">new</span> QMyWidget;</span><br><span class="line">QWidget *widget = qobject_cast&lt;QWidget *&gt;(obj);         <span class="comment">// 向上转型</span></span><br><span class="line">QMyWidget *myWidget = qobject_cast&lt;QMyWidget *&gt;(obj);   <span class="comment">// 向下转型</span></span><br><span class="line">QLabel *label = qobject_cast&lt;QLabel *&gt;(obj);            <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>QObject::tr()</code>和<code>QObject::trUtf8()</code>用于翻译字符串，用于多语言界面设计</p>
+</li>
+<li><p><code>QObject::setProperty()</code>和<code>QObject::property()</code>函数用于通过属性名称动态设置和获取属性值</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/30/关于个人Blog的基础搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/06/30/关于个人Blog的基础搭建/" itemprop="url">个人Blog</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-30T14:43:16+08:00">
+                2019-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-09/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.09</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="nvm：node-js版本管理工具安装"><a href="#nvm：node-js版本管理工具安装" class="headerlink" title="nvm：node.js版本管理工具安装"></a><font color="red">nvm</font>：node.js版本管理工具安装</h2><p>nvm是可以管理不同版本的node和npm，所以我们通过nvm来安装Node.js<br>nvm的Github地址[nvm][<a href="https://github.com/nvm-sh/nvm]" target="_blank" rel="noopener">https://github.com/nvm-sh/nvm]</a></p>
+<h3 id="安装nvm"><a href="#安装nvm" class="headerlink" title="安装nvm"></a>安装nvm</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cURL</span></span><br><span class="line">$ curl https://raw.github.com/creationix/nvm/v0.33.11/install.sh | sh</span><br><span class="line"><span class="comment"># Wget</span></span><br><span class="line">$ wget -qO- https://raw.github.com/creationix/nvm/v0.33.11/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="进入～-nvm目录下配置环境"><a href="#进入～-nvm目录下配置环境" class="headerlink" title="进入～/.nvm目录下配置环境"></a>进入～/.nvm目录下配置环境</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.nvm/ &amp;&amp; touch .bash_profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="向-bash-profile中写入如下内容"><a href="#向-bash-profile中写入如下内容" class="headerlink" title="向.bash_profile中写入如下内容"></a>向.bash_profile中写入如下内容</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NVM_DIR=<span class="string">"<span class="variable">$HOME</span>/.nvm"</span></span><br><span class="line">[ -s <span class="string">"<span class="variable">$NVM_DIR</span>/nvm.sh"</span> ] &amp;&amp; \. <span class="string">"<span class="variable">$NVM_DIR</span>/nvm.sh"</span> <span class="comment"># This loads nvm</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="执行文件配置"><a href="#执行文件配置" class="headerlink" title="执行文件配置"></a>执行文件配置</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> .bash_profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="这时候就安装成功了"><a href="#这时候就安装成功了" class="headerlink" title="这时候就安装成功了"></a>这时候就安装成功了</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm --version</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nvm install stable</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><p><font color="red">npm</font>是世界上最大的软件注册表，每个星期有30亿次下载量</p>
+<h3 id="npm设置为淘宝的镜像源"><a href="#npm设置为淘宝的镜像源" class="headerlink" title="npm设置为淘宝的镜像源"></a>npm设置为淘宝的镜像源</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g cnpm --registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装hexo-1"><a href="#安装hexo-1" class="headerlink" title="安装hexo"></a>安装hexo</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cnpm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<h3 id="在想要创建的文件夹下初始化hexo目录"><a href="#在想要创建的文件夹下初始化hexo目录" class="headerlink" title="在想要创建的文件夹下初始化hexo目录"></a>在想要创建的文件夹下初始化hexo目录</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用hexo"><a href="#使用hexo" class="headerlink" title="使用hexo"></a>使用hexo</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo s        <span class="comment"># 启动hexo</span></span><br><span class="line">$ hexo clean    <span class="comment"># 删除数据库</span></span><br><span class="line">$ hexo g        <span class="comment"># update generate</span></span><br></pre></td></tr></table></figure>
+
+<p>然后就可以在浏览器地址栏中输入localhost:4000访问到博客了</p>
+<hr>
+<h2 id="部署到Github"><a href="#部署到Github" class="headerlink" title="部署到Github"></a>部署到Github</h2><p>通过部署到远端服务器来公开使用</p>
+<h3 id="在github上创建名为-你的ID-github-io-的项目"><a href="#在github上创建名为-你的ID-github-io-的项目" class="headerlink" title="在github上创建名为[你的ID.github.io]的项目"></a>在github上创建名为[你的ID.github.io]的项目</h3><h3 id="安装部署插件"><a href="#安装部署插件" class="headerlink" title="安装部署插件"></a>安装部署插件</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cnpm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置-config-yml"><a href="#设置-config-yml" class="headerlink" title="设置_config.yml"></a>设置_config.yml</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment下配置</span></span><br><span class="line">    <span class="built_in">type</span>: git</span><br><span class="line">    repo: [your github repository url]</span><br><span class="line">    branch: master</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署到远端"><a href="#部署到远端" class="headerlink" title="部署到远端"></a>部署到远端</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo d</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hoex</a>文档说明</p>
+<p>Reference from <a href="https://www.codesheep.cn/" target="_blank" rel="noopener">codesheep</a></p>
+<h3 id="hexo-console-rename插件安装"><a href="#hexo-console-rename插件安装" class="headerlink" title="hexo-console-rename插件安装"></a>hexo-console-rename插件安装</h3><p><a href="https://github.com/timnew/hexo-console-rename" target="_blank" rel="noopener">hexo-console-rename</a> install using npm</p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-console-rename@3 --save</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
 
   
 
@@ -280,7 +807,9 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">pthread_N_IPC </h1>
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/06/30/pthread-N-IPC/" itemprop="url">pthread_N_IPC </a></h1>
         
 
         <div class="post-meta">
@@ -352,7 +881,9 @@
       
 
       
-        <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// IEEE POSIX头文件</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;    // POSIX线程</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;semaphore.h&gt;  // 信号量</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/sem.h&gt;    // 有名信号量(system v)</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;   // 进程控制</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;     // 符号常量</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;  // 基本系统数据类型</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;      // 文件控制</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;   // 文件状态</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ipc.h&gt;    // IPC</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/shm.h&gt;    // XSI共享存储</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/msg.h&gt;    // XSI 消息队列</span></span></span><br></pre></td></tr></table></figure>
+        
+          
+            <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// IEEE POSIX头文件</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;    // POSIX线程</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;semaphore.h&gt;  // 信号量</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/sem.h&gt;    // 有名信号量(system v)</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;   // 进程控制</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;     // 符号常量</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;  // 基本系统数据类型</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;      // 文件控制</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;   // 文件状态</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ipc.h&gt;    // IPC</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/shm.h&gt;    // XSI共享存储</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/msg.h&gt;    // XSI 消息队列</span></span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ISO C</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;     // 验证程序断言</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;      // 出错码</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;      // 标准I/O库</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;     // 实用函数</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;     // 信号</span></span></span><br></pre></td></tr></table></figure>
 
@@ -420,6 +951,8 @@
 
 <p>异步IO、共享内存、内存映射文件、内存锁定、实时性时钟和定时器、备选调度策略、实时性信号、消息队列、信号量</p>
 
+          
+        
       
     </div>
     
@@ -434,42 +967,14 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Linux/" rel="tag"># Linux</a>
-          
-            <a href="/tags/unix/" rel="tag"># unix</a>
-          
-            <a href="/tags/APUE/" rel="tag"># APUE</a>
-          
-            <a href="/tags/TLPI/" rel="tag"># TLPI</a>
-          
-        </div>
+
+      
+
       
 
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/06/30/关于个人Blog的基础搭建/" rel="prev" title="个人Blog">
-                个人Blog <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -479,11 +984,14 @@
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
 
 
           </div>
@@ -491,10 +999,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -725,10 +1229,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 
