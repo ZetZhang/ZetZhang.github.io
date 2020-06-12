@@ -259,6 +259,465 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/一些调试工具命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/13/一些调试工具命令/" itemprop="url">一些调试工具命令</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-13T00:09:41+08:00">
+                2020-06-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-04/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.04</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="测试工具"><a href="#测试工具" class="headerlink" title="测试工具"></a>测试工具</h2><blockquote>
+<ul>
+<li>三剑客<a href="#grep">grep</a>、<a href="#sed">sed</a>、<a href="#awk">awk</a>的使用</li>
+<li>网络分析工具<a href="#tcpdump">tcpdump</a>的使用</li>
+<li>其他：netstat、lsof、nc、tcpcopy、prerf、sysctl、<a href="#strace">strace</a>、prove等</li>
+<li>性能检测工具：<a href="#perf">perf</a>、ftrace、vmstat</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="Linux三剑客"><a href="#Linux三剑客" class="headerlink" title="Linux三剑客"></a>Linux三剑客</h3><hr>
+<h4 id="grep"><a href="#grep" class="headerlink" title="grep"></a><span id="grep">grep</span></h4><h5 id="用法：grep-OPTION-PATTERN-FILE"><a href="#用法：grep-OPTION-PATTERN-FILE" class="headerlink" title="用法：grep [OPTION...] PATTERN [FILE...]"></a>用法：<code>grep [OPTION...] PATTERN [FILE...]</code></h5><h5 id="选项："><a href="#选项：" class="headerlink" title="选项："></a>选项：</h5><ul>
+<li>-b：每一行打印字符偏移量</li>
+<li>-c：统计符合要求的行数</li>
+<li>-E：使用egrep</li>
+<li>-f：从文件中取匹配模板</li>
+<li>-F：不使用正则快速搜索</li>
+<li>-h：不显示文件名</li>
+<li>-H：显式</li>
+<li>-i：忽略大小写</li>
+<li>-l：仅列出符合要求的文件，不列出具体行</li>
+<li>-L：与-l相反</li>
+<li>-n：显示符合要求的行及行号</li>
+<li>-p：silence模式</li>
+<li>-v：取反</li>
+<li>-r：遍历子目录</li>
+<li>-s：no-message</li>
+<li>-w：匹配完整的词</li>
+<li>-x：匹配完整的行</li>
+<li>-An：</li>
+<li>-Bn：</li>
+<li>-Cn：</li>
+<li>正则规则：<ul>
+<li><code>[]</code>：表示集合中的内容，如<code>[abc]</code>匹配<code>a</code>或<code>b</code>或<code>c</code>。<ul>
+<li><code>[^]</code>：取反</li>
+<li><code>[a-z]</code>：小写字母</li>
+<li><code>[A-Z]</code>：大写字母</li>
+<li><code>[0-9]</code>：数字</li>
+</ul>
+</li>
+<li><code>^</code>和<code>$</code>：表示行首和行位，<code>^$</code>表示空行</li>
+<li><code>*</code>：通配符，表示多个重复</li>
+<li><code>.</code>：单个。<code>.*</code>表示0个或多个</li>
+<li><code>{n, m}</code>：个数范围，n个到m个之间，需要用<code>/</code>转义，egrep下不需要转义</li>
+<li><code>egrep</code>：<ul>
+<li><code>+</code>：类似<code>.</code>，1个或多个</li>
+<li><code>?</code>：表示0个或多个</li>
+<li><code>|</code>：表示关系，如<code>&#39;ab|cd|def&#39;</code>表示<code>ab</code>、<code>cd</code>或<code>def</code>的串</li>
+<li><code>()</code>：将部分内容合成单元</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="sed"><a href="#sed" class="headerlink" title="sed"></a><span id="sed">sed</span></h4><h5 id="用法：sed-OPTION-SCRIPTorCOMMAND-FILE"><a href="#用法：sed-OPTION-SCRIPTorCOMMAND-FILE" class="headerlink" title="用法：sed [OPTION]... [SCRIPTorCOMMAND] [FILE]..."></a>用法：<code>sed [OPTION]... [SCRIPTorCOMMAND] [FILE]...</code></h5><h5 id="选项：-1"><a href="#选项：-1" class="headerlink" title="选项："></a>选项：</h5><ul>
+<li>-e：执行多条命令</li>
+<li>-f：引导sed脚本</li>
+<li>-i：直接修改文件</li>
+<li>-n：silent，搭配s替换p可以打印修改过的行</li>
+<li>-h：帮助</li>
+<li>-V：版本信息</li>
+<li>action:<ul>
+<li><code>a</code>：后插，<code>sed &#39;/text/a\newline&#39;</code> OR <code>sed &#39;/text/a newline&#39;</code></li>
+<li><code>c</code>：取代，<code>sed &#39;3,4c\replaceline&#39;</code></li>
+<li><code>d</code>：删除，<code>sed &#39;2,4d&#39;</code> OR <code>sed &#39;/text/&#39;d</code></li>
+<li><code>g</code>：获取缓冲区内容替换文本</li>
+<li><code>G</code>：获取缓冲区内容追加文本</li>
+<li><code>h</code>：拷贝文本到缓冲区</li>
+<li><code>H</code>：追加文本到缓冲区，保持和获取：<code>sed -e &#39;/text/h&#39; -e &#39;$G&#39; file</code></li>
+<li><code>i</code>：前插，<code>sed &#39;/text/i\newthing&#39;</code></li>
+<li><code>l</code>：列表不打印字符清单</li>
+<li><code>n</code>：读取下一个命令，用新命令处理新行</li>
+<li><code>p</code>：打印，<code>sed &#39;1p;3,4p&#39;</code></li>
+<li><code>q</code>：打印到第n行退出</li>
+<li><code>r</code>：从file读内容，<code>sed &#39;/text/r file&#39;</code></li>
+<li><code>s</code>：取代（正则）<ul>
+<li><code>^</code>、<code>$</code>、<code>.</code>、<code>*</code>、<code>[]</code>、<code>[^]</code></li>
+<li><code>(..)</code>：匹配子串，保存字符如<code>s/(love)able/\1rs</code>：<code>loveable</code> -&gt; <code>lovers</code></li>
+<li><code>&amp;</code>：拼接，<code>s/love/sb&amp;</code> -&gt; <code>love</code> -&gt; <code>sblove</code></li>
+<li><code>&lt;</code>：匹配单词开始，如<code>/&lt;love/</code>表示love开头的单词的行</li>
+<li><code>&gt;</code>：匹配单词结束，如<code>/love&gt;/</code></li>
+<li><code>x{m}</code>：重复x有m次，<code>/0{5}</code></li>
+<li><code>x{m,}</code>：重复x至少m次</li>
+<li><code>x{m, n}</code>：重复x至少m到n次</li>
+</ul>
+</li>
+<li><code>t</code>：if分支</li>
+<li><code>g</code>：全面替换</li>
+<li><code>w</code>：把行写入file，<code>sed &#39;/text/w file&#39;</code></li>
+<li><code>x</code>：</li>
+<li><code>y</code>：把字符翻译为另外的字符，不做正则</li>
+<li><code>!</code>：后续命令作用于没有选中的行</li>
+<li><code>#</code>：注释扩展到下个换行符前</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="awk"><a href="#awk" class="headerlink" title="awk"></a><span id="awk">awk</span></h4><p><a href="https://www.jianshu.com/p/8c6a0d0d4f0d" target="_blank" rel="noopener">awk简明教程</a></p>
+<h5 id="用法："><a href="#用法：" class="headerlink" title="用法："></a>用法：</h5><h5 id="awk-F-SEPSTRING-v-ASSIGNMENT-program-ARGUMENT"><a href="#awk-F-SEPSTRING-v-ASSIGNMENT-program-ARGUMENT" class="headerlink" title="awk [-F SEPSTRING] [-v ASSIGNMENT]... program [ARGUMENT...]"></a><code>awk [-F SEPSTRING] [-v ASSIGNMENT]... program [ARGUMENT...]</code></h5><h5 id="awk-F-SEPSTRING-f-PROFILE-f-v-ASSIGNMENT-ARGUMENT"><a href="#awk-F-SEPSTRING-f-PROFILE-f-v-ASSIGNMENT-ARGUMENT" class="headerlink" title="awk [-F SEPSTRING] -f PROFILE [-f]... [-v ASSIGNMENT]... [ARGUMENT...]"></a><code>awk [-F SEPSTRING] -f PROFILE [-f]... [-v ASSIGNMENT]... [ARGUMENT...]</code></h5><h5 id="选项：-2"><a href="#选项：-2" class="headerlink" title="选项："></a>选项：</h5><ul>
+<li>-F fs：指定文件分隔符，fs是字符串或正则，如<code>-F:</code></li>
+<li>-v var=value：定义变量</li>
+<li>-f scripfile：从脚本中读取awk</li>
+<li>-W：<ul>
+<li><code>compact</code> or <code>traditional</code>：兼容模式运行awk，gawk将同awk，忽略扩展</li>
+<li><code>copyleft</code> or <code>copyright</code>：版权信息</li>
+<li><code>help</code> or <code>usage</code>：选项简短说明</li>
+<li><code>lint</code> or <code>lint-old</code>：向传统unix移植结构警告</li>
+<li><code>posix</code>：兼容模式不识别：\x、函数关键字、func、换码序列以及当fs是一个空格时，将新行作为一个域分隔符；操作符<strong>和</strong>=不能代替^和^=；fflush无效</li>
+<li><code>re-interval</code>：允许间隔正则使用，POSIX字符类，括号表达式[[:alpha:]]</li>
+<li><code>source PROG</code>：使用PROG作为源码，可搭配<code>-f</code><h5 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h5><table>
+<thead>
+<tr>
+<th align="left">变量</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">$n</td>
+<td align="left">记录的第n个字段，由FS分隔</td>
+</tr>
+<tr>
+<td align="left">$0</td>
+<td align="left">完整的输入记录</td>
+</tr>
+<tr>
+<td align="left">ARGC</td>
+<td align="left">命令行参数数量</td>
+</tr>
+<tr>
+<td align="left">ARGIND</td>
+<td align="left">命令行中当前文件位置</td>
+</tr>
+<tr>
+<td align="left">ARGV</td>
+<td align="left">命令行参数数组</td>
+</tr>
+<tr>
+<td align="left">CONVFMT</td>
+<td align="left">数字转换格式（%.6g）</td>
+</tr>
+<tr>
+<td align="left">ENVIRON</td>
+<td align="left">环境变量关联数组</td>
+</tr>
+<tr>
+<td align="left">ERRNO</td>
+<td align="left">系统错误</td>
+</tr>
+<tr>
+<td align="left">FIELDWIDTHS</td>
+<td align="left">字段宽度列表</td>
+</tr>
+<tr>
+<td align="left">FILENAME</td>
+<td align="left">当前文件名</td>
+</tr>
+<tr>
+<td align="left">ENR</td>
+<td align="left">同NR</td>
+</tr>
+<tr>
+<td align="left">FS</td>
+<td align="left">字段分隔符</td>
+</tr>
+<tr>
+<td align="left">IGNORECASE</td>
+<td align="left">为真则忽略大小写匹配</td>
+</tr>
+<tr>
+<td align="left">NF</td>
+<td align="left">记录中的字段数</td>
+</tr>
+<tr>
+<td align="left">OFMT</td>
+<td align="left">数字输出格式</td>
+</tr>
+<tr>
+<td align="left">OFS</td>
+<td align="left">输出字段分隔符（默认空格）</td>
+</tr>
+<tr>
+<td align="left">ORS</td>
+<td align="left">输出记录分隔符（默认换行）</td>
+</tr>
+<tr>
+<td align="left">RLENGTH</td>
+<td align="left">match函数匹配的字符串长度</td>
+</tr>
+<tr>
+<td align="left">RS</td>
+<td align="left">记录分隔符（默认换行）</td>
+</tr>
+<tr>
+<td align="left">RSTART</td>
+<td align="left">match函数匹配的第一个位置</td>
+</tr>
+<tr>
+<td align="left">SUBSEP</td>
+<td align="left">数组下标分隔符（默认\034）</td>
+</tr>
+<tr>
+<td align="left">##### 通用正则表达式元字符</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">符号</td>
+<td align="left">描述</td>
+</tr>
+<tr>
+<td align="left">:–</td>
+<td align="left">:–</td>
+</tr>
+<tr>
+<td align="left">\Y</td>
+<td align="left">匹配单词开头或末尾的空字符串</td>
+</tr>
+<tr>
+<td align="left">\B</td>
+<td align="left">匹配单词内空字符串</td>
+</tr>
+<tr>
+<td align="left">&lt;</td>
+<td align="left">匹配单词开头</td>
+</tr>
+<tr>
+<td align="left">&gt;</td>
+<td align="left">匹配单词末尾</td>
+</tr>
+<tr>
+<td align="left">\w</td>
+<td align="left">匹配字母数字组成的单词</td>
+</tr>
+<tr>
+<td align="left">\W</td>
+<td align="left">匹配非字母数字组成的单词</td>
+</tr>
+<tr>
+<td align="left">&#39;</td>
+<td align="left">字符串开头空字符串</td>
+</tr>
+<tr>
+<td align="left">‘</td>
+<td align="left">字符换末尾空字符串</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a><span id="tcpdump">tcpdump</span></h4><h3 id="其他一些工具"><a href="#其他一些工具" class="headerlink" title="其他一些工具"></a>其他一些工具</h3><h4 id="strace"><a href="#strace" class="headerlink" title="strace"></a><span id="strace">strace</span></h4><h3 id="perf性能分析工具"><a href="#perf性能分析工具" class="headerlink" title="perf性能分析工具"></a><span id="perf">perf</span>性能分析工具</h3><h4 id="调试关注点"><a href="#调试关注点" class="headerlink" title="调试关注点"></a>调试关注点</h4><ul>
+<li>基于性能分析：可以<strong>算法优化</strong>、<strong>代码优化</strong></li>
+<li>硬件资源使用：如cache访问次数、cache丢失次数、流水线停顿周期、前端总线访问次数等</li>
+<li>操作系统资源：如系统调用次数、上下文切换次数、任务迁移次数</li>
+<li>事件以下几种：<ul>
+<li>Hardware Event：由PMU部件产生，特定条件下探测性能事件是否发生以及发生次数，如cache命中</li>
+<li>Software Event：由内核产生的事件，分布各个功能模块，统计与操作系统相关的事件，如进程切换，tick数等</li>
+<li>Tracepoint Event：由内核中静态tracepoint所触发的事件，tracepoint用来判断程序运行期间内核的行为细节，如slab分配器分配次数等</li>
+<li>Tool Event：duration_time<h4 id="用法：perf-version-help-OPTIONS-COMMAND-ARGS"><a href="#用法：perf-version-help-OPTIONS-COMMAND-ARGS" class="headerlink" title="用法：perf [--version] [--help] [OPTIONS] COMMAND [ARGS]"></a>用法：<code>perf [--version] [--help] [OPTIONS] COMMAND [ARGS]</code></h4></li>
+</ul>
+</li>
+<li>The most commonly used perf commands are:<ul>
+<li><code>annotate</code>        Read perf.data (created by perf record) and display annotated code</li>
+<li><code>archive</code>         Create archive with object files with build-ids found in perf.data file</li>
+<li><code>bench</code>           General framework for benchmark suites</li>
+<li><code>buildid-cache</code>   Manage build-id cache.</li>
+<li><code>buildid-list</code>    List the buildids in a perf.data file</li>
+<li><code>c2c</code>             Shared Data C2C/HITM Analyzer.</li>
+<li><code>config</code>          Get and set variables in a configuration file.</li>
+<li><code>data</code>            Data file related processing</li>
+<li><code>diff</code>            Read perf.data files and display the differential profile</li>
+<li><code>evlist</code>          List the event names in a perf.data file</li>
+<li><code>ftrace</code>          simple wrapper for kernel’s ftrace functionality</li>
+<li><code>inject</code>          Filter to augment the events stream with additional information</li>
+<li><code>kallsyms</code>        Searches running kernel for symbols</li>
+<li><code>kmem</code>            Tool to trace/measure kernel memory properties</li>
+<li><code>kvm</code>             Tool to trace/measure kvm guest os</li>
+<li><code>list</code>            List all symbolic event types</li>
+<li><code>lock</code>            Analyze lock events</li>
+<li><code>mem</code>             Profile memory accesses</li>
+<li><code>record</code>          Run a command and record its profile into perf.data</li>
+<li><code>report</code>          Read perf.data (created by perf record) and display the profile</li>
+<li><code>sched</code>           Tool to trace/measure scheduler properties (latencies)</li>
+<li><code>script</code>          Read perf.data (created by perf record) and display trace output</li>
+<li><code>stat</code>            Run a command and gather performance counter statistics</li>
+<li><code>test</code>            Runs sanity tests.</li>
+<li><code>timechart</code>       Tool to visualize total system behavior during a workload</li>
+<li><code>top</code>             System profiling tool.</li>
+<li><code>version</code>         display the version of perf binary</li>
+<li><code>probe</code>           Define new dynamic tracepoints</li>
+<li><code>trace</code>           strace inspired tool<h4 id="功能分类"><a href="#功能分类" class="headerlink" title="功能分类"></a>功能分类</h4><h5 id="全局性概况"><a href="#全局性概况" class="headerlink" title="全局性概况"></a>全局性概况</h5></li>
+</ul>
+</li>
+<li><code>list</code>：查看系统支持的性能事件</li>
+<li><code>bench</code>：对系统性能摸底</li>
+<li><code>test</code>：对系统健全性测试</li>
+<li><code>stat</code>：对全局性能进行统计<h5 id="全局细节"><a href="#全局细节" class="headerlink" title="全局细节"></a>全局细节</h5></li>
+<li><code>top</code>：实时查看系统进程函数占用率情况</li>
+<li><code>probe</code>：自定义动态事件<h5 id="特定功能分析"><a href="#特定功能分析" class="headerlink" title="特定功能分析"></a>特定功能分析</h5></li>
+<li><code>kmem</code>：支队slab子系统性能分析</li>
+<li><code>kvm</code>：针对kvm虚拟化分析</li>
+<li><code>lock</code>：分析锁性能</li>
+<li><code>mem</code>：分析内核调度器性能</li>
+<li><code>trace</code>：记录系统调用轨迹<h5 id="记录与分析"><a href="#记录与分析" class="headerlink" title="记录与分析"></a>记录与分析</h5></li>
+<li><code>record</code>：记录信息到perf.data</li>
+<li><code>report</code>：生成报告</li>
+<li><code>diff</code>：对两个记录进行diff</li>
+<li><code>evlist</code>：列出记录的性能事件</li>
+<li><code>annotate</code>：显式perf.data函数代码</li>
+<li><code>archive</code>：将相关符号打包，方便其他机器进行分析</li>
+<li><code>script</code>：将perf.data输出可读性文本<h5 id="可视化工具"><a href="#可视化工具" class="headerlink" title="可视化工具"></a>可视化工具</h5></li>
+<li><code>timechart record</code>：记录事件</li>
+<li><code>timechart</code>：生成output.svg文档</li>
+</ul>
+<h4 id="一些技巧记录"><a href="#一些技巧记录" class="headerlink" title="一些技巧记录"></a>一些技巧记录</h4><ul>
+<li>显式本地IP：<code>curl myip.ipip.net</code></li>
+<li>查找结构体：<code>grep -Rn --include=&quot;*.h&quot; --include=&quot;*.c&quot; &#39;struct ether_header&#39; /usr</code></li>
+<li>查找宏定义：<code>grep -Rn --include=&quot;*.h&quot; --include=&quot;*.c&quot; &#39;#define PCAP_ERRBUF_SIZE&#39; /usr</code></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/第七章-站在对象模型的尖端/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -430,10 +889,7 @@
 <li>对于每个被抛出来的exception，编译器产生一个类型描述器，对exception的类型进行编码。如果那是derived type，编码内容包含所有base class的类型信息。</li>
 <li>类型描述器（type derscriptor）是必要的。因为exception是在执行期被处理的，object必须有自己的类型信息。RTTI正是因为支持EH而获得的副产品。</li>
 </ul>
-<h5 id="当一个实际对象在程序执行时被抛出，会发生什么事？"><a href="#当一个实际对象在程序执行时被抛出，会发生什么事？" class="headerlink" title="当一个实际对象在程序执行时被抛出，会发生什么事？"></a>当一个实际对象在程序执行时被抛出，会发生什么事？</h5><h4 id="7-3-执行期类型识别（Runtime-Type-Identification，RTTI）"><a href="#7-3-执行期类型识别（Runtime-Type-Identification，RTTI）" class="headerlink" title="7.3 执行期类型识别（Runtime Type Identification，RTTI）"></a>7.3 执行期类型识别（Runtime Type Identification，RTTI）</h4><ul>
-<li><h5 id="Type-Safe-Downcast（保证安全的向下转换操作）"><a href="#Type-Safe-Downcast（保证安全的向下转换操作）" class="headerlink" title="Type-Safe Downcast（保证安全的向下转换操作）"></a>Type-Safe Downcast（保证安全的向下转换操作）</h5></li>
-</ul>
-<h5 id="Type-Safe-Dynamic-Cast（保证安全的动态转换）"><a href="#Type-Safe-Dynamic-Cast（保证安全的动态转换）" class="headerlink" title="Type-Safe Dynamic Cast（保证安全的动态转换）"></a>Type-Safe Dynamic Cast（保证安全的动态转换）</h5><h5 id="Reference并不是Pointers"><a href="#Reference并不是Pointers" class="headerlink" title="Reference并不是Pointers"></a>Reference并不是Pointers</h5><h5 id="Typeid运算符"><a href="#Typeid运算符" class="headerlink" title="Typeid运算符"></a>Typeid运算符</h5><h4 id="7-4-效率有了，弹性呢？"><a href="#7-4-效率有了，弹性呢？" class="headerlink" title="7.4 效率有了，弹性呢？"></a>7.4 效率有了，弹性呢？</h4><h5 id="动态共享函数库（Dynamic-Shared-Libraries）"><a href="#动态共享函数库（Dynamic-Shared-Libraries）" class="headerlink" title="动态共享函数库（Dynamic Shared Libraries）"></a>动态共享函数库（Dynamic Shared Libraries）</h5><h5 id="共享内存（Shared-Memory）"><a href="#共享内存（Shared-Memory）" class="headerlink" title="共享内存（Shared Memory）"></a>共享内存（Shared Memory）</h5>
+<h5 id="当一个实际对象在程序执行时被抛出，会发生什么事？"><a href="#当一个实际对象在程序执行时被抛出，会发生什么事？" class="headerlink" title="当一个实际对象在程序执行时被抛出，会发生什么事？"></a>当一个实际对象在程序执行时被抛出，会发生什么事？</h5><h4 id="7-3-执行期类型识别（Runtime-Type-Identification，RTTI）"><a href="#7-3-执行期类型识别（Runtime-Type-Identification，RTTI）" class="headerlink" title="7.3 执行期类型识别（Runtime Type Identification，RTTI）"></a>7.3 执行期类型识别（Runtime Type Identification，RTTI）</h4><h5 id="Type-Safe-Downcast（保证安全的向下转换操作）"><a href="#Type-Safe-Downcast（保证安全的向下转换操作）" class="headerlink" title="Type-Safe Downcast（保证安全的向下转换操作）"></a>Type-Safe Downcast（保证安全的向下转换操作）</h5><h5 id="Type-Safe-Dynamic-Cast（保证安全的动态转换）"><a href="#Type-Safe-Dynamic-Cast（保证安全的动态转换）" class="headerlink" title="Type-Safe Dynamic Cast（保证安全的动态转换）"></a>Type-Safe Dynamic Cast（保证安全的动态转换）</h5><h5 id="Reference并不是Pointers"><a href="#Reference并不是Pointers" class="headerlink" title="Reference并不是Pointers"></a>Reference并不是Pointers</h5><h5 id="Typeid运算符"><a href="#Typeid运算符" class="headerlink" title="Typeid运算符"></a>Typeid运算符</h5><h4 id="7-4-效率有了，弹性呢？"><a href="#7-4-效率有了，弹性呢？" class="headerlink" title="7.4 效率有了，弹性呢？"></a>7.4 效率有了，弹性呢？</h4><h5 id="动态共享函数库（Dynamic-Shared-Libraries）"><a href="#动态共享函数库（Dynamic-Shared-Libraries）" class="headerlink" title="动态共享函数库（Dynamic Shared Libraries）"></a>动态共享函数库（Dynamic Shared Libraries）</h5><h5 id="共享内存（Shared-Memory）"><a href="#共享内存（Shared-Memory）" class="headerlink" title="共享内存（Shared Memory）"></a>共享内存（Shared Memory）</h5>
           
         
       
@@ -3309,291 +3765,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker基本使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/12/Docker基本使用/" itemprop="url">Docker基本使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T20:57:19+08:00">
-                2020-06-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2020-06/" itemprop="url" rel="index">
-                    <span itemprop="name">2020.06</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="修改镜像源"><a href="#修改镜像源" class="headerlink" title="修改镜像源"></a>修改镜像源</h2><blockquote>
-<p>（manjaro）只需要添加配置文件/etc/docker/daemon.json</p>
-</blockquote>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"registry-mirrors"</span>: [<span class="string">"https://docker.mirrors.ustc.edu.cn"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="或者使用–registry-mirror选项"><a href="#或者使用–registry-mirror选项" class="headerlink" title="或者使用–registry-mirror选项"></a>或者使用–registry-mirror选项</h3><ul>
-<li>修改:/etc/default/docker</li>
-<li>添加:DOCKER_OPTS=”–registry-mirror=<a href="https://docker.mirrors.ustc.edu.cn&quot;" target="_blank" rel="noopener">https://docker.mirrors.ustc.edu.cn&quot;</a></li>
-<li><code>systemctl daemon-reload</code></li>
-<li><code>systemctl restart docker</code></li>
-</ul>
-<hr>
-<h2 id="一些Docker基础命令"><a href="#一些Docker基础命令" class="headerlink" title="一些Docker基础命令"></a>一些Docker基础命令</h2><h2 id="容器操作"><a href="#容器操作" class="headerlink" title="容器操作"></a><em>容器操作</em></h2><h3 id="run-通过运行镜像输出hello"><a href="#run-通过运行镜像输出hello" class="headerlink" title="run: 通过运行镜像输出hello"></a><font color="red">run</font>: 通过运行镜像输出hello</h3><blockquote>
-<p><code>docker run CONTAINER [COMMAND] [ARGS]</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 相当于先create再start</span></span><br><span class="line"><span class="comment"># e.g. docker run CONTAINER echo 'hello'</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="启动交互式容器"><a href="#启动交互式容器" class="headerlink" title="启动交互式容器"></a>启动交互式容器</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># e.g.:指定ip:host进行后台运行</span></span><br><span class="line">$ docker run -it -d -p 127.0.0.1:12306:12306 --name postgres ichheitimg:9.1-deb /bin/bash</span><br></pre></td></tr></table></figure>
-
-<h3 id="带名字的运行镜像"><a href="#带名字的运行镜像" class="headerlink" title="带名字的运行镜像"></a>带名字的运行镜像</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name=<span class="string">'name'</span> CONTAINER <span class="built_in">echo</span> <span class="string">'hello'</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="守护形式运行容器"><a href="#守护形式运行容器" class="headerlink" title="守护形式运行容器"></a>守护形式运行容器</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># C^P C^Q退出，可docker ps查看守护容器</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="可直接启动后台"><a href="#可直接启动后台" class="headerlink" title="可直接启动后台"></a>可直接启动后台</h4><p><a href="https://docs.docker.com/reference/commandline/cli" target="_blank" rel="noopener">配置选项</a></p>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 运行相关选项</span></span><br><span class="line"> <span class="comment"># -D, --debug=false</span></span><br><span class="line"> <span class="comment"># -e, --exec-driver="native"</span></span><br><span class="line"> <span class="comment"># -g, --graph="/var/lib/docker"</span></span><br><span class="line"> <span class="comment"># --icc=true</span></span><br><span class="line"> <span class="comment"># -l, --log-level="info"</span></span><br><span class="line"> <span class="comment"># --label=[]</span></span><br><span class="line"> <span class="comment"># -p, --pidfile="/var/run/docker.pid"</span></span><br><span class="line"> <span class="comment"># </span></span><br><span class="line">$ docker run -d CONTAINER [COMMAND] [ARG...]</span><br><span class="line"><span class="comment"># 服务器相关选项</span></span><br><span class="line"> <span class="comment"># -G, --group="docker"</span></span><br><span class="line"> <span class="comment"># -H, --host=[]</span></span><br><span class="line"> <span class="comment"># --tls=false</span></span><br><span class="line"> <span class="comment"># --tlscacert="/home/sven/.docker/ca.pem"</span></span><br><span class="line"> <span class="comment"># --tlscert="/home/sven/.docker/ca.pem"</span></span><br><span class="line"> <span class="comment"># --tlskey="/home/sven/.docker/ca.pem"</span></span><br><span class="line"> <span class="comment"># --tlsverify=false</span></span><br><span class="line"><span class="comment"># Remote API存储相关</span></span><br><span class="line"> <span class="comment"># -s, --storage-driver=""</span></span><br><span class="line"> <span class="comment"># --selinux-enabled=false</span></span><br><span class="line"> <span class="comment"># --storage-opt=[]</span></span><br><span class="line"><span class="comment"># Registry相关</span></span><br><span class="line"> <span class="comment"># --insecure-registry=[]</span></span><br><span class="line"> <span class="comment"># --registry-mirror=p[]</span></span><br><span class="line"><span class="comment"># 网络设置相关</span></span><br><span class="line"> <span class="comment"># -b, --bridge=""</span></span><br><span class="line"> <span class="comment"># --bip=""</span></span><br><span class="line"> <span class="comment"># --fixed-cidr=""</span></span><br><span class="line"> <span class="comment"># --fixed-cidr-v6=""</span></span><br><span class="line"> <span class="comment"># --dns=[]</span></span><br><span class="line"> <span class="comment"># --dns-search=[]</span></span><br><span class="line"> <span class="comment"># --ip=0</span></span><br><span class="line"> <span class="comment"># --ip-forward=true</span></span><br><span class="line"> <span class="comment"># --ip-masq=true</span></span><br><span class="line"> <span class="comment"># --iptables=true</span></span><br><span class="line"> <span class="comment"># --ipv6=false</span></span><br><span class="line"> <span class="comment"># --mtu=0</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="设置容器的端口映射"><a href="#设置容器的端口映射" class="headerlink" title="设置容器的端口映射"></a>设置容器的端口映射</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># -p, --publish</span></span><br><span class="line"><span class="comment"># containerPort</span></span><br><span class="line">$ docker run -p 80 -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># hostPort:containerPort</span></span><br><span class="line">$ docker run -p 8080:80 -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># ip::containerPort</span></span><br><span class="line">$ docker run -p 0.0.0.0:80 -it CONTAINER /bin/bash</span><br><span class="line"><span class="comment"># ip:hostPort:containerPort</span></span><br><span class="line">$ docker run -p 0.0.0.0:8080:80 -it CONTAINER /bin/bash</span><br></pre></td></tr></table></figure>
-
-<h3 id="create-创建容器"><a href="#create-创建容器" class="headerlink" title="create: 创建容器"></a><font color="red">create</font>: 创建容器</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 新建新容器，如果没有指定镜像，会自动pull镜像</span></span><br><span class="line">$ docker create -it ubuntu:latest</span><br></pre></td></tr></table></figure>
-
-<h3 id="start-启动容器"><a href="#start-启动容器" class="headerlink" title="start: 启动容器"></a><font color="red">start</font>: 启动容器</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 启动创建好的容器</span></span><br><span class="line">$ docker start XXXXXXX</span><br></pre></td></tr></table></figure>
-
-<h3 id="ps-查看容器"><a href="#ps-查看容器" class="headerlink" title="ps: 查看容器"></a><font color="red">ps</font>: 查看容器</h3><blockquote>
-<p><code>docker ps [OPT]</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -a 全部记录</span></span><br><span class="line"><span class="comment"># -l 最新记录</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="rm-删除容器"><a href="#rm-删除容器" class="headerlink" title="rm: 删除容器"></a><font color="red">rm</font>: 删除容器</h3><blockquote>
-<p><code>docker rm &#39;{IMAGE}&#39;</code></p>
-</blockquote>
-<h3 id="attach-继续运行后台守护容器"><a href="#attach-继续运行后台守护容器" class="headerlink" title="attach: 继续运行后台守护容器"></a><font color="red">attach</font>: 继续运行后台守护容器</h3><blockquote>
-<p><code>docker attach &#39;{IMAGE}&#39;</code><br><code>dokcer attach [--detach-keys[=[]]] [--no-stdin][--sig-proxy[=true]] 
-CONTAINER</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">```</span><br><span class="line"></span><br><span class="line"><span class="comment">### &lt;font color="red"&gt;logs&lt;/font&gt;: 查看容器日志</span></span><br><span class="line">&gt; `docker logs [OPT] <span class="string">'&#123;IMAGE&#125;'</span>`</span><br><span class="line">```zsh</span><br><span class="line"> <span class="comment"># -f --follows=true|false 默认false</span></span><br><span class="line"> <span class="comment"># -t --timestamps=true|false 默认false</span></span><br><span class="line"> <span class="comment"># --tail="all"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="exec-在已运行的容器中启动新进程"><a href="#exec-在已运行的容器中启动新进程" class="headerlink" title="exec: 在已运行的容器中启动新进程"></a><font color="red">exec</font>: 在已运行的容器中启动新进程</h3><blockquote>
-<p><code>docker exec [OPT] CONTAINER [COMMAND] {ARGS}</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -d</span></span><br><span class="line"><span class="comment"># -i </span></span><br><span class="line"><span class="comment"># -t</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="stop-kill-停止容器"><a href="#stop-kill-停止容器" class="headerlink" title="stop/kill: 停止容器"></a><font color="red">stop/kill</font>: 停止容器</h3><blockquote>
-<p><code>docker stop [-t | --time[=10]] CONTAINER</code><br><code>docker kill CONTAINER</code></p>
-</blockquote>
-<hr>
-<h2 id="镜像操作"><a href="#镜像操作" class="headerlink" title="镜像操作"></a><em>镜像操作</em></h2><h3 id="images-inspect-查看镜像"><a href="#images-inspect-查看镜像" class="headerlink" title="images/inspect: 查看镜像"></a><font color="red">images/inspect</font>: 查看镜像</h3><blockquote>
-<p><code>docker iamges [OPT] [REPOSITORY]</code><br><code>docker inspect [OPT] CONTAINER|IMAGE [...]</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -a, all=false</span></span><br><span class="line"><span class="comment"># -f, --filter=[]</span></span><br><span class="line"><span class="comment"># --no-trunc=false</span></span><br><span class="line"><span class="comment"># -q, --quiet=false</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="search-查找镜像"><a href="#search-查找镜像" class="headerlink" title="search: 查找镜像"></a><a href="https://registry.hub.docker.com" target="_blank" rel="noopener"><font color="red">search</font>: 查找镜像</a></h3><blockquote>
-<p><code>docker search [OPT] TERM</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># --automated=false</span></span><br><span class="line"><span class="comment"># --no-trunc=false</span></span><br><span class="line"><span class="comment"># -s, --stars=0</span></span><br><span class="line"><span class="comment"># --filter=stars=3</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="pull-拉取镜像"><a href="#pull-拉取镜像" class="headerlink" title="pull: 拉取镜像"></a><font color="red">pull</font>: 拉取镜像</h3><blockquote>
-<p><code>docker pull [OPT] NAME [:TAG]</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -a, --all-ags=false</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h3><h4 id="commit-通过容器"><a href="#commit-通过容器" class="headerlink" title="commit: 通过容器"></a><font color="red">commit</font>: 通过容器</h4><blockquote>
-<p><code>docker commit [OPT] CONTAINER [REPOSITORY[:TAG]]</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># -a,--author=""</span></span><br><span class="line"> <span class="comment"># -m,--message=""</span></span><br><span class="line"> <span class="comment"># -p,--pause=true, 提交时暂停容器运行</span></span><br><span class="line"><span class="comment"># e.g.:提交本地deb容器</span></span><br><span class="line">$ docker commit deb ichheitimg:9.1-deb</span><br></pre></td></tr></table></figure>
-
-<h4 id="import-通过本地模板导入"><a href="#import-通过本地模板导入" class="headerlink" title="import: 通过本地模板导入"></a><font color="red">import</font>: 通过本地模板导入</h4><blockquote>
-<p><code>docker import [OPT] file |URL|[REPOSITORY[:TAG]]</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.:导入</span></span><br><span class="line">$ cat ubuntu-14.04-x86_64-minimal.tar.gz | docker import - ubuntu:14.04</span><br></pre></td></tr></table></figure>
-
-<h4 id="build-通过Dockerfile文件"><a href="#build-通过Dockerfile文件" class="headerlink" title="build: 通过Dockerfile文件"></a><font color="red">build</font>: 通过Dockerfile文件</h4><blockquote>
-<p><code>docker build</code></p>
-</blockquote>
-<h4 id="通过Dockerfile"><a href="#通过Dockerfile" class="headerlink" title="通过Dockerfile"></a>通过Dockerfile</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --force-rm=false</span></span><br><span class="line"> <span class="comment"># --no-cache=false</span></span><br><span class="line"> <span class="comment"># --pull=false</span></span><br><span class="line"> <span class="comment"># -q, --quiet=false</span></span><br><span class="line"> <span class="comment"># --rm=true</span></span><br><span class="line"> <span class="comment"># -t, --tag=""</span></span><br><span class="line">$ docker build [OPT] PATH | URL | -</span><br><span class="line"><span class="comment"># e.g. 在创建的目录中编写Dockerfile文件，然后使用$ docker build -t='name' .</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="Dockerfile格式："><a href="#Dockerfile格式：" class="headerlink" title="Dockerfile格式："></a>Dockerfile格式：</h5><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># First Dockerfile</span></span><br><span class="line">   FROM [CONTAINER]</span><br><span class="line">   MAINTAINER [MESSAGE]</span><br><span class="line">   [COMMAND...]</span><br><span class="line">   EXPOSE 80</span><br><span class="line">   CMD [<span class="string">"executable"</span>, <span class="string">"param1"</span>, <span class="string">"param2"</span>] (<span class="built_in">exec</span> mode)</span><br><span class="line">   CMD <span class="built_in">command</span> param1 param2 (shell mode)</span><br><span class="line">   CMD [<span class="string">"param1"</span>, <span class="string">"param2"</span>] (ENTRYPOINT指令搭配下的参数)</span><br><span class="line">   ENTRYPOINT [<span class="string">"executable"</span>, <span class="string">"param1"</span>, <span class="string">"param2"</span>] (<span class="built_in">exec</span> mode)</span><br><span class="line">   ENTRYPOINT <span class="built_in">command</span> param1 param2 (shell mode)</span><br><span class="line">   <span class="comment"># CMD与ENTRYPOINT的区别是后者命令不会被构建时命令所覆盖，也可以使用--entrypoint覆盖</span></span><br><span class="line">   ADD &lt;src&gt; .. &lt;dest&gt;</span><br><span class="line">   COPY &lt;src&gt; ... &lt;dest&gt;</span><br><span class="line">   VOLUMN [<span class="string">"/data"</span>]</span><br><span class="line">   (共享数据等作用，使用时在build构建前应使用--volumes-from选项挂在数据卷容器)</span><br><span class="line">   WORKDIR /path/to/workdir (指定工作目录)</span><br><span class="line">   ENV &lt;key&gt; &lt;value&gt;</span><br><span class="line">   ENV &lt;key&gt;=&lt;value&gt; ...</span><br><span class="line">   USER user (e.g. | USER user | USER user:group | USER user:gid |)</span><br><span class="line">   ONBUILD [INSTRUCTION] (添加触发器)</span><br></pre></td></tr></table></figure>
-
-<h5 id="Dockerfile构建过程"><a href="#Dockerfile构建过程" class="headerlink" title="Dockerfile构建过程"></a>Dockerfile构建过程</h5><ul>
-<li>从基础镜像运行容器</li>
-<li>执行指令，对容器做修改</li>
-<li>执行类docker commit操作，提交新镜像层</li>
-<li>基于新镜像运行新容器</li>
-<li>执行Dockerfile的下一指令直到所有指令执行完毕</li>
-</ul>
-<h3 id="save-存入镜像"><a href="#save-存入镜像" class="headerlink" title="save: 存入镜像"></a><font color="red">save</font>: 存入镜像</h3><blockquote>
-<p><code>docker save</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 导出本地的ubuntu:14.04为文件ubuntu_14.014.tar</span></span><br><span class="line">$ docker save -o ubuntu_14.04.tar ubuntu:14:04</span><br></pre></td></tr></table></figure>
-
-<h3 id="load-载入镜像"><a href="#load-载入镜像" class="headerlink" title="load: 载入镜像"></a><font color="red">load</font>: 载入镜像</h3><blockquote>
-<p><code>docker load</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 导出tar文件到本地镜像库</span></span><br><span class="line">$ docker load --input ubuntu_14.04.tar</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">$ docker load &lt; ubuntu_14.04.tar</span><br></pre></td></tr></table></figure>
-
-<h3 id="push-上传镜像"><a href="#push-上传镜像" class="headerlink" title="push: 上传镜像"></a><font color="red">push</font>: 上传镜像</h3><blockquote>
-<p><code>docker push NAME[: TAG] |REGISTRY_HOST[: REGISTRY_PORT]/NAME[: TAG]</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.: 用户user上传test:latest镜像到user/test:latest</span></span><br><span class="line">$ docker tag <span class="built_in">test</span>:latest user/<span class="built_in">test</span>:latest</span><br><span class="line">$ docker push user/<span class="built_in">test</span>:latest</span><br></pre></td></tr></table></figure>
-
-<h3 id="rmi-删除镜像"><a href="#rmi-删除镜像" class="headerlink" title="rmi: 删除镜像"></a><font color="red">rmi</font>: 删除镜像</h3><blockquote>
-<p><code>docker rmi [OPT] IMAGE [...]</code></p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -f, --force=false</span></span><br><span class="line"><span class="comment"># --no-prune=false</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Docker的C-S模式：Remote-API"><a href="#Docker的C-S模式：Remote-API" class="headerlink" title="Docker的C/S模式：Remote API"></a>Docker的C/S模式：<a href="https://docs.docker.com/reference/api/docker_remote_api/" target="_blank" rel="noopener">Remote API</a></h3><h4 id="连接方式"><a href="#连接方式" class="headerlink" title="连接方式"></a>连接方式</h4><ul>
-<li><code>unix:///var/run/docker.dock</code></li>
-<li><code>tcp://host:port</code></li>
-<li><code>fd://socketfd</code><h4 id="Docker的远程访问"><a href="#Docker的远程访问" class="headerlink" title="Docker的远程访问"></a>Docker的远程访问</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认配置-H unix:///var/run/docker.sock</span></span><br><span class="line"><span class="comment"># e.g.: docker -H tcp://ip:port COMMAND</span></span><br><span class="line"><span class="comment"># 可选择的环境变量DOCKER_HOST</span></span><br><span class="line"><span class="comment"># e.g.: export DOCKER_HOST="tcp://ip:port"</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="Docker容器互联"><a href="#Docker容器互联" class="headerlink" title="Docker容器互联"></a>Docker容器互联</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --icc=true，允许容器间互联</span></span><br><span class="line"><span class="comment"># 每次镜像重启都可能导致IP的变更，因此使用以下方式</span></span><br><span class="line"> <span class="comment"># --link</span></span><br><span class="line">$ docker run --link=[CONTAINER]:[ALIAS] [IMAGE][COMMAND]</span><br><span class="line"><span class="comment"># e.g. docker run -it --name test --link=other:alias img:test</span></span><br><span class="line"><span class="comment"># 只允许特定容器间连接</span></span><br><span class="line">$ --icc=<span class="literal">false</span> --iptables=<span class="literal">true</span></span><br><span class="line">$ --link</span><br></pre></td></tr></table></figure>
-
-<h3 id="Docker容器的数据卷"><a href="#Docker容器的数据卷" class="headerlink" title="Docker容器的数据卷"></a>Docker容器的数据卷</h3><h4 id="为容器添加数据卷"><a href="#为容器添加数据卷" class="headerlink" title="为容器添加数据卷"></a>为容器添加数据卷</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># -v local_catalogue:docker_catalogue:[ro]</span></span><br><span class="line"><span class="comment"># e.g.</span></span><br><span class="line">$ sudo dcoker run -v ~/container_data:/data -it ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
-
-<h4 id="在Dockerfile中使用COLUMN下指定数据卷容器"><a href="#在Dockerfile中使用COLUMN下指定数据卷容器" class="headerlink" title="在Dockerfile中使用COLUMN下指定数据卷容器"></a>在Dockerfile中使用COLUMN下指定数据卷容器</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># e.g.:</span></span><br><span class="line"><span class="comment"># 编写Dockefile，指定VOLUME目录</span></span><br><span class="line">$ docker build -t dorman/dvt .</span><br><span class="line">$ docker run -it --name <span class="built_in">test</span> dorman/dvt</span><br><span class="line"><span class="comment"># 以下--volumes-from将共享Dockfile中的目录</span></span><br><span class="line">$ docker run -it --name test1 --volumes-from <span class="built_in">test</span> ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
-
-<h3 id="Docker数据卷的备份和还原"><a href="#Docker数据卷的备份和还原" class="headerlink" title="Docker数据卷的备份和还原"></a>Docker数据卷的备份和还原</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from [container name] -v local_catalogue:docker_catalogue ubuntu</span><br><span class="line">$ tar cvf /backup/backup.tar [container data volume]</span><br></pre></td></tr></table></figure>
-
-<h3 id="Docker容器的跨主机连接"><a href="#Docker容器的跨主机连接" class="headerlink" title="Docker容器的跨主机连接"></a>Docker容器的跨主机连接</h3><h4 id="网桥实现"><a href="#网桥实现" class="headerlink" title="网桥实现"></a>网桥实现</h4><ul>
-<li>通过在主机和虚拟机之间使用同一个网段来跨主机连接</li>
-<li>需要网络配置并且配置Docker网桥，并通过–fixed-cidr指定网络范围</li>
-<li>(/etc/network/interfaces)</li>
-</ul>
-<h4 id="Open-vSwitch实现"><a href="#Open-vSwitch实现" class="headerlink" title="Open vSwitch实现"></a>Open vSwitch实现</h4><h5 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h5><ul>
-<li>双网卡，Host-Only &amp; NAT</li>
-<li>安装Open vSwitch和网桥管理工具bridge-utils</li>
-<li>同一网段的IP地址<h5 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h5></li>
-<li>建立ovs网桥</li>
-<li>添加gre连接</li>
-<li>配置docker容器虚拟网桥</li>
-<li>为虚拟网桥添加ovs接口</li>
-<li>添加不同DOcker容器网段路由</li>
-</ul>
-<h4 id="weave实现"><a href="#weave实现" class="headerlink" title="weave实现"></a>weave实现</h4>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3646,7 +3817,7 @@ CONTAINER</code></p>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -3657,7 +3828,7 @@ CONTAINER</code></p>
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -3668,7 +3839,7 @@ CONTAINER</code></p>
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
