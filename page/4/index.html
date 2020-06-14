@@ -694,7 +694,10 @@
 </ul>
 <h4 id="一些技巧"><a href="#一些技巧" class="headerlink" title="一些技巧"></a>一些技巧</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看程序的pid、ppid、pgid、sid、comm信息</span></span><br><span class="line">$ ps -C program o pid,ppid,pgid,sid,comm</span><br><span class="line"><span class="comment"># 查看进程层次关系</span></span><br><span class="line">$ ps -ejH</span><br><span class="line">$ ps axjf</span><br></pre></td></tr></table></figure>
 
-<h3 id="valgrind"><a href="#valgrind" class="headerlink" title="valgrind"></a><span id="grep">valgrind</span></h3><h4 id="用法：valgrind-VALGRIND-OPTIONS-programing-PROG-OPTIONS"><a href="#用法：valgrind-VALGRIND-OPTIONS-programing-PROG-OPTIONS" class="headerlink" title="用法：valgrind [VALGRIND_OPTIONS] programing [PROG_OPTIONS]"></a>用法：valgrind [VALGRIND_OPTIONS] programing [PROG_OPTIONS]</h4><h5 id="基本选项"><a href="#基本选项" class="headerlink" title="基本选项"></a>基本选项</h5><ul>
+<h3 id="valgrind"><a href="#valgrind" class="headerlink" title="valgrind"></a><span id="grep">valgrind</span></h3><blockquote>
+<p><a href="https://www.valgrind.org/docs/manual/manual-core.html#manual-core.report" target="_blank" rel="noopener">使用手册</a></p>
+</blockquote>
+<h4 id="用法：valgrind-VALGRIND-OPTIONS-programing-PROG-OPTIONS"><a href="#用法：valgrind-VALGRIND-OPTIONS-programing-PROG-OPTIONS" class="headerlink" title="用法：valgrind [VALGRIND_OPTIONS] programing [PROG_OPTIONS]"></a>用法：valgrind [VALGRIND_OPTIONS] programing [PROG_OPTIONS]</h4><h5 id="基本选项"><a href="#基本选项" class="headerlink" title="基本选项"></a>基本选项</h5><ul>
 <li><p><code>-h</code>：帮助</p>
 </li>
 <li><p><code>-q</code>：静默模式</p>
