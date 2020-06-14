@@ -87,7 +87,7 @@
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
 <meta property="og:description" content="条例16：谨记80-20原则 80-20原则说：一个程序80%的资源用于20%的代码身上。因此根据观察或实验来识别出造成你心痛那20%代码，辨别之道就是使用某个程序分析器（program profiler）。  条款17：考虑使用lazy evaluation（缓式评估） lazy evaluation（缓式评估）就是以某种方式撰写你的classes，使它们延缓运算，直到那些运算结果刻不容缓地迫切">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T05:54:59.563Z">
+<meta property="og:updated_time" content="2020-06-14T08:30:22.466Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="4 效率">
 <meta name="twitter:description" content="条例16：谨记80-20原则 80-20原则说：一个程序80%的资源用于20%的代码身上。因此根据观察或实验来识别出造成你心痛那20%代码，辨别之道就是使用某个程序分析器（program profiler）。  条款17：考虑使用lazy evaluation（缓式评估） lazy evaluation（缓式评估）就是以某种方式撰写你的classes，使它们延缓运算，直到那些运算结果刻不容缓地迫切">
@@ -454,8 +454,6 @@
 </ol>
 </li>
 <li><p><font color="red">运行时期类型辨识</font>（<font color="green">runtime type identification</font>, <font color="red">RTTI</font>）让我们在运行期获得objects和classes的相关信息，它们被存放在类型为type_info的对象内。可以利用<code>typeid</code>操作符取得某个class相应的type_info对象。只有当某种类型拥有至少一个虚函数，才保证我们能检验该类型对象的动态类型。它是个根据class的vtbl来实现的。RTTI的空间成本就只需在每个class vtbl内增加一个条目，再加上每个class所需的一份type_info对象空间。</p>
-</li>
-</ol>
 <table>
 <thead>
 <tr>
@@ -490,6 +488,8 @@
 <td>否</td>
 </tr>
 </tbody></table>
+</li>
+</ol>
 
       
     </div>
@@ -613,7 +613,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -635,7 +635,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

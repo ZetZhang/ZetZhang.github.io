@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Config,Rust,">
+  <meta name="keywords" content="PostgreSQL,Config,Database,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="安装Rust12$ curl https://sh.rustup.rs -sSf | sh# $ curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly -y  修改国内源123# 设置环境变量export RUSTUP_DIST_SERVER=http://mirrors.ustc.edu.cn/rust-sta">
-<meta name="keywords" content="Config,Rust">
+<meta name="description" content="PostgreSQL源码目录简介contrib目录下的第三方插件 adminpack：一些管理函数 auth_delay：认证失败后延迟报异常，防止暴力破解 auto_explain：将超过指定执行时间的SQL执行计划输出到日志 btree_gin：gin索引方法的btree操作符扩展（某些情况下“多列gin组合索引”比“锁哥btree单列索引”的bitmap anding更高效 chkpass：">
+<meta name="keywords" content="PostgreSQL,Config,Database">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Rust配置">
-<meta property="og:url" content="http://yoursite.com/2020/06/14/Rust配置/index.html">
+<meta property="og:title" content="PostgreSQL插件及安装">
+<meta property="og:url" content="http://yoursite.com/2020/06/14/PostgreSQL插件及安装/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="安装Rust12$ curl https://sh.rustup.rs -sSf | sh# $ curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly -y  修改国内源123# 设置环境变量export RUSTUP_DIST_SERVER=http://mirrors.ustc.edu.cn/rust-sta">
+<meta property="og:description" content="PostgreSQL源码目录简介contrib目录下的第三方插件 adminpack：一些管理函数 auth_delay：认证失败后延迟报异常，防止暴力破解 auto_explain：将超过指定执行时间的SQL执行计划输出到日志 btree_gin：gin索引方法的btree操作符扩展（某些情况下“多列gin组合索引”比“锁哥btree单列索引”的bitmap anding更高效 chkpass：">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:20:02.700Z">
+<meta property="og:updated_time" content="2020-06-14T08:10:09.903Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Rust配置">
-<meta name="twitter:description" content="安装Rust12$ curl https://sh.rustup.rs -sSf | sh# $ curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly -y  修改国内源123# 设置环境变量export RUSTUP_DIST_SERVER=http://mirrors.ustc.edu.cn/rust-sta">
+<meta name="twitter:title" content="PostgreSQL插件及安装">
+<meta name="twitter:description" content="PostgreSQL源码目录简介contrib目录下的第三方插件 adminpack：一些管理函数 auth_delay：认证失败后延迟报异常，防止暴力破解 auto_explain：将超过指定执行时间的SQL执行计划输出到日志 btree_gin：gin索引方法的btree操作符扩展（某些情况下“多列gin组合索引”比“锁哥btree单列索引”的bitmap anding更高效 chkpass：">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/06/14/Rust配置/">
+  <link rel="canonical" href="http://yoursite.com/2020/06/14/PostgreSQL插件及安装/">
 
 
 
 
 
-  <title>Rust配置 | .27t_lBZ4oZgg_</title>
+  <title>PostgreSQL插件及安装 | .27t_lBZ4oZgg_</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/Rust配置/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/PostgreSQL插件及安装/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ichheit">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Rust配置</h1>
+          <h1 class="post-title" itemprop="name headline">PostgreSQL插件及安装</h1>
         
 
         <div class="post-meta">
@@ -292,7 +292,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T15:13:14+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T15:59:46+08:00">
                 2020-06-14
               </time>
             
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2020-01/" itemprop="url" rel="index">
-                    <span itemprop="name">2020.01</span>
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
                   </a>
                 </span>
 
@@ -352,16 +352,96 @@
       
 
       
-        <h3 id="安装Rust"><a href="#安装Rust" class="headerlink" title="安装Rust"></a>安装Rust</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl https://sh.rustup.rs -sSf | sh</span><br><span class="line"><span class="comment"># $ curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly -y</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="修改国内源"><a href="#修改国内源" class="headerlink" title="修改国内源"></a>修改国内源</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置环境变量</span></span><br><span class="line"><span class="built_in">export</span> RUSTUP_DIST_SERVER=http://mirrors.ustc.edu.cn/rust-static</span><br><span class="line"><span class="built_in">export</span> RUSTUP_UPDATE_ROOT=http://mirrors.ustc.edu.cn/rust-static/rustup</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/.cargo/config</span></span><br><span class="line"><span class="section">[source.crates-io]</span></span><br><span class="line"><span class="attr">registry</span> = <span class="string">"https://github.com/rust-lang/crates.io-index"</span></span><br><span class="line"><span class="attr">replace-with</span> = <span class="string">'ustc'</span></span><br><span class="line"><span class="section">[source.ustc]</span></span><br><span class="line"><span class="attr">registry</span> = <span class="string">"http://mirrors.ustc.edu.cn/crates.io-index"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Docker中使用"><a href="#Docker中使用" class="headerlink" title="Docker中使用"></a>Docker中使用</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Dockerfile</span></span><br><span class="line">FROM phusion/baseimage</span><br><span class="line">ENV RUSTUP_HOME=/rust</span><br><span class="line">ENV CARGO_HOME=/cargo</span><br><span class="line">ENV PATH=/cargo/bin:/rust/bin:<span class="variable">$PATH</span></span><br><span class="line">RUN curl https://sh.rustup.rs -sSf | sh -s -- -- default-toolchain nightly -y</span><br></pre></td></tr></table></figure>
-
-<h3 id="Racer代码补全"><a href="#Racer代码补全" class="headerlink" title="Racer代码补全"></a>Racer代码补全</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cargo install racer</span><br><span class="line">$ rustup component add rust-src</span><br><span class="line"><span class="built_in">export</span> RUST_SRC_PATH=<span class="string">"<span class="variable">$(rustc --print sysroot)</span>/lib/rustlib/src/rust/src"</span></span><br></pre></td></tr></table></figure>
-
+        <h3 id="PostgreSQL源码目录简介"><a href="#PostgreSQL源码目录简介" class="headerlink" title="PostgreSQL源码目录简介"></a>PostgreSQL源码目录简介</h3><h4 id="contrib目录下的第三方插件"><a href="#contrib目录下的第三方插件" class="headerlink" title="contrib目录下的第三方插件"></a>contrib目录下的第三方插件</h4><ul>
+<li>adminpack：一些管理函数</li>
+<li>auth_delay：认证失败后延迟报异常，防止暴力破解</li>
+<li>auto_explain：将超过指定执行时间的SQL执行计划输出到日志</li>
+<li>btree_gin：gin索引方法的btree操作符扩展（某些情况下“多列gin组合索引”比“锁哥btree单列索引”的bitmap anding更高效</li>
+<li>chkpass：自动加密的字段类型（用UNIXcrypt()进行封装，仅支持前8位安全）<code>&#39;abcdefghijkl&#39;::chkpass = &#39;abcdefgh&#39;</code></li>
+<li>citext：不区分大小写的数据类型</li>
+<li>cube：多维立方体类型，支持立方体对象的相同、相交和包含等关系</li>
+<li>dblink：PostgreSQL跨库操作插件</li>
+<li>dict_int：全文检索的字典模块，控制数字拆分最大长度，以确定数字在全文检索中的分词个数（maxlen = 6: 12345678被截断，rejectlong = true则忽略这个分词）</li>
+<li>dict_xsyn：全文检索的字典模块，设置分词同义词，支持同义词匹配</li>
+<li>dummy_seclabel：用于安全标签SQL测试</li>
+<li>earthdistance：cube、point类型计算地球两点间距离</li>
+<li>file_fdw：文件外部表模块</li>
+<li>fuzzystrmatch：单字节字符串之间的相似性判断</li>
+<li>hstore：存储kv数据类型，插件还提供了多个kv类型的函数和操作符，如数组、json、hstore间转换，kv存在判断，删除kv值</li>
+<li>intagg：int类型数组聚合函数</li>
+<li>intarray：int类型数组功能扩展</li>
+<li>isn：国际通用产品标识码数据类型，如ISBN、ISMN等</li>
+<li>lo：大对象可选木块，lo烈性和自动unlink大对象的trigger</li>
+<li>ltree：异构数据类型及操作函数操作符</li>
+<li>oid2name：oid转换成name的命令行工具，不属于extension</li>
+<li>pageinspect：用于读取数据库PAGE裸信息插件，可以读main、fsm、vm、FORK的页数据，用于debug</li>
+<li>passwordcheck：创建用户或修改用户密码时，检查密码安全性</li>
+<li>pg_archivecleanup：清除归档文件的命令，不属于extension</li>
+<li>pgbeanch：数据库性能测试，不属于extension</li>
+<li>pg_buffercache，输出当前shared buffer状态数据，细化到page number</li>
+<li>pgcrypto：服务端数据加密的扩展库</li>
+<li>pg_freespacemap：从行头信息的infomask获取行锁信息</li>
+<li>pg_standby：便于创建warm standby的命令行工具</li>
+<li>pg_stat_statements：跟踪数据库SQL，收集统计信息</li>
+<li>pgstattuple：行级统计信息，dead tuple、live tuples、table_len、free_space</li>
+<li>pg_tset_fsync：测试磁盘fsync速率</li>
+<li>pg_test_timing：测试系统定时器开销，开销越大，explain analyze时间结果越不准</li>
+<li>pg_trgm：将字符串拆分成3个一组的多个单元，用于测试两个字符串之间相似度，比分词暴力</li>
+<li>pg_upgrade：跨大版本的升级工具，如9.0-&gt;9.1 </li>
+<li>pg_upgrade_support –pg_upgrade用到的服务端函数集</li>
+<li>pg_xlogdump：从xlog中dump出易读的底层信息</li>
+<li>postgresfdw：跨库的外部表插件</li>
+<li>seg：线段类型和浮点数的区间类型，及相关操作符，索引访问方法</li>
+<li>sepgsql：基于SELinux安全策略的访问控制模块</li>
+<li>spi：一些服务端的trigger函数</li>
+<li>sslinfo：输入ssl认证的客户端认证信息</li>
+<li>start-scripts：数据库启动脚本模块</li>
+<li>tablefunc：用于行列变换，异构数据处理</li>
+<li>tcn：提供异步消息输出的trigger </li>
+<li>test_parser：全文检索中的自定义parser的测试插件</li>
+<li>tserach2：全文检索相关插件，8.3以后不需要这个</li>
+<li>unaccent：全文检索插件</li>
+<li>uuid-ossp：生成UUID插件</li>
+<li>vacuumlo：大对象垃圾回收命令</li>
+<li>worker_spi：服务端worker编程返利</li>
+<li>xml2：xml相关插件</li>
+</ul>
+<h4 id="PostgreSQL数据库结构介绍"><a href="#PostgreSQL数据库结构介绍" class="headerlink" title="PostgreSQL数据库结构介绍"></a>PostgreSQL数据库结构介绍</h4><ul>
+<li>base：对应pg_default(\db)表空间</li>
+<li>global：对应pg_global表空间，存放集群中共享对象例pg__database表，包含控制文件等</li>
+<li>pg_commit_ts：事务提交状态数据</li>
+<li>pg_hba.conf：数据库访问控制文件</li>
+<li>pg_log：数据库日志目录，根据配置定义，可能没有这个目录</li>
+<li>pg_multixact：共享行锁的事务状态数据</li>
+<li>pg_notify：异步消息相关的状态数据</li>
+<li>pg_serial：串行隔离级别的事务状态数据</li>
+<li>pg_snapshots：存储执行了事务snapshot导出的状态数据</li>
+<li>pg_stat_tmp：统计信息的临时文件</li>
+<li>pg_subtrans：子事务状态数据</li>
+<li>pg_tblspc：表空间的软链接目录</li>
+<li>pg_twophase：二阶事务的状态数据</li>
+<li>PG_VERSION：数据库版本</li>
+<li>postgresql.cofn：配置文件</li>
+<li>postgresql.auto.conf</li>
+<li>postmaster.opts：记录数据库启动时的命令行选项</li>
+<li>postmaster.pid：数据库启动的主进程信息文件，如$PGDATA目录，数据库启动时间、监听端口、IPC信息等</li>
+<li>pg_dynshmem</li>
+<li>pg_ident.conf</li>
+<li>pg_logical</li>
+<li>pg_replslot</li>
+<li>pg_stat</li>
+<li>pg_wal：应该就是存储WAL文件吧</li>
+<li>pg_xact</li>
+</ul>
+<h4 id="PostgreSQL第三方插件安装"><a href="#PostgreSQL第三方插件安装" class="headerlink" title="PostgreSQL第三方插件安装"></a>PostgreSQL第三方插件安装</h4><ul>
+<li>通常的安装方法：<ul>
+<li>把第三方插件源码目录拷贝到contrib目录中</li>
+<li>把pg_config加到PATH中</li>
+<li>make clean -j8 &amp;&amp; make -j8 &amp;&amp; make install -j8</li>
+<li>create externsion XXX;方式进行插件安装</li>
+</ul>
+</li>
+</ul>
 
       
     </div>
@@ -379,9 +459,11 @@
       
         <div class="post-tags">
           
+            <a href="/tags/PostgreSQL/" rel="tag"># PostgreSQL</a>
+          
             <a href="/tags/Config/" rel="tag"># Config</a>
           
-            <a href="/tags/Rust/" rel="tag"># Rust</a>
+            <a href="/tags/Database/" rel="tag"># Database</a>
           
         </div>
       
@@ -394,8 +476,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/14/VIM配置/" rel="next" title="VIM配置">
-                <i class="fa fa-chevron-left"></i> VIM配置
+              <a href="/2020/06/14/Muduo技要2/" rel="next" title="Muduo技要2">
+                <i class="fa fa-chevron-left"></i> Muduo技要2
               </a>
             
           </div>
@@ -404,8 +486,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/14/Rust型变/" rel="prev" title="Rust型变">
-                Rust型变 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/14/PostgreSQL查询优化/" rel="prev" title="PostgreSQL查询优化">
+                PostgreSQL查询优化 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -540,7 +622,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Rust"><span class="nav-number">1.</span> <span class="nav-text">安装Rust</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改国内源"><span class="nav-number">2.</span> <span class="nav-text">修改国内源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker中使用"><span class="nav-number">3.</span> <span class="nav-text">Docker中使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Racer代码补全"><span class="nav-number">4.</span> <span class="nav-text">Racer代码补全</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#PostgreSQL源码目录简介"><span class="nav-number">1.</span> <span class="nav-text">PostgreSQL源码目录简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#contrib目录下的第三方插件"><span class="nav-number">1.1.</span> <span class="nav-text">contrib目录下的第三方插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PostgreSQL数据库结构介绍"><span class="nav-number">1.2.</span> <span class="nav-text">PostgreSQL数据库结构介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PostgreSQL第三方插件安装"><span class="nav-number">1.3.</span> <span class="nav-text">PostgreSQL第三方插件安装</span></a></li></ol></li></ol></div>
             
 
           </div>

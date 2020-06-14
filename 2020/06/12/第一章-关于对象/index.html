@@ -87,7 +87,7 @@
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
 <meta property="og:description" content="C语言中，数据和函数是分开来声明的，也就是说，语言本身没有支持”数据和函数“之间的关联性，这种程序方法称为程序性的（procedural）。一般从Cstruct转到C++的封装类后，唯一在布局以及存取时间上的负担是virtual引起的。  1.1 C++对象模式（The C++ Object Model） C++中有两种class data members：static和nonstatic，以及">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-12T14:50:22.282Z">
+<meta property="og:updated_time" content="2020-06-14T08:32:31.616Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第一章 关于对象">
 <meta name="twitter:description" content="C语言中，数据和函数是分开来声明的，也就是说，语言本身没有支持”数据和函数“之间的关联性，这种程序方法称为程序性的（procedural）。一般从Cstruct转到C++的封装类后，唯一在布局以及存取时间上的负担是virtual引起的。  1.1 C++对象模式（The C++ Object Model） C++中有两种class data members：static和nonstatic，以及">
@@ -398,8 +398,9 @@
 </li>
 </ul>
 <h4 id="1-2-关键词所带来的差异（A-Keyword-Distinction）"><a href="#1-2-关键词所带来的差异（A-Keyword-Distinction）" class="headerlink" title="1.2 关键词所带来的差异（A Keyword Distinction）"></a>1.2 关键词所带来的差异（A Keyword Distinction）</h4><h5 id="关键词的困扰"><a href="#关键词的困扰" class="headerlink" title="关键词的困扰"></a>关键词的困扰</h5><ul>
-<li><p>关键词struct的意思是一个数据集合体，没有private data，也没有data的相应操作。它和C++的<font color="red">使用者自定义类型</font>（<font color="green">user-defined type</font>）区分开来。struct关键词的使用实现了C的<font colo="red">数据抽象观念</font>，而class关键词实现的是C++的<font color="red">ADT</font>（<font color="grren">Abstract Data Type</font>）观念。</p>
-<h5 id="策略性正确的struct（The-Politically-Correct-Struct）"><a href="#策略性正确的struct（The-Politically-Correct-Struct）" class="headerlink" title="策略性正确的struct（The Politically Correct Struct）"></a>策略性正确的struct（The Politically Correct Struct）</h5></li>
+<li>关键词struct的意思是一个数据集合体，没有private data，也没有data的相应操作。它和C++的<font color="red">使用者自定义类型</font>（<font color="green">user-defined type</font>）区分开来。struct关键词的使用实现了C的<font colo="red">数据抽象观念</font>，而class关键词实现的是C++的<font color="red">ADT</font>（<font color="grren">Abstract Data Type</font>）观念。</li>
+</ul>
+<h5 id="策略性正确的struct（The-Politically-Correct-Struct）"><a href="#策略性正确的struct（The-Politically-Correct-Struct）" class="headerlink" title="策略性正确的struct（The Politically Correct Struct）"></a>策略性正确的struct（The Politically Correct Struct）</h5><ul>
 <li><p>C的巧计有时候是C++的陷阱。例如一个在struct尾端的单一数组，也是每个struct objects有可变长数据：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mutable</span> &#123;</span></span><br><span class="line">    <span class="comment">/* stuff */</span></span><br><span class="line">    <span class="keyword">char</span> pc[<span class="number">1</span>];</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 为struct本身和该字符串配置足够的内存</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mumble</span> *<span class="title">pmumb1</span> = (<span class="title">struct</span> <span class="title">memble</span>*)<span class="title">malloc</span>(<span class="title">sizeof</span>(<span class="title">struct</span> <span class="title">mumble</span>) + <span class="title">strlen</span>(<span class="title">string</span>) + 1);</span></span><br><span class="line"><span class="built_in">strcpy</span>(&amp;mumble.pc, <span class="built_in">string</span>);</span><br></pre></td></tr></table></figure>
 
@@ -409,22 +410,23 @@
 </li>
 </ul>
 <h4 id="1-3-对象的差异（An-Object-Distinction）"><a href="#1-3-对象的差异（An-Object-Distinction）" class="headerlink" title="1.3 对象的差异（An Object Distinction）"></a>1.3 对象的差异（An Object Distinction）</h4><ul>
-<li><p>C++有以下方法支持<font color="red"><strong>多态</strong></font>：</p>
-<ul>
+<li>C++有以下方法支持<font color="red"><strong>多态</strong></font>：<ul>
 <li><font color="red">隐式转化操作</font>。（<code>Shape *ps = new Circle()</code>）</li>
 <li><font color="red">经由virtual function机制</font>。（<code>ps-&gt;rotate();</code>）</li>
 <li><font color="red">经由dynamic_cast和typeid操作符</font>。（<code>if（Circle \*pc = dynamic\_cast&lt;Circle\*&gt;(ps))</code>）</li>
 </ul>
 </li>
-<li><p>需要多少内存才能够表现一个<font color="red"><strong>class object大小</strong></font>？</p>
-<ul>
+<li>需要多少内存才能够表现一个<font color="red"><strong>class object大小</strong></font>？<ul>
 <li><strong>nonstatic data members的总和大小</strong>。</li>
 <li><strong>根据alignment需求padding的空间</strong>。（alignment是将数值调整到某数的倍数。32位机器上位4 bytes，64位机器上位8bytes）。</li>
-<li><strong>支持virtual而内部产生的额外负担（overhead）</strong>。<h5 id="指针的类型（The-Type-of-a-Pointer）"><a href="#指针的类型（The-Type-of-a-Pointer）" class="headerlink" title="指针的类型（The Type of a Pointer）"></a>指针的类型（The Type of a Pointer）</h5></li>
+<li><strong>支持virtual而内部产生的额外负担（overhead）</strong>。</li>
 </ul>
 </li>
-<li><p>一个指向ZooAnimal的指针与一个指向整数的指针或template Array的指针在内存上没什么区别。真正的不同是其所寻址出来的<font color="red"><strong>object类型</strong></font>不同，因为<font color="red">指针类型会教导编译器如何解释某个地址中的内存内容及其大小</font>。所以，这就是为什么void<em>能持有一个地址，但不同操作该地址的原因了。而<font color="red">转换</font>（<font color="green">cast</font>）也是一种编译器指令，*</em>它不改变地址，只影响内存大小和内容的解释方式**。</p>
-<h5 id="加上多态之后（Adding-Polymorphism）"><a href="#加上多态之后（Adding-Polymorphism）" class="headerlink" title="加上多态之后（Adding Polymorphism）"></a>加上多态之后（Adding Polymorphism）</h5></li>
+</ul>
+<h5 id="指针的类型（The-Type-of-a-Pointer）"><a href="#指针的类型（The-Type-of-a-Pointer）" class="headerlink" title="指针的类型（The Type of a Pointer）"></a>指针的类型（The Type of a Pointer）</h5><ul>
+<li>一个指向ZooAnimal的指针与一个指向整数的指针或template Array的指针在内存上没什么区别。真正的不同是其所寻址出来的<font color="red"><strong>object类型</strong></font>不同，因为<font color="red">指针类型会教导编译器如何解释某个地址中的内存内容及其大小</font>。所以，这就是为什么void<em>能持有一个地址，但不同操作该地址的原因了。而<font color="red">转换</font>（<font color="green">cast</font>）也是一种编译器指令，*</em>它不改变地址，只影响内存大小和内容的解释方式**。</li>
+</ul>
+<h5 id="加上多态之后（Adding-Polymorphism）"><a href="#加上多态之后（Adding-Polymorphism）" class="headerlink" title="加上多态之后（Adding Polymorphism）"></a>加上多态之后（Adding Polymorphism）</h5><ul>
 <li><p>定义一个Bear，作为一种ZooAnimal：</p>
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">ZooAnimal --- Bear</span><br></pre></td></tr></table></figure>
 
@@ -567,7 +569,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -589,7 +591,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

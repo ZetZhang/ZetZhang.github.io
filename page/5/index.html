@@ -259,6 +259,503 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker的dockerfile编写/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/12/Docker的dockerfile编写/" itemprop="url">Docker的dockerfile编写</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T22:10:03+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="使用Dockerfile创建镜像"><a href="#使用Dockerfile创建镜像" class="headerlink" title="使用Dockerfile创建镜像"></a>使用Dockerfile创建镜像</h2><ul>
+<li>Dockerfile分为四部分<ul>
+<li>基础镜像信息</li>
+<li>维护者信息</li>
+<li>镜像操作指令</li>
+<li>容器启动时执行指令</li>
+</ul>
+</li>
+</ul>
+<h3 id="detail"><a href="#detail" class="headerlink" title="detail"></a>detail</h3><table>
+<thead>
+<tr>
+<th align="left">指令</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>FROM</code></td>
+<td align="left">指定基础镜像</td>
+</tr>
+<tr>
+<td align="left"><code>MAINTAINER</code></td>
+<td align="left">维护者信息</td>
+</tr>
+<tr>
+<td align="left"><code>RUN</code></td>
+<td align="left">运行命令</td>
+</tr>
+<tr>
+<td align="left"><code>CMD</code></td>
+<td align="left">启动容器时默认执行命令，最多只能执行一个命令</td>
+</tr>
+<tr>
+<td align="left"><code>LABEL</code></td>
+<td align="left">元数据标签信息</td>
+</tr>
+<tr>
+<td align="left"><code>EXPOSE</code></td>
+<td align="left">监听端口</td>
+</tr>
+<tr>
+<td align="left"><code>ENV</code></td>
+<td align="left">环境变量</td>
+</tr>
+<tr>
+<td align="left"><code>ADD</code></td>
+<td align="left">复制&lt;src&gt;到容器&lt;dest&gt;，如果是tar自动解压，src可以是URL</td>
+</tr>
+<tr>
+<td align="left"><code>COPY</code></td>
+<td align="left">复制本地&lt;src&gt;到容器&lt;dest&gt;</td>
+</tr>
+<tr>
+<td align="left"><code>ENTRYPOINT</code></td>
+<td align="left">指定镜像默认入口，最多只有一个，可以被<code>docker run --entrypoint</code>覆盖掉</td>
+</tr>
+<tr>
+<td align="left"><code>VOLUME</code></td>
+<td align="left">创建数据卷挂载点</td>
+</tr>
+<tr>
+<td align="left"><code>USER</code></td>
+<td align="left">指定运行容器时的USER或UID</td>
+</tr>
+<tr>
+<td align="left"><code>WORKDIR</code></td>
+<td align="left">为<code>RUN</code>、<code>CMD</code>和<code>ENTRYPOINT</code>指令配置工作目录</td>
+</tr>
+<tr>
+<td align="left"><code>ARG</code></td>
+<td align="left">指定一些镜像内使用的参数</td>
+</tr>
+<tr>
+<td align="left"><code>ONBUILD</code></td>
+<td align="left">当创建的镜像为其他镜像的基础镜像时执行的操作命令</td>
+</tr>
+<tr>
+<td align="left"><code>STOPSIGNAL</code></td>
+<td align="left">指定创建镜像启动的容器接收退出的信号值</td>
+</tr>
+<tr>
+<td align="left"><code>HEALTHCHECK</code></td>
+<td align="left">配置启动容器如何进行健康检查</td>
+</tr>
+<tr>
+<td align="left">+ 使用<code>.dockerignore</code>文件可以让Docker忽略匹配路径下的目录和文件</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># comment</span><br><span class="line">*/temp*</span><br><span class="line">*/*/temp*</span><br><span class="line">tmp?</span><br><span class="line">~*</span><br></pre></td></tr></table></figure></td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<h3 id="desc"><a href="#desc" class="headerlink" title="desc"></a>desc</h3><table>
+<thead>
+<tr>
+<th align="left">指令</th>
+<th align="left">格式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>FROM</code></td>
+<td align="left"><code>&lt;image&gt;:&lt;tag&gt;</code> || <code>&lt;image&gt;@&lt;digest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>MAINTAINER</code></td>
+<td align="left"><code>&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>RUN</code></td>
+<td align="left">shell:<code>&lt;command&gt;</code> || exec:<code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>CMD</code></td>
+<td align="left"><code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code> || <code>command param1 param2</code> || [“param1”, “param2”]</td>
+</tr>
+<tr>
+<td align="left"><code>LABEL</code></td>
+<td align="left"><code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>EXPOSE</code></td>
+<td align="left"><code>&lt;port&gt;[&lt;port&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>ENV</code></td>
+<td align="left"><code>&lt;key&gt; &lt;value&gt;</code> || <code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
+</tr>
+<tr>
+<td align="left"><code>ADD</code></td>
+<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>COPY</code></td>
+<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
+</tr>
+<tr>
+<td align="left"><code>ENTRYPOINT</code></td>
+<td align="left">shell:<code>command param1 param2</code> || exec: <code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>VOLUME</code></td>
+<td align="left"><code>[&quot;/data&quot;]</code></td>
+</tr>
+<tr>
+<td align="left"><code>USER</code></td>
+<td align="left"><code>daemon</code></td>
+</tr>
+<tr>
+<td align="left"><code>WORKDIR</code></td>
+<td align="left"><code>/path/to/workdir</code>，如果是相对路径，路径是基于前个<code>WORKDIR</code>的</td>
+</tr>
+</tbody></table>
+<h3 id="exampe"><a href="#exampe" class="headerlink" title="exampe"></a>exampe</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM debian:jessie</span><br><span class="line">MAINTAINER NGINX Docker Maintainers &quot;docker-maint@nginx.com&quot;</span><br><span class="line">ENV NGINX_VERSION 1.10.1-1-jessie</span><br><span class="line">RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys ....</span><br><span class="line">RUN ln -sf /dev/stdout /var/log/nginx/access.log \</span><br><span class="line">        $$ ln -sf /dev/stderr /var/log/nginx/error.log</span><br><span class="line">EXPOSE 80 443</span><br><span class="line">CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</span><br></pre></td></tr></table></figure>
+
+<h3 id="sys"><a href="#sys" class="headerlink" title="sys"></a>sys</h3><h4 id="如果使用alpine镜像"><a href="#如果使用alpine镜像" class="headerlink" title="如果使用alpine镜像"></a>如果使用alpine镜像</h4><blockquote>
+<p>安装软件包需要用apk包管理器替换apt工具</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apk add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可以从<a href="https://pkgs.alpinelinux.org/packages" target="_blank" rel="noopener">alpine</a>搜索并确定安装包名称<br>如果需要指定社区的安装包，则：</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"http://dl-4.alpinelinux.org/alpine/edge/teseting"</span> &gt;&gt; /etc/apk/repositories</span><br><span class="line">$ apk --update add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker数据卷/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/12/Docker数据卷/" itemprop="url">Docker数据卷</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T21:00:57+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h2><blockquote>
+<p>使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作</p>
+</blockquote>
+<ul>
+<li>数据管理主要有两种方式：<ul>
+<li>数据卷（Data Volumes）：容器数据直接映射到本地主机环境</li>
+<li>数据卷容器（Data Volume Containers）：使用特定容器维护数据卷</li>
+</ul>
+</li>
+</ul>
+<h4 id="数据卷-1"><a href="#数据卷-1" class="headerlink" title="数据卷"></a>数据卷</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/webapp目录</span></span><br><span class="line"><span class="comment"># 创建数据卷，-P是映射本地临时端口</span></span><br><span class="line"><span class="comment"># 挂在主机目录为数据卷: from/path:to/path</span></span><br><span class="line"><span class="comment"># 指定数据卷读写权限: ro/rw</span></span><br><span class="line">$ docker run -d -P --name web -v /src/webapp:/opt/webapp:ro training/webapp python app.py</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据卷容器"><a href="#数据卷容器" class="headerlink" title="数据卷容器"></a>数据卷容器</h4><blockquote>
+<p>创建数据卷容器dbdata，创建数据卷挂载到容器dbdata</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it -v /dbdata --name dbdata ubuntu</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>其他容器对其进行挂载，之后三方任何一方修改各方都可见</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --volumes-from dbdata --name db1 ubuntu</span><br><span class="line">$ docker run -it --volumes-from dbdata --name db2 ubuntu</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>删除最后挂载容器需要使用<code>docker rm -v</code>同时删除关联容器</p>
+</blockquote>
+<hr>
+<h3 id="使用数据卷容器迁移数据"><a href="#使用数据卷容器迁移数据" class="headerlink" title="使用数据卷容器迁移数据"></a>使用数据卷容器迁移数据</h3><h4 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from dbdata -v $(<span class="built_in">pwd</span>):/backup --name worker ubuntu tar cvf /backup/backup.tar /dbdata</span><br></pre></td></tr></table></figure>
+
+<h4 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h4><blockquote>
+<p>首先创建容器dbdata2</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -v /dbupdate --name dbdata2 ubuntu ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>新容器挂载dbdata2，然后untar解压备份文件到所挂载的容器卷中</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from dbdata2 -v $(<span class="built_in">pwd</span>):/backup busybox tar xvf /backup/backup.tar</span><br></pre></td></tr></table></figure>
+
+<h2 id="端口映射和容器互联"><a href="#端口映射和容器互联" class="headerlink" title="端口映射和容器互联"></a>端口映射和容器互联</h2><h3 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以-p映射多端口-p po -p po</span></span><br><span class="line"><span class="comment"># 可以指定ip:po:po</span></span><br><span class="line"><span class="comment"># 还可以本地随机端口ip::po</span></span><br><span class="line"><span class="comment"># 还可以指定udp端口ip:po:po/udp</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="容器互联"><a href="#容器互联" class="headerlink" title="容器互联"></a>容器互联</h3><blockquote>
+<p>创建新容器</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d --name db training/postgres</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>创建新容器连接到db容器</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --link　name:alias</span></span><br><span class="line">$ docker run -d -P --name web --link db:db traning/webapp</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker基本使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -469,10 +966,10 @@ CONTAINER</code></p>
 <h3 id="Docker的C-S模式：Remote-API"><a href="#Docker的C-S模式：Remote-API" class="headerlink" title="Docker的C/S模式：Remote API"></a>Docker的C/S模式：<a href="https://docs.docker.com/reference/api/docker_remote_api/" target="_blank" rel="noopener">Remote API</a></h3><h4 id="连接方式"><a href="#连接方式" class="headerlink" title="连接方式"></a>连接方式</h4><ul>
 <li><code>unix:///var/run/docker.dock</code></li>
 <li><code>tcp://host:port</code></li>
-<li><code>fd://socketfd</code><h4 id="Docker的远程访问"><a href="#Docker的远程访问" class="headerlink" title="Docker的远程访问"></a>Docker的远程访问</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认配置-H unix:///var/run/docker.sock</span></span><br><span class="line"><span class="comment"># e.g.: docker -H tcp://ip:port COMMAND</span></span><br><span class="line"><span class="comment"># 可选择的环境变量DOCKER_HOST</span></span><br><span class="line"><span class="comment"># e.g.: export DOCKER_HOST="tcp://ip:port"</span></span><br></pre></td></tr></table></figure>
-
-</li>
+<li><code>fd://socketfd</code></li>
 </ul>
+<h4 id="Docker的远程访问"><a href="#Docker的远程访问" class="headerlink" title="Docker的远程访问"></a>Docker的远程访问</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认配置-H unix:///var/run/docker.sock</span></span><br><span class="line"><span class="comment"># e.g.: docker -H tcp://ip:port COMMAND</span></span><br><span class="line"><span class="comment"># 可选择的环境变量DOCKER_HOST</span></span><br><span class="line"><span class="comment"># e.g.: export DOCKER_HOST="tcp://ip:port"</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="Docker容器互联"><a href="#Docker容器互联" class="headerlink" title="Docker容器互联"></a>Docker容器互联</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --icc=true，允许容器间互联</span></span><br><span class="line"><span class="comment"># 每次镜像重启都可能导致IP的变更，因此使用以下方式</span></span><br><span class="line"> <span class="comment"># --link</span></span><br><span class="line">$ docker run --link=[CONTAINER]:[ALIAS] [IMAGE][COMMAND]</span><br><span class="line"><span class="comment"># e.g. docker run -it --name test --link=other:alias img:test</span></span><br><span class="line"><span class="comment"># 只允许特定容器间连接</span></span><br><span class="line">$ --icc=<span class="literal">false</span> --iptables=<span class="literal">true</span></span><br><span class="line">$ --link</span><br></pre></td></tr></table></figure>
 
 <h3 id="Docker容器的数据卷"><a href="#Docker容器的数据卷" class="headerlink" title="Docker容器的数据卷"></a>Docker容器的数据卷</h3><h4 id="为容器添加数据卷"><a href="#为容器添加数据卷" class="headerlink" title="为容器添加数据卷"></a>为容器添加数据卷</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># -v local_catalogue:docker_catalogue:[ro]</span></span><br><span class="line"><span class="comment"># e.g.</span></span><br><span class="line">$ sudo dcoker run -v ~/container_data:/data -it ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
@@ -489,7 +986,9 @@ CONTAINER</code></p>
 <h4 id="Open-vSwitch实现"><a href="#Open-vSwitch实现" class="headerlink" title="Open vSwitch实现"></a>Open vSwitch实现</h4><h5 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h5><ul>
 <li>双网卡，Host-Only &amp; NAT</li>
 <li>安装Open vSwitch和网桥管理工具bridge-utils</li>
-<li>同一网段的IP地址<h5 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h5></li>
+<li>同一网段的IP地址</li>
+</ul>
+<h5 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h5><ul>
 <li>建立ovs网桥</li>
 <li>添加gre连接</li>
 <li>配置docker容器虚拟网桥</li>
@@ -1746,7 +2245,7 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1768,7 +2267,7 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

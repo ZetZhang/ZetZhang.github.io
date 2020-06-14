@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。 2.1 Default Constructor的构造操作“带有Default Constructor”的Member Class Object 如果class没有constructor，但有一个member object，而且这个object">
+<meta name="description" content="关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。  2.1 Default Constructor的构造操作“带有Default Constructor”的Member Class Object 如果class没有constructor，但有一个member object，而且这个objec">
 <meta name="keywords" content="C++,C++对象模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第二章 构造函数语义学">
 <meta property="og:url" content="http://yoursite.com/2020/06/12/第二章-构造函数语义学/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。 2.1 Default Constructor的构造操作“带有Default Constructor”的Member Class Object 如果class没有constructor，但有一个member object，而且这个object">
+<meta property="og:description" content="关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。  2.1 Default Constructor的构造操作“带有Default Constructor”的Member Class Object 如果class没有constructor，但有一个member object，而且这个objec">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-12T14:50:33.079Z">
+<meta property="og:updated_time" content="2020-06-14T08:33:31.706Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第二章 构造函数语义学">
-<meta name="twitter:description" content="关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。 2.1 Default Constructor的构造操作“带有Default Constructor”的Member Class Object 如果class没有constructor，但有一个member object，而且这个object">
+<meta name="twitter:description" content="关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。  2.1 Default Constructor的构造操作“带有Default Constructor”的Member Class Object 如果class没有constructor，但有一个member object，而且这个objec">
 
 
 
@@ -353,8 +353,9 @@
 
       
         <ul>
-<li><p>关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。</p>
-<h4 id="2-1-Default-Constructor的构造操作"><a href="#2-1-Default-Constructor的构造操作" class="headerlink" title="2.1 Default Constructor的构造操作"></a>2.1 Default Constructor的构造操作</h4><h5 id="“带有Default-Constructor”的Member-Class-Object"><a href="#“带有Default-Constructor”的Member-Class-Object" class="headerlink" title="“带有Default Constructor”的Member Class Object"></a>“带有Default Constructor”的Member Class Object</h5></li>
+<li>关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。</li>
+</ul>
+<h4 id="2-1-Default-Constructor的构造操作"><a href="#2-1-Default-Constructor的构造操作" class="headerlink" title="2.1 Default Constructor的构造操作"></a>2.1 Default Constructor的构造操作</h4><h5 id="“带有Default-Constructor”的Member-Class-Object"><a href="#“带有Default-Constructor”的Member-Class-Object" class="headerlink" title="“带有Default Constructor”的Member Class Object"></a>“带有Default Constructor”的Member Class Object</h5><ul>
 <li><p>如果class没有constructor，但有一个member object，而且这个object有default constructor，那么这个class的implicit default constructor是<font color="red">nontrivial</font>的。举个例子，下面程序片段中，编译器为class Bar合成一个default constructor：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> &#123;</span> <span class="keyword">public</span>: Foo(), Foo(<span class="keyword">int</span>) ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span> &#123;</span> <span class="keyword">public</span>: Foo foo; <span class="keyword">char</span> *str; &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo_bar</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Bar bar;    <span class="comment">// Bar::foo 必须在此处初始化。</span></span><br><span class="line">    <span class="keyword">if</span> (str) &#123; &#125; ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -364,11 +365,13 @@
 <p>  而且，被合成default constructor只满足编译期需求，并不是程序员需求。如果default constructor由程序员显式定义出来了，那么编译器的行动是：</p>
 </li>
 <li><p>如果class A内含一个或一个以上的member class objects，那么class A的每一个constructor必须调用每一个member classes的default constructor。编译器会扩张已存在的constructors，使得user code被执行之前，先调用的default constructor。</p>
-<h5 id="“带有Default-Constructor”的Base-Class"><a href="#“带有Default-Constructor”的Base-Class" class="headerlink" title="“带有Default Constructor”的Base Class"></a>“带有Default Constructor”的Base Class</h5></li>
-<li><p>如果class没有constructors，却派生自有default constructor的base class，那么这个derived class的default constructor会被视为nontrivial。</p>
 </li>
-<li><p>如果提供多个constructor，但都没有default constructor，编译器会扩张现有的每一个constructors，将用以调用必要default constructors的程序代码加进去。它不会合成一个新的default constructor。</p>
-<h5 id="“带有一个Virtual-Function”的Class"><a href="#“带有一个Virtual-Function”的Class" class="headerlink" title="“带有一个Virtual Function”的Class"></a>“带有一个Virtual Function”的Class</h5></li>
+</ul>
+<h5 id="“带有Default-Constructor”的Base-Class"><a href="#“带有Default-Constructor”的Base-Class" class="headerlink" title="“带有Default Constructor”的Base Class"></a>“带有Default Constructor”的Base Class</h5><ul>
+<li>如果class没有constructors，却派生自有default constructor的base class，那么这个derived class的default constructor会被视为nontrivial。</li>
+<li>如果提供多个constructor，但都没有default constructor，编译器会扩张现有的每一个constructors，将用以调用必要default constructors的程序代码加进去。它不会合成一个新的default constructor。</li>
+</ul>
+<h5 id="“带有一个Virtual-Function”的Class"><a href="#“带有一个Virtual-Function”的Class" class="headerlink" title="“带有一个Virtual Function”的Class"></a>“带有一个Virtual Function”的Class</h5><ul>
 <li><p>另外有<font color="red">两种情况</font>，也要合成default constructor：</p>
 <ol>
 <li><p><strong>class声明（或继承）一个virtual function</strong></p>
@@ -400,9 +403,10 @@
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">const</span> A *pa)</span> </span>&#123;pa-&gt;__vbcX-&gt;i = <span class="number">1024</span>; &#125;</span><br></pre></td></tr></table></figure>
 
 <p> __vbcX实在class object构造期间被完成的。编译器会安插允许每个virtual base class在执行器存取操作的代码，如果base没有声明任何constructor，编译器必须为它合成一个default的。</p>
-<h4 id="2-2-Copy-Constructor的构造操作"><a href="#2-2-Copy-Constructor的构造操作" class="headerlink" title="2.2 Copy Constructor的构造操作"></a>2.2 Copy Constructor的构造操作</h4></li>
-<li><p>有三种情况，会以一个obect的内容作为另一个class object的初值。</p>
-<ul>
+</li>
+</ul>
+<h4 id="2-2-Copy-Constructor的构造操作"><a href="#2-2-Copy-Constructor的构造操作" class="headerlink" title="2.2 Copy Constructor的构造操作"></a>2.2 Copy Constructor的构造操作</h4><ul>
+<li>有三种情况，会以一个obect的内容作为另一个class object的初值。<ul>
 <li><strong>对object做显式初始化操作</strong></li>
 <li><strong>当object作为参数交给某个函数时</strong></li>
 <li><strong>函数回传一个class object时</strong></li>
@@ -731,7 +735,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -753,7 +757,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

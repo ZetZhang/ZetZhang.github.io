@@ -259,6 +259,425 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/3-异常/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/14/3-异常/" itemprop="url">3 异常</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T13:51:56+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-03/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.03</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>C++增加了exceptions性质后，可能令人不舒服的改变了很多事情。原始指针的使用如今称为高风险行为，资源泄露的机会大增，撰写符合期望的constructors和destructors的难度也大增。程序员特别小心，放置程序在执行时突然中止。可执行文件和程序库变得更大、速度更慢。<br>为什么使用exceptions？答案很简单：exceptions无法被忽视。如果一个函数利用<strong>设定状态变量</strong>的方式或是利用<strong>返回错误码</strong>的方式发出一个异常，无法保证此函数的调用者会检查那个变量或检验那个错误码。于是程序不断执行，远离错误发生地点。但如果函数以抛出exception的方式发出异常信号，而该exception未被捕捉，程序的执行立刻中止。<br>C只有<font color="red"><code>setjmp</code></font>和<font color="red"><code>longjmp</code></font>才能近似这样的行为。但longjmp在C++中有缺陷：当它调整栈（stack）的时候，无法调用局部（local）对象的destructors。C++很依赖destructors被调用。</p>
+<h4 id="条款9：利用destuctors避免资源泄露"><a href="#条款9：利用destuctors避免资源泄露" class="headerlink" title="条款9：利用destuctors避免资源泄露"></a>条款9：利用destuctors避免资源泄露</h4><ol>
+<li><p>有个例子，加入你现在要写一个软件。收养中心每天会产生一个文件，其中有它所安排的当天收养个案，你的工作是写程序读文件，然后为每个个案做适当处理：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ALA: abstract base class</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ALA</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">processAdoption</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Puppy</span> :</span> <span class="keyword">public</span> ALA</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">processAdoption</span><span class="params">()</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kitten</span> :</span> <span class="keyword">public</span> ALA</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">processAdoption</span><span class="params">()</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">ALA* <span class="title">readALA</span><span class="params">(istream &amp;s)</span></span>;</span><br><span class="line"><span class="comment">// 程序核心大致</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">processAdoptions</span><span class="params">(istream &amp;dataSource)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 如果还有数据</span></span><br><span class="line">    <span class="keyword">while</span> (dataSource)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 取出下一只动物</span></span><br><span class="line">        ALA *pa = readALA(dataSource);</span><br><span class="line">        <span class="comment">// 处理收养事宜</span></span><br><span class="line">        pa-&gt;processAdoption();</span><br><span class="line">        <span class="comment">// 删除readALA返回的对象</span></span><br><span class="line">        <span class="keyword">delete</span> pa;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 如果pa-&gt;processAdoption抛出一个exception怎么办，很简单：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">processAdoptions</span><span class="params">(istream &amp;dataSource)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (dataSource)</span><br><span class="line">    &#123;</span><br><span class="line">        ALA *pa = readALA(dataSource);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            pa-&gt;processAdoption();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (...) &#123; <span class="comment">// 捕捉</span></span><br><span class="line">            <span class="keyword">delete</span> pa;  <span class="comment">// delete，避免泄露</span></span><br><span class="line">            <span class="keyword">throw</span>;      <span class="comment">// 传播给调用端</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">delete</span> pa;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 这样程序被try语句块和catch语句块搞得乱七八糟。解决方法是以一个类似指针的对象取代指针pa，这样当这个类指针对象被（自动）销毁，可以令其destructor调用delete。这就是<font color="red">smart pointers</font>。C++标准库有，它看起来是这样子的（此书有点旧）：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">auto_ptr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">auto_ptr</span>(T *p = <span class="number">0</span>) : ptr(p) &#123;&#125;</span><br><span class="line">    ~<span class="built_in">auto_ptr</span>() &#123; <span class="keyword">delete</span> ptr; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T *ptr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> auto_ptr不适合delete数组对象的指针。如果你希望有这样的auto_ptr用在数组上，要么自己写一个，要么最好使用一些容器，比如vector来取代。用auto_ptr对象取代原始指针后，processAdoptions看起来这样子：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">processAdoptions</span><span class="params">(istream &amp;dataSource)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (dataSource)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">auto_ptr</span>&lt;ALA&gt; pa(readALA(dataSource));</span><br><span class="line">        pa-&gt;processAdoption();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 它和原版本的差异只有两处。一是pa被声明为一个auto_ptr&lt;ALA&gt;对象；二是循环最后不再有delete语句。它是隐藏在auto_ptr背后的观念——以一个对象存放必须自动释放的资源，并依赖该对象的destructor释放。</p>
+</li>
+</ol>
+<h4 id="条款10：在constructors内阻止资源泄露（resource-leak）"><a href="#条款10：在constructors内阻止资源泄露（resource-leak）" class="headerlink" title="条款10：在constructors内阻止资源泄露（resource leak）"></a>条款10：在constructors内阻止资源泄露（resource leak）</h4><ol>
+<li><p>对于尚未完全构造好的对象，C++拒绝调用其destructor。由于C++不自动清理构造期间抛出exceptions的对象，所以设法让constructor在那种情况下也能自我清理。这通常将可能的exceptions捕捉起来，执行清理工作，然后重新抛出exception。让它继续传播：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Image</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Image(<span class="keyword">const</span> <span class="built_in">string</span> &amp;imageDataFileName);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AudioClip</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    AudioClip(<span class="keyword">const</span> <span class="built_in">string</span> &amp;audioDataFileName);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookEntry</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    ~BookEntry();</span><br><span class="line">    BookEntry(<span class="keyword">const</span> <span class="built_in">string</span>&amp;, <span class="keyword">const</span> <span class="built_in">string</span>&amp;, <span class="keyword">const</span> <span class="built_in">string</span>&amp;, <span class="keyword">const</span> <span class="built_in">string</span>&amp;);</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addPhoneNumber</span><span class="params">(<span class="keyword">const</span> PhoneNumber &amp;number)</span></span>;</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="built_in">string</span> theName;</span><br><span class="line">    <span class="built_in">string</span> theAddress;</span><br><span class="line">    <span class="built_in">list</span>&lt;PhoneNumber&gt; thePhones;</span><br><span class="line">    Iimage * <span class="keyword">const</span> theImage;</span><br><span class="line">    AudioClip * <span class="keyword">const</span> theAudioClip;</span><br><span class="line">    <span class="function">Image* <span class="title">initImage</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp;imageFileName)</span></span>;</span><br><span class="line">    <span class="function">AudioClip* <span class="title">initAudioClip</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp;audioClipFileName)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> BookEntry::cleanup()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">delete</span> theImage;</span><br><span class="line">    <span class="keyword">delete</span> the AudioClip;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">BookEntry::BookEntry(const string &amp;name,</span></span><br><span class="line"><span class="comment">                    const string &amp;address,</span></span><br><span class="line"><span class="comment">                    const string &amp;imageFileName,</span></span><br><span class="line"><span class="comment">                    const string &amp;audioClipFileName) </span></span><br><span class="line"><span class="comment">: theName(name, theAddress(address),</span></span><br><span class="line"><span class="comment">    theImage(0), theAudioClip(0)</span></span><br><span class="line"><span class="comment">&#123;</span></span><br><span class="line"><span class="comment">    try &#123;</span></span><br><span class="line"><span class="comment">        if (imageFileName != "") </span></span><br><span class="line"><span class="comment">            theImage = new Image(imageFileName);</span></span><br><span class="line"><span class="comment">        if (audioClipFileName != "")</span></span><br><span class="line"><span class="comment">            theAudioClip = new AudioClip(audioClipFileName);</span></span><br><span class="line"><span class="comment">    &#125; catch (...) &#123;</span></span><br><span class="line"><span class="comment">        cleanup();</span></span><br><span class="line"><span class="comment">        throw;</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 想要在exceptions传播到constructor外之前，无法将try和catch放到member initialization list中，就放到某些private member functions中。</span></span><br><span class="line">BookEntry::BookEntry(<span class="keyword">const</span> <span class="built_in">string</span> &amp;name,</span><br><span class="line">                    <span class="keyword">const</span> <span class="built_in">string</span> &amp;address,</span><br><span class="line">                    <span class="keyword">const</span> <span class="built_in">string</span> &amp;imageFileName,</span><br><span class="line">                    <span class="keyword">const</span> <span class="built_in">string</span> &amp;audioClipFileName) </span><br><span class="line">: theName(name, theAddress(address),</span><br><span class="line">    theImage(initImage(imageFileName)), theAudioClip(initAudioClip(audioClipFileName))</span><br><span class="line">&#123;&#125;</span><br><span class="line"></span><br><span class="line">Image* BookEntry::initImage(<span class="keyword">const</span> <span class="built_in">string</span> &amp;imageFileName)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (imageFileName != <span class="string">""</span>) </span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Image(imageFileName);</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">AudioClip* BookEntry::initAudioClip(<span class="keyword">const</span> <span class="built_in">string</span> &amp;audioClipFileName)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (audioClipFileName != <span class="string">""</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> AudioClip(audioClipFIleName);</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (...) &#123;</span><br><span class="line">        <span class="keyword">delete</span> theImage;</span><br><span class="line">        <span class="keyword">throw</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">BookEntry::~BookEntry()</span><br><span class="line">&#123;</span><br><span class="line">    cleanup();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 更好的做法是如条款9一样，使用smart pointer来取代pointer class members，免除了exception出现时发生资源泄露。</p>
+</li>
+</ol>
+<h4 id="条款11：禁止异常（exceptions）流出destructors之外"><a href="#条款11：禁止异常（exceptions）流出destructors之外" class="headerlink" title="条款11：禁止异常（exceptions）流出destructors之外"></a>条款11：禁止异常（exceptions）流出destructors之外</h4><ol>
+<li>两种情况下destructor会被调用。第一种情况是<strong>当对象在正常状态下被销毁，也就是离开生存空间（scope）或是被明确删除时</strong>；第二种情况是<strong>当对象被exception处理机制——也就是exception传播过程中的stack-unwinding（栈展开）机制——销毁</strong>。</li>
+<li>当destructor被调用，可能有一个exception正在作用中，可惜的是无法在destructor区分这些状态（有了）。这样就要保守撰写destructors了。如果控制权基于exception的因素离开destructor，而此时另一个exception处于作用状态，C++会调用terminate函数，将程序结束掉。</li>
+<li>有两个理由支持阻止exceptions传出destructor之外。第一，<strong>它可以避免terminate函数在exception传播过程的<font color="red">栈展开</font>（<font color="green">stack-unwinding</font>）机制被调用</strong>；第二，<strong>它可以协助确保destructors完成其应该完成的所有事情</strong>。</li>
+</ol>
+<h4 id="条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异"><a href="#条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异" class="headerlink" title="条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异"></a>条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异</h4><ol>
+<li><p>从抛出端传递一个exception到catch字句，看起来和从函数调用端传递一个自变量到函数参数是一样的。但是有重大的不同。函数参数和exception的传递参数有3中：by value，by reference，by pointer。然而，当你调用一个函数，控制权最终会回到调用端（除非函数失败），但是当你抛出一个exception，控制权不再回到抛出端。而且被捕捉的exception是某个对象的副本，即使以by reference方式传参。</p>
+</li>
+<li><p>当对象被赋值当作一个exception，复制行为是由对象的copy constructor执行的。这个copy constructor相当于该对象的”静态类型“而非”动态类型”。例如：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span> &#123;</span> ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SpecialWidget</span> :</span> <span class="keyword">public</span> Widget &#123; ... &#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">passAndThrowWidget</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    SpecialWidget localSpecialWidget;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// rw表示一个SpecialWidget</span></span><br><span class="line">    Widget&amp; rw = localSpecialWidget;</span><br><span class="line">    <span class="comment">// 抛出一个类型为Widget的exception</span></span><br><span class="line">    <span class="keyword">throw</span> rw;   <span class="comment">// （条款25有返回动态类型的技术）</span></span><br><span class="line">    <span class="comment">// 抛出一个类型为SpecialWidget的exception；这是因为它并没有发生复制行为，只是再抛出。</span></span><br><span class="line">    <span class="keyword">throw</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (Widget w) ...    <span class="comment">// by value</span></span><br><span class="line"><span class="keyword">catch</span> (Widget &amp;w) ...   <span class="comment">// by reference</span></span><br><span class="line"><span class="keyword">catch</span> (<span class="keyword">const</span> Widget &amp;w) ... <span class="comment">// by reference-to-const</span></span><br></pre></td></tr></table></figure>
+
+<p> 以上“参数传递”和“exception传播“之间的另一个区别。exception的复制动作，其结果是个临时对象。一个被抛出的对象可以简单的用by reference的方式捕捉，不需要以<font color="red">by reference-to-const</font>的方式捕捉。调用过程将一个临时对象传递给<font color="red">non-const reference</font>参数是不允许的，但对exceptions则是合法。<br> 值得一提，by value方式传递exception，得符出”被抛出物“<strong>两个副本</strong>的构造代价，其中一个构造动作用于产生exception临时对象，另一个构造动作作用于将临时对象赋值到w；而by reference得付出<strong>单一副本</strong>的构造代价，这个副本就是临时副本，by reference方式传递函数参数不会发生复制行为。<br> 还有，exceptions与catch子句匹配过程中，不会发生隐式转换的行为。它仅有两种转换可以发生。第一种是<font color="red">继承架构中的类转换</font>（<font color="green">inheritance-based conversions</font>）。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">logic_error--&gt;exception</span><br><span class="line">runtime_error--&gt;exception</span><br><span class="line">domain_error--&gt;logic_error</span><br><span class="line">invalid_argument--&gt;logic_error</span><br><span class="line">length_error--&gt;logic_error</span><br><span class="line">out_of_range--&gt;logic_error</span><br><span class="line">range_error--&gt;runtime_error</span><br><span class="line">underflow_error--&gt;runtime_error</span><br><span class="line">overflow_error--&gt;runtime_error</span><br></pre></td></tr></table></figure>
+
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">catch</span> (runtime_error) ...</span><br><span class="line"><span class="keyword">catch</span> (runtime_error&amp;) ...</span><br><span class="line"><span class="keyword">catch</span> (<span class="keyword">const</span> runtime_error&amp;) ...</span><br><span class="line"><span class="keyword">catch</span> (runtime_error*) ...</span><br><span class="line"><span class="keyword">catch</span> (<span class="keyword">const</span> runtime_error*) ...</span><br><span class="line"><span class="keyword">catch</span> (<span class="keyword">const</span> <span class="keyword">void</span>*) ...</span><br></pre></td></tr></table></figure>
+
+<p> ”传递参数“和”传播exception“的最后不同是，catch子句总是依出现顺序做匹配尝试。将此行为和调用虚函数的行为比对。当调用虚函数时，被调用的函数是“调用者的动态类型”中的函数。在这方面，虚函数采用<font color="red"><strong>”best fit“（最佳吻合）策略</strong></font>，<font color="red"><strong>exception遵循”first fit”（最先吻合）策略</strong></font>。所以针对derived class而设计的catch子句必须放到针对base class设计的catch子句之前。</p>
+</li>
+</ol>
+<h4 id="条款13：以by-reference方式捕捉exceptions"><a href="#条款13：以by-reference方式捕捉exceptions" class="headerlink" title="条款13：以by reference方式捕捉exceptions"></a>条款13：以by reference方式捕捉exceptions</h4><ol>
+<li><font color="red">throw by pointer</font>应该是最有效率的一种做法,因为它不复制对象。但它并没有想象中的好，因为了让exception objects在控制权离开抛出指针的函数之后依然存在，就需要声明global或static对象，而程序很容易忘记。而且如果抛出的指针指向一个新的heap-based，负责catch的人不能区分是global即static还是heap中的exception object，于是可能产生内存泄露或者未定义的行为等潜在问题。<br> 此外，catch-by-pointer和语言本身建立起来的惯例有矛盾。4个标准的exception——<strong>bad-alloc、bad_cast、bad_typeid和bad_exception</strong>——统统都是对象，不是对象指针。说明只能使用by value或by reference。然而<font color="red">catch-by-value</font>每当exception objects被抛出，就得复制两次。而且他会引起<font color="red">切割</font>（<font color="green">slicing</font>）问题，因为derived class exception objects被捕捉并被视为base class exceptions：被切割过的对象其实就是缺少derived class data members。<br> 所以接下来就是<font color="red">catch-by-reference</font>了。它不像catch-by-pointer发生对象删除问题，也不存在catch-by-value的切割问题，而且exception objects只会被复制一次。</li>
+</ol>
+<h4 id="条款14：明智运用exception-specifications"><a href="#条款14：明智运用exception-specifications" class="headerlink" title="条款14：明智运用exception specifications"></a>条款14：明智运用exception specifications</h4><ol>
+<li><p><font color="red">exception specifications</font>让代码更容易被理解，因为它明确指出一个函数可以抛出什么样的exceptions。但它不只是一个注释而已。编译器有时候能够在编译期间侦测到与exception specifications不一致的行为。如果函数抛出了一个并未列入于其exception speicification的exception，这个错误会在运行期被检验出来。于是特殊函数<font color="red">unexpected</font>会被自动调用。unexpected的默认行为是调用terminate，而terminate的默认行为是调用abort，所以程序如果违反exception speicification，默认结果就是程序被中止。</p>
+</li>
+<li><p>编译器只会对exception specifications做局部经检验，调用某个函数而该函数可能违反调用端函数本身的exception specification。这么做可能会导致程序被迫终止，为将这种不一致性降到最低，一个方法是<strong>避免将exception specification放在需要类型自变量的templates身上</strong>。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不良的temmplates design，它带有exception specification</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">bool</span> <span class="title">operator</span>==(<span class="title">const</span> <span class="title">T</span> &amp;<span class="title">lhs</span>, <span class="title">const</span> <span class="title">T</span> &amp;<span class="title">rhs</span>) <span class="title">throw</span>()</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">return</span> &amp;lhs == &amp;rhs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 它指明template产生出来的函数不会抛出任何exception，然而它调用的operator &amp;可能会抛出一个异常。更一般化的问题是，没有任何方法可以知道一个template的类型参数可能抛出什么。<br> 避免踏上unexpected之路的第二个方法是：<strong>如果A函数调用的B函数没有exception specifications，那么A函数本身也不要设定exception specifications</strong>。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 标准委员会宣称typedef内不可出现exception specification， 可能需要该写宏</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*CallBackPtr)</span><span class="params">(<span class="keyword">int</span> eventXLocation, <span class="keyword">int</span> eventYLocation, <span class="keyword">void</span> *dataToPassBack)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CallBack</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    CallBack(CallBackPtr fPtr, <span class="keyword">void</span> *dataToPassBack) : func(fPtr), data(dataToPassBack) &#123;&#125; </span><br><span class="line">    <span class="function">vvoid <span class="title">makeCallBack</span><span class="params">(<span class="keyword">int</span> eventXLocation, <span class="keyword">int</span> eentYLocaltion)</span> <span class="keyword">const</span> <span class="title">throw</span><span class="params">()</span></span>;s</span><br><span class="line"><span class="keyword">private</span></span><br><span class="line">    CallBackPtr *func;</span><br><span class="line">    <span class="keyword">void</span> *fdata;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> CallBack::makeCallBack(<span class="keyword">int</span> eventXLocation, <span class="keyword">int</span> eventYLocatino) <span class="function"><span class="keyword">const</span> <span class="title">throw</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    fnuc(eventXLocation, eventYLocation, data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 第三个技术是：<strong>处理“系统”可能抛出的exceptions</strong>。直接处理非预期的exceptions比事先预防来的简单。但如果你写的软件大量运用exception specifications，但调用程序库提供的函数没有使用exception specifications，想要阻止之变得不切实际。这时候可以利用一个事实：以不同类型的exceptions取代非预期的exceptions。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 所有非预期的exception objects都被取代为此类的objects</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnexpectedException</span> &#123;</span>&#125;;</span><br><span class="line"><span class="comment">// 如果有非预期的exception被抛出，调用此函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">convertUnexpected</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">throw</span> UnexpectedException();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 以convertUnexpected取代默认的unexpected</span></span><br><span class="line"><span class="built_in">std</span>::set_unexpected(convertUnexpected);</span><br></pre></td></tr></table></figure>
+
+<p> 一旦完成这些部署，非预期的exception会导致该函数被调用。那么只要违反的exception specification内含有Unexpected Exception，exception的传播就会继续下去，而如果未含有，terminate会被调用，犹如未取代unexpected一样。<br> 将非预期的exceptions转换为一个已知类型的另一个做法是，依赖以下事实：如果非预期函数的替代者重新抛出当前（current）exception，该xception会被保准类型bad_exception取代而之。</p>
+</li>
+</ol>
+<h4 id="条款15：了解异常处理（exception-handing）的成本"><a href="#条款15：了解异常处理（exception-handing）的成本" class="headerlink" title="条款15：了解异常处理（exception handing）的成本"></a>条款15：了解异常处理（exception handing）的成本</h4><ol>
+<li>为了能够在运行期处理exceptions，程序必须做大量簿记工作。在每个执行点，它们必须能够确认“如果发生exception，哪些对象需要析构”，它们必须在每个try语句块的进入点和离开点做记号，针对每个try语句块它们必须记录对应的catch子句及能够处理的exceptions类型。这些簿记工作必须符出代价，运行时期的比对工作（以确保符合exception specifications）不是免费的。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/2-操作符/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/14/2-操作符/" itemprop="url">2 操作符</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T13:51:50+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-03/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.03</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="条款5：对定制的“类型转换函数”保持警觉"><a href="#条款5：对定制的“类型转换函数”保持警觉" class="headerlink" title="条款5：对定制的“类型转换函数”保持警觉"></a>条款5：对定制的“类型转换函数”保持警觉</h4><ol>
+<li><p>C++允许编译器在不同类型之间执行<font color="red">隐式转换</font>（<font color="green">implicit conversions</font>）。它继承C的传统，允许将char转换为int，将short转换为double。然而还有令人害怕的转型，包括将int转换为short，将double转换为char，这些类型转换会遗失信息。所以我们可以使用自己的类型。两种函数允许编译器执行这样的转换：<strong>单自变量constructors</strong>和<strong>隐式类型转换操作符</strong>。所谓的单自变量constructor是指能够以单一自变量成功调用的constructors：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Name</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// string to Name</span></span><br><span class="line">    Name(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;s);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Rational to double</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">double</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> ，而隐式类型转换操作符，是一个拥有奇怪名称的member function：关键词operator后面加上一个类型名称，你不能为此函数指定返回值类型，因为其返回值类型已经表现在函数名称上了：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">double</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">Rational <span class="title">r</span><span class="params">(<span class="number">1</span>, <span class="number">2</span>)</span></span>;   <span class="comment">// r == 1/2</span></span><br><span class="line"><span class="keyword">double</span> d = <span class="number">0.5</span> * r; <span class="comment">// 将r转为double，然后执行乘法运算</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>假设有一个class用来表现分数（rational numbers）。你希望像内建类型一样地输出Rational objects内容。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Rational <span class="title">r</span><span class="params">(<span class="number">1</span>, <span class="number">2</span>)</span></span>;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; r;</span><br></pre></td></tr></table></figure>
+
+<p> 假设忘了给Rational写一个operator&lt;&lt;，上述打印不但不会出错，编译器在面对上述动作，它会想尽各种办法（包括找出一系列可接受的隐式类型转换）让函数调用动作成功。而之间的代码发现，只要调用了Rational::oeprator double，将r转换为double，调用动作就能成功，却又有隐式类型转换操作符的缺点：它的出现可能到导致错误（非预期）的函数被调用。于是有了解决办法：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">asDouble</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; r;             <span class="comment">// error</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; r.asDouble();  <span class="comment">// ok, 以double形式输出r</span></span><br></pre></td></tr></table></figure>
+
+<p> 必须明白调用类型转换函数虽然有点不便，却可以避免默默调用了不想调用的函数。这也就是为什么标准程序库的string类型并未含有从string object到C-style char*的隐式转换函数，而是提供了一个显式的member function <code>c_str</code>。<br> 在单自变量constructors，这些函数造成的隐式类型转换的情况更难对付：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">Array</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Array(<span class="keyword">int</span> lowBound, <span class="keyword">int</span> highBound);</span><br><span class="line">    Array(<span class="keyword">int</span> size);</span><br><span class="line">    T&amp; <span class="keyword">operator</span>[](<span class="keyword">int</span> index);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span>==(<span class="keyword">const</span> Array&lt;<span class="keyword">int</span>&gt; &amp;lhs, <span class="keyword">const</span> Array&lt;<span class="keyword">int</span>&gt; &amp;rhs);</span><br><span class="line">Array&lt;<span class="keyword">int</span>&gt; a(<span class="number">10</span>);</span><br><span class="line">Array&lt;<span class="keyword">int</span>&gt; b(<span class="number">10</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    <span class="keyword">if</span> (a == b[i])      <span class="comment">// 如果打算写a[i] == b[i]</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">do</span> something <span class="keyword">for</span> when a[i] <span class="keyword">and</span> b[i] are equal;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        <span class="keyword">do</span> something <span class="keyword">for</span> when they're <span class="keyword">not</span>;</span><br></pre></td></tr></table></figure>
+
+<p> 这样的错误编译器并没有提醒，它一声不吭，编译器注意到它，发现只要调用Array&lt;int&gt; constructor（需要一个int自变量）就可以将int转为Array&lt;int&gt; object。于是它放手去做。<br> 有两种办法阻止编译器这么做：一个是简易法，另一个可在编译器不支持简易法的情况下使用。<br> 简易法是使用C++特征：关键词<font color="red"><code>explicit</code></font>。只要将constructors声明为explicit，编译器就能因隐式转换而调用它，不过显式类型转换是允许的（没发现）。有个解决方案：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">Array</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ArraySize</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        ArraySize(<span class="keyword">int</span> numElements) :  theSize(numElements) &#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> theSize; &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">int</span> theSize;</span><br><span class="line">    &#125;;</span><br><span class="line">    Array(<span class="keyword">int</span> lowBound, <span class="keyword">int</span> highBound);</span><br><span class="line">    Array(ArraySize size);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span>==(<span class="keyword">const</span> Array&lt;<span class="keyword">int</span>&gt; &amp;lhs, <span class="keyword">const</span> Array&lt;<span class="keyword">int</span>&gt; &amp;rhs);</span><br><span class="line">Array&lt;<span class="keyword">int</span>&gt; a(<span class="number">10</span>);</span><br><span class="line">Array&lt;<span class="keyword">int</span>&gt; b(<span class="number">10</span>);</span><br><span class="line">...</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    <span class="keyword">if</span> (a == b[i])  <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+
+<p> 编译器需要一个Array&lt;int&gt;的对象在==右边，但此时没有这样隐式转换的constructor。更不能将int转换一个<strong>临时性</strong>的ArraySize对象，再根据这个临时对象产生必要的Array&lt;int&gt;对象，所以报错。类似ArraySize这样的classes，往往被称为proxy classes，因为它的每一个对象都是为了其他对象而存在的，好像其他对象的<font cololr="red">代理人</font>（<font color="green">proxy</font>）一样。这是一个很值得学习的技术。</p>
+</li>
+</ol>
+<h4 id="条款6：区别increment-decrement操作符的前置（prefix）和后置（postfix）形式"><a href="#条款6：区别increment-decrement操作符的前置（prefix）和后置（postfix）形式" class="headerlink" title="条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式"></a>条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式</h4><ol>
+<li><p>重载函数是以其参数类型来区分彼此的，然而不论increment或decrement操作符的前置式或后置式，都没有参数，为了填平这个语言学上的漏洞，只好让后置式有一个int自变量，并且让它被调用时，编译器默默地为该int指定一个<font color="red"><strong>0值</strong></font>：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UPInt</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    UPInt&amp; <span class="keyword">operator</span>++();            <span class="comment">// 前置式++</span></span><br><span class="line">    <span class="keyword">const</span> UPInt <span class="keyword">operator</span>++(<span class="keyword">int</span>);    <span class="comment">// 后置式++</span></span><br><span class="line">    UPInt&amp; <span class="keyword">operator</span>--();            <span class="comment">// 前置式--</span></span><br><span class="line">    <span class="keyword">const</span> UPInt <span class="keyword">operator</span>--(<span class="keyword">int</span>);    <span class="comment">// 后置式--</span></span><br><span class="line">    UPInt&amp; <span class="keyword">operator</span>+=(<span class="keyword">int</span>);         <span class="comment">// +=操作符</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line">UPInt i;</span><br><span class="line">++i;    <span class="comment">// i.operator++();</span></span><br><span class="line">i++;    <span class="comment">// i.operator++(0);</span></span><br><span class="line">--i;    <span class="comment">// i.operator--();</span></span><br><span class="line">i--;    <span class="comment">// i.operator--(0);</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>所谓的increment操作符的前置式意义“increment and fetch“（积累然后取出），后置式意义”fetch and increment“（取出然后累加）：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">UPInt&amp; UPInt::<span class="keyword">operator</span>++()</span><br><span class="line">&#123;</span><br><span class="line">    *<span class="keyword">this</span> += <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> UPInt UPInt::<span class="keyword">operator</span>++(<span class="keyword">int</span>)</span><br><span class="line">&#123;</span><br><span class="line">    UPInt oldValue = *<span class="keyword">this</span>;</span><br><span class="line">    ++(*<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">return</span> oldValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 为什么后置increment操作符返回的对象是const呢？以下：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPInt i;</span><br><span class="line">i++++;  <span class="comment">//  后置increment操作符两次</span></span><br><span class="line">i.<span class="keyword">operator</span>(<span class="number">0</span>).<span class="keyword">operator</span>++(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="条款7：千万不要重载-amp-amp-，-和，操作符"><a href="#条款7：千万不要重载-amp-amp-，-和，操作符" class="headerlink" title="条款7：千万不要重载&amp;&amp;，||和，操作符"></a>条款7：千万不要重载&amp;&amp;，||和，操作符</h4><ol>
+<li><p>操作符重载也不是任何都能用来重，它也是有底线的，你不能重载以下操作符：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.       .*      ::      ?:      <span class="keyword">new</span> </span><br><span class="line"><span class="keyword">delete</span>  <span class="keyword">sizeof</span>  <span class="keyword">typeid</span>  <span class="keyword">static_cast</span></span><br><span class="line"><span class="keyword">dynamic_cast</span>    <span class="keyword">const_cast</span>  <span class="keyword">reinterpret_cast</span></span><br></pre></td></tr></table></figure>
+
+<p> 可以重载的有：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">operator</span> <span class="keyword">new</span>        <span class="keyword">operator</span> <span class="keyword">delete</span></span><br><span class="line"><span class="keyword">operator</span> <span class="keyword">new</span>[]      <span class="keyword">operator</span> <span class="keyword">delete</span>[]</span><br><span class="line">+   -   *   /   %   ^   &amp;   |   ~   </span><br><span class="line">!   =   &lt;   &gt;   +=  -=  *=  /=  %=</span><br><span class="line">^=  &amp;=  |=  &lt;&lt;  &gt;&gt;  &gt;&gt;= &lt;&lt;= ==  !=</span><br><span class="line">&lt;=  &gt;=  &amp;&amp;  ||  ++  --  ,   -&gt;* -&gt;</span><br><span class="line">()  []</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<h4 id="条款8：了解各种不同意义的new和delete"><a href="#条款8：了解各种不同意义的new和delete" class="headerlink" title="条款8：了解各种不同意义的new和delete"></a>条款8：了解各种不同意义的new和delete</h4><ol>
+<li><p>new operator和operator new之间是有差别的。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> *ps = <span class="keyword">new</span> <span class="built_in">string</span>(<span class="string">"Memory Management"</span>);</span><br></pre></td></tr></table></figure>
+
+<p> 所使用的new是所谓的<font color="red">new operator</font>。这个操作符是语言内建的，跟sizeof一样不能改变意义。它的分为两方面：<strong>分配足够的内存用来存放某类型的对象</strong>；<strong>而后调用一个constructor为刚才分配的内存中的那个对象设定初值</strong>。<br> 我们能够重写改函数，改变其行为。这个函数名称叫<font color="red">operator new</font>。它的函数原型是：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> * <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span> size)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p> size_t参数表示需要分配多少内存。然后返回一块原始的内存。和malloc一样，operator new唯一任务是分配内存。但它<strong>不知道</strong>什么是constructors。当你想要调用一个constructor，有个特殊版本的operator new，称为<font color="red">placement new</font>，允许你这么做：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Widget(<span class="keyword">int</span> widgetSize);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">Widget* <span class="title">constructorWidgetInBuffer</span><span class="params">(<span class="keyword">void</span> *buffer, <span class="keyword">int</span> widgetSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span>(buffer) Widget(widgetSize);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 这是new operator的用法之一，指定一个额外自变量（buffer）作为new operator隐式调用operator new时所用。于是，被调用的operator new除了几首size_t变量外，还接受了一个void*参数，这就是所谓的placement new，看起来像这样：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span>, <span class="keyword">void</span> *location)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> location;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 如果你希望将对象产生于heap，请使用new operator，它不但分配内存而且为对象调用一个constructor。如果只是打算分配内存，调用operator new，那没有任何constructor被调用。如果打算在heap objects产生时决定内存分配方式，写一个自己的operator new。</p>
+</li>
+<li><p>为了避免<font color="red">resource leaks</font>（<strong>资源泄露</strong>），每一个动态分配行为都必须匹配一个相应但相反的释放动作。内存释放动作是由operator delete执行：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> *ps;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">delete</span> ps;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *memoryToBeDeallocated)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p> 因此，<code>delete</code>动作会产生类似代码：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps-&gt;~<span class="built_in">string</span>();</span><br><span class="line"><span class="function"><span class="keyword">operator</span> <span class="title">delete</span><span class="params">(ps)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p> 这里呈现的暗示是，如果只打算处理原始的、未设初值的内存，应该回避new operator和delete operators。如果使用了placement new产生对象，避免对该内存使用delete operator。因为delete operator会调用operator delete来释放内存，但该内存并非由operator new分配得来的。placement new只是返回它接受的指针而已，所以未了抵消该对象的constructor的影响，应该直接调用该对象的destructor。</p>
+</li>
+<li><p>面对数组情况，也有所不同：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> *ps = <span class="keyword">new</span> <span class="built_in">string</span>[<span class="number">10</span>];</span><br></pre></td></tr></table></figure>
+
+<p> 上述的new仍然是new operator，但由于诞生的是数组，所以new operator的行为不再以operator new分配，而是由一个名为operator new[]负责分配（通常称为array new）。同样道理，当delete operator被用于数组，它会针对数组中的每个元素调用其destructor，然后调用operator delete[]释放内存。<br> 总结以下，new operator和delete operator都是内建操作符，无法为你所控制，但是它们所调用的内存分配/释放函数则不然。</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/1-基础议题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1807,358 +2226,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/2-构造、析构、赋值运算/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/14/2-构造、析构、赋值运算/" itemprop="url">2 构造、析构、赋值运算</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T13:41:30+08:00">
-                2020-06-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2019-01/" itemprop="url" rel="index">
-                    <span itemprop="name">2019.01</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="条款05：了解C-默默编写并调用哪些函数"><a href="#条款05：了解C-默默编写并调用哪些函数" class="headerlink" title="条款05：了解C++默默编写并调用哪些函数"></a>条款05：了解C++默默编写并调用哪些函数</h4><ol>
-<li>如果自己没声明，编译器会自动声明（编译器版本）的<font color="red">copy构造函数</font>、<font color="red">copy assignment操作符</font>和<font color="red">析构函数</font>。如果没有声明构造函数，编译器也会声明一个<font color="red">default构造函数</font>。</li>
-<li>如果某个base classes将copy assignment操作符声明为private，编译器将拒绝为其derived classes生成一个copy assignment操作符。</li>
-<li>如果一个类中有reference或pointer类型的数据。那么对于copy assignment操作符需要自己定义，而不是使用编译器生成版本。</li>
-</ol>
-<h4 id="条款06：若不想使用编译器自动生成的函数，就该明确拒绝"><a href="#条款06：若不想使用编译器自动生成的函数，就该明确拒绝" class="headerlink" title="条款06：若不想使用编译器自动生成的函数，就该明确拒绝"></a>条款06：若不想使用编译器自动生成的函数，就该明确拒绝</h4><ol>
-<li>为了组织copying动作可以设计一个base class并且不予以实现：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Uncopyable</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    Uncopyable() &#123;&#125;</span><br><span class="line">    ~Uncopyable() &#123;&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Uncopyable(<span class="keyword">const</span> Uncopyable&amp;);</span><br><span class="line">    Uncopyable&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Uncopyable&amp;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomeForSale</span> :</span> <span class="keyword">private</span> Uncopyable</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// class不再声明copy构造函数或copy assignment操作符</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这行得通，甚至是member函数或friend函数——尝试拷贝HomeForSale对象，编译器便试图生成一个copy构造函数和一个copy assignment操作符，生成版会尝试调用base class的对应函数，而调用被拒绝，因为拷贝函数是private。</p>
-<h4 id="条款07：为多态基类声明virtual析构函数"><a href="#条款07：为多态基类声明virtual析构函数" class="headerlink" title="条款07：为多态基类声明virtual析构函数"></a>条款07：为多态基类声明virtual析构函数</h4><ol>
-<li>给base class一个virtual析构函数，此后删除derived class对象就会销毁整个对象。如果class不含virtual函数，通常表示意图不被做一个base class。</li>
-<li>想实现出virtual函数，对象必须携带某些信息，主要用来在运行期决定哪一个virtual函数该被调用。它由一个<font color="red">vptr</font>（<font color="green">virtual table pointer</font>）指向一个由函数指针构成的数组，称为<font color="red">vtbl</font>（<font color="green">virtual table</font>）；每个带有virtual函数的class都有一个相应的vtbl。当对象调用virtual函数时，编译器在其中寻找适当的函数指针。给base classes一个virtual析构函数这个规则只适用于<font color="green">polymorphic</font>（<font color="red">带多态性质的</font>）base classes身上。</li>
-</ol>
-<h4 id="条款08：别让异常逃离析构函数"><a href="#条款08：别让异常逃离析构函数" class="headerlink" title="条款08：别让异常逃离析构函数"></a>条款08：别让异常逃离析构函数</h4><ol>
-<li>对于析构函数中可能抛出的异常，由两种办法可以避免。一是如果抛出异常就结束程序，通常通过在析构函数调用<code>abort</code>抢先制不明确行为于死地；二是吞下它。</li>
-<li>如果用户需要对某个操作函数运行期间的异常做出反应，应该提供一个普通函数来操作。然后在结束时析构函数来判断二重保险。</li>
-</ol>
-<h4 id="条款09：绝不在构造和析构过程中调用virtual函数"><a href="#条款09：绝不在构造和析构过程中调用virtual函数" class="headerlink" title="条款09：绝不在构造和析构过程中调用virtual函数"></a>条款09：绝不在构造和析构过程中调用virtual函数</h4><ol>
-<li>由于base class构造函数的执行更早于derived class构造函数，当base class构造函数执行时derived class的成员变量尚未初始化。如果此期间调用的virtual函数下降至derived classes阶层，那些成员变量尚未初始化，这将产生未定义行为。</li>
-<li>在构造和析构期间不要调用virtual函数，因为这类调用从不下降至derived class。</li>
-</ol>
-<h4 id="条款10：令operator-返回一个reference-to-this"><a href="#条款10：令operator-返回一个reference-to-this" class="headerlink" title="条款10：令operator=返回一个reference to *this"></a>条款10：令operator=返回一个reference to *this</h4><h4 id="条款11：在operator-中处理“自我赋值”"><a href="#条款11：在operator-中处理“自我赋值”" class="headerlink" title="条款11：在operator=中处理“自我赋值”"></a>条款11：在operator=中处理“自我赋值”</h4><ol>
-<li>如果operator=函数内的*this和赋值的来源是同一个对象，潜在的delete操作可能就摧毁了全部对象。因此需要注意在复制之前要么数据最好别删除，要么通过测试是否自我赋值。</li>
-<li>在operator=函数内的替换方案最好是使用所谓的copy and swap技术。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; Widget::<span class="keyword">operator</span>=(Widget rhs)</span><br><span class="line">&#123;</span><br><span class="line">    swap(rhs);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<h4 id="条款12：赋值对象时勿忘其每一个成分"><a href="#条款12：赋值对象时勿忘其每一个成分" class="headerlink" title="条款12：赋值对象时勿忘其每一个成分"></a>条款12：赋值对象时勿忘其每一个成分</h4><ol>
-<li>当你编写一个copying函数，要确保复制所有local成员变量，且调用所有base calsses内的适当的copying函数。</li>
-<li>对于为了消除复制代码的重复性，不该用copy assignment操作符调用copy构造函数，反之亦然。消除重复代码的做法是，建立一个新的成员函数给两者调用。这样的函数往往是private而且被命名为init。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/1-让自己习惯C/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/14/1-让自己习惯C/" itemprop="url">1 让自己习惯C++</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T13:38:36+08:00">
-                2020-06-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2019-01/" itemprop="url" rel="index">
-                    <span itemprop="name">2019.01</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="条款01-视C-为一个语言联邦"><a href="#条款01-视C-为一个语言联邦" class="headerlink" title="条款01: 视C++为一个语言联邦"></a>条款01: 视C++为一个语言联邦</h4><ol>
-<li>C++是一个<font color="red">多重范式编程语言</font>（<font color="green">multiparadigm programming language</font>），它是一个支持<font color="red">过程形式</font>（<font color="green">procedural</font>）、<font color="red">面向对象形式</font>（<font color="green">object-oriented</font>）、<font color="red">函数形式</font>（<font color="green">functional</font>）、<font color="red">泛型形式</font>（<font color="green">generic</font>）、<font color="red">元编程形式</font>（<font color="green">metaprogramming</font>）的语言。</li>
-<li>为了理解C++可以从四个方面入手：<ul>
-<li>C。区块（blocks）、语句（statements）、预处理器（preprocessor）、内置数据类型（built-in data types）、数组（arrays）、指针（pointers）。</li>
-<li>Object-Oriented C++。classes（构造函数和析构函数），封装（encapsulation）、继承（inheritance）、多态（polymorphism）、virtual函数（动态绑定）。</li>
-<li>Template C++。</li>
-<li>STL。容器（containers）、迭代器（iterators）、算法（algorithms）以及函数对象（function objects）。</li>
-</ul>
-</li>
-</ol>
-<h4 id="条款02：-尽量以const，enum，inline替换-define"><a href="#条款02：-尽量以const，enum，inline替换-define" class="headerlink" title="条款02： 尽量以const，enum，inline替换#define"></a>条款02： 尽量以const，enum，inline替换#define</h4><ol>
-<li><code>#define</code>记号也许在编译器开始处理源码前就被预处理器移走了。于是可能记号没有进入<font color="red">记号表</font>（<font color="green">symbol table</font>）内。</li>
-<li>当我们以常量替换<code>#define</code>，如果要在头文件内定义一个常量<code>char*</code>-based字符串，必须写const两次（顶层const和底层const）：<code>const char* const authorName = &quot;Scott Meyers&quot;;</code>但通常用string对象更合宜；如果是class专属常量，为了确保常量至多只有一份，必须称为一个static成员。  </li>
-<li>如果不想别人获得一个pointer或reference指向整数常量，enum可以帮助实现这个约束。</li>
-<li>用<code>template&lt;typename T&gt;inline void callWithMax(cons T &amp;a, const T &amp;b);</code>来代替<code>#define</code>定义的仿函数，这种<font color="red">template inline函数</font>不仅获得宏带来的效率还有一般函数的所有可预料行为和类型安全性（type safety）。</li>
-</ol>
-<h4 id="条款03：尽可能使用const"><a href="#条款03：尽可能使用const" class="headerlink" title="条款03：尽可能使用const"></a>条款03：尽可能使用const</h4><ol>
-<li>const多才多艺，可以在classes外部修饰global或namespace中的常量，或修饰文件、函数、或区块作用域（block scope）中被声明为static的对象。也可以修饰calsses内部的static和non-static成员变量。面对指针，可以指出指针自身、指针所指物，或两者都不是。</li>
-<li>STL迭代器系是以指针塑膜出来，作用跟T*指针一样。声明迭代器为const表示迭代器不指向不同的东西（T *const指针）。但是希望迭代器所指的东西不可改动（模拟const T*指针），需要的是<font color="red"><code>const_iterator</code></font>。</li>
-<li><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextBlock</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// operator[] for const 对象</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position) <span class="keyword">const</span>  </span><br><span class="line">    &#123; <span class="keyword">return</span> text[position]; &#125;</span><br><span class="line">    <span class="comment">// operator[] for non-const对象</span></span><br><span class="line">    <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position)  </span><br><span class="line">    &#123; <span class="keyword">return</span> text[position]; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> text;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TextBlock的operator[]可这么使用：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">TextBlock <span class="title">tb</span><span class="params">(<span class="string">"Hello"</span>)</span></span>;</span><br><span class="line"><span class="comment">// 调用non-const TextBlock::operator[]</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; tb[<span class="number">0</span>]; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">const</span> TextBlock <span class="title">ctb</span><span class="params">(<span class="string">"World"</span>)</span></span>;</span><br><span class="line"><span class="comment">// 调用const TextBlock::operator[]</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; ctb[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
-
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意：non-const operator[]的返回类型是reference to cahr，不是char。因为如果返回类型是个内置类型，那么改动返回值就不合法，即使合法，C++以by value返回对象意味着返回值是副本，而不是本身。<br>4. <font color="red"><code>mutable</code>成员变量</font>总是会被更改，即使在const成员函数内。<br>5. 当const和non-const成员函数有着实质等价的实现时，令non-const版本调用const版本可避免代码重复。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextBlock</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position) <span class="keyword">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        ...</span><br><span class="line">        ...</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">return</span> text[position];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 将op[]返回值的const转除；为*this加上const；调用const op[]</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>&amp;&gt;(</span><br><span class="line">            <span class="keyword">static_cast</span>&lt;<span class="keyword">const</span> TextBlock&amp;&gt;(*<span class="keyword">this</span>)</span><br><span class="line">                [position]</span><br><span class="line">            );</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="条款04：确定对象被使用前已先被初始化"><a href="#条款04：确定对象被使用前已先被初始化" class="headerlink" title="条款04：确定对象被使用前已先被初始化"></a>条款04：确定对象被使用前已先被初始化</h4><ol>
-<li>永远在使用对象之前将它初始化。对于无任何成员的内置类型，必须手工完成，因为C++不保证初始化它们。</li>
-<li>构造函数最好使用<font color="red">成员初值列</font>（<font color="green">member initialization list</font>）</li>
-<li><font color="red">non-local static</font>对象被<font color="red">local static</font>对象替换。以“函数调用”替换“直接访问non-local static对象“。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FileSYstem</span> &#123;</span> ... &#125;;</span><br><span class="line"><span class="function">FileSystem&amp; <span class="title">tfs</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> FileSystem fs;</span><br><span class="line">    <span class="keyword">return</span> fs;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Directory</span> &#123;</span> ... &#125;;</span><br><span class="line">Directory::Directory(params)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">size_t</span> disks = tfs().numDisks();</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Directory&amp; <span class="title">tempDir</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> Directory td;</span><br><span class="line">    <span class="keyword">return</span> td;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这些<font color="red">reference-returning</font>函数往往十分单纯，这些函数”内涵static对象“的事实使它们在多线程系统中带有不确定性。此时的做法是：在程序的单线程启动阶段（single-threaded startup portion）手工调用所有reference-returning函数，可消除与初始化有关的”&lt;/font color=red&gt;竞速形势（race conditions）“。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2211,7 +2278,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2233,7 +2300,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

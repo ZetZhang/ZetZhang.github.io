@@ -259,6 +259,358 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/2-构造、析构、赋值运算/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/14/2-构造、析构、赋值运算/" itemprop="url">2 构造、析构、赋值运算</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T13:41:30+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-01/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.01</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="条款05：了解C-默默编写并调用哪些函数"><a href="#条款05：了解C-默默编写并调用哪些函数" class="headerlink" title="条款05：了解C++默默编写并调用哪些函数"></a>条款05：了解C++默默编写并调用哪些函数</h4><ol>
+<li>如果自己没声明，编译器会自动声明（编译器版本）的<font color="red">copy构造函数</font>、<font color="red">copy assignment操作符</font>和<font color="red">析构函数</font>。如果没有声明构造函数，编译器也会声明一个<font color="red">default构造函数</font>。</li>
+<li>如果某个base classes将copy assignment操作符声明为private，编译器将拒绝为其derived classes生成一个copy assignment操作符。</li>
+<li>如果一个类中有reference或pointer类型的数据。那么对于copy assignment操作符需要自己定义，而不是使用编译器生成版本。</li>
+</ol>
+<h4 id="条款06：若不想使用编译器自动生成的函数，就该明确拒绝"><a href="#条款06：若不想使用编译器自动生成的函数，就该明确拒绝" class="headerlink" title="条款06：若不想使用编译器自动生成的函数，就该明确拒绝"></a>条款06：若不想使用编译器自动生成的函数，就该明确拒绝</h4><ol>
+<li>为了组织copying动作可以设计一个base class并且不予以实现：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Uncopyable</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    Uncopyable() &#123;&#125;</span><br><span class="line">    ~Uncopyable() &#123;&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Uncopyable(<span class="keyword">const</span> Uncopyable&amp;);</span><br><span class="line">    Uncopyable&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Uncopyable&amp;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomeForSale</span> :</span> <span class="keyword">private</span> Uncopyable</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// class不再声明copy构造函数或copy assignment操作符</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这行得通，甚至是member函数或friend函数——尝试拷贝HomeForSale对象，编译器便试图生成一个copy构造函数和一个copy assignment操作符，生成版会尝试调用base class的对应函数，而调用被拒绝，因为拷贝函数是private。</p>
+<h4 id="条款07：为多态基类声明virtual析构函数"><a href="#条款07：为多态基类声明virtual析构函数" class="headerlink" title="条款07：为多态基类声明virtual析构函数"></a>条款07：为多态基类声明virtual析构函数</h4><ol>
+<li>给base class一个virtual析构函数，此后删除derived class对象就会销毁整个对象。如果class不含virtual函数，通常表示意图不被做一个base class。</li>
+<li>想实现出virtual函数，对象必须携带某些信息，主要用来在运行期决定哪一个virtual函数该被调用。它由一个<font color="red">vptr</font>（<font color="green">virtual table pointer</font>）指向一个由函数指针构成的数组，称为<font color="red">vtbl</font>（<font color="green">virtual table</font>）；每个带有virtual函数的class都有一个相应的vtbl。当对象调用virtual函数时，编译器在其中寻找适当的函数指针。给base classes一个virtual析构函数这个规则只适用于<font color="green">polymorphic</font>（<font color="red">带多态性质的</font>）base classes身上。</li>
+</ol>
+<h4 id="条款08：别让异常逃离析构函数"><a href="#条款08：别让异常逃离析构函数" class="headerlink" title="条款08：别让异常逃离析构函数"></a>条款08：别让异常逃离析构函数</h4><ol>
+<li>对于析构函数中可能抛出的异常，由两种办法可以避免。一是如果抛出异常就结束程序，通常通过在析构函数调用<code>abort</code>抢先制不明确行为于死地；二是吞下它。</li>
+<li>如果用户需要对某个操作函数运行期间的异常做出反应，应该提供一个普通函数来操作。然后在结束时析构函数来判断二重保险。</li>
+</ol>
+<h4 id="条款09：绝不在构造和析构过程中调用virtual函数"><a href="#条款09：绝不在构造和析构过程中调用virtual函数" class="headerlink" title="条款09：绝不在构造和析构过程中调用virtual函数"></a>条款09：绝不在构造和析构过程中调用virtual函数</h4><ol>
+<li>由于base class构造函数的执行更早于derived class构造函数，当base class构造函数执行时derived class的成员变量尚未初始化。如果此期间调用的virtual函数下降至derived classes阶层，那些成员变量尚未初始化，这将产生未定义行为。</li>
+<li>在构造和析构期间不要调用virtual函数，因为这类调用从不下降至derived class。</li>
+</ol>
+<h4 id="条款10：令operator-返回一个reference-to-this"><a href="#条款10：令operator-返回一个reference-to-this" class="headerlink" title="条款10：令operator=返回一个reference to *this"></a>条款10：令operator=返回一个reference to *this</h4><h4 id="条款11：在operator-中处理“自我赋值”"><a href="#条款11：在operator-中处理“自我赋值”" class="headerlink" title="条款11：在operator=中处理“自我赋值”"></a>条款11：在operator=中处理“自我赋值”</h4><ol>
+<li>如果operator=函数内的*this和赋值的来源是同一个对象，潜在的delete操作可能就摧毁了全部对象。因此需要注意在复制之前要么数据最好别删除，要么通过测试是否自我赋值。</li>
+<li>在operator=函数内的替换方案最好是使用所谓的copy and swap技术。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; Widget::<span class="keyword">operator</span>=(Widget rhs)</span><br><span class="line">&#123;</span><br><span class="line">    swap(rhs);</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="条款12：赋值对象时勿忘其每一个成分"><a href="#条款12：赋值对象时勿忘其每一个成分" class="headerlink" title="条款12：赋值对象时勿忘其每一个成分"></a>条款12：赋值对象时勿忘其每一个成分</h4><ol>
+<li>当你编写一个copying函数，要确保复制所有local成员变量，且调用所有base calsses内的适当的copying函数。</li>
+<li>对于为了消除复制代码的重复性，不该用copy assignment操作符调用copy构造函数，反之亦然。消除重复代码的做法是，建立一个新的成员函数给两者调用。这样的函数往往是private而且被命名为init。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/1-让自己习惯C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/14/1-让自己习惯C/" itemprop="url">1 让自己习惯C++</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T13:38:36+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-01/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.01</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="条款01-视C-为一个语言联邦"><a href="#条款01-视C-为一个语言联邦" class="headerlink" title="条款01: 视C++为一个语言联邦"></a>条款01: 视C++为一个语言联邦</h4><ol>
+<li>C++是一个<font color="red">多重范式编程语言</font>（<font color="green">multiparadigm programming language</font>），它是一个支持<font color="red">过程形式</font>（<font color="green">procedural</font>）、<font color="red">面向对象形式</font>（<font color="green">object-oriented</font>）、<font color="red">函数形式</font>（<font color="green">functional</font>）、<font color="red">泛型形式</font>（<font color="green">generic</font>）、<font color="red">元编程形式</font>（<font color="green">metaprogramming</font>）的语言。</li>
+<li>为了理解C++可以从四个方面入手：<ul>
+<li>C。区块（blocks）、语句（statements）、预处理器（preprocessor）、内置数据类型（built-in data types）、数组（arrays）、指针（pointers）。</li>
+<li>Object-Oriented C++。classes（构造函数和析构函数），封装（encapsulation）、继承（inheritance）、多态（polymorphism）、virtual函数（动态绑定）。</li>
+<li>Template C++。</li>
+<li>STL。容器（containers）、迭代器（iterators）、算法（algorithms）以及函数对象（function objects）。</li>
+</ul>
+</li>
+</ol>
+<h4 id="条款02：-尽量以const，enum，inline替换-define"><a href="#条款02：-尽量以const，enum，inline替换-define" class="headerlink" title="条款02： 尽量以const，enum，inline替换#define"></a>条款02： 尽量以const，enum，inline替换#define</h4><ol>
+<li><code>#define</code>记号也许在编译器开始处理源码前就被预处理器移走了。于是可能记号没有进入<font color="red">记号表</font>（<font color="green">symbol table</font>）内。</li>
+<li>当我们以常量替换<code>#define</code>，如果要在头文件内定义一个常量<code>char*</code>-based字符串，必须写const两次（顶层const和底层const）：<code>const char* const authorName = &quot;Scott Meyers&quot;;</code>但通常用string对象更合宜；如果是class专属常量，为了确保常量至多只有一份，必须称为一个static成员。  </li>
+<li>如果不想别人获得一个pointer或reference指向整数常量，enum可以帮助实现这个约束。</li>
+<li>用<code>template&lt;typename T&gt;inline void callWithMax(cons T &amp;a, const T &amp;b);</code>来代替<code>#define</code>定义的仿函数，这种<font color="red">template inline函数</font>不仅获得宏带来的效率还有一般函数的所有可预料行为和类型安全性（type safety）。</li>
+</ol>
+<h4 id="条款03：尽可能使用const"><a href="#条款03：尽可能使用const" class="headerlink" title="条款03：尽可能使用const"></a>条款03：尽可能使用const</h4><ol>
+<li>const多才多艺，可以在classes外部修饰global或namespace中的常量，或修饰文件、函数、或区块作用域（block scope）中被声明为static的对象。也可以修饰calsses内部的static和non-static成员变量。面对指针，可以指出指针自身、指针所指物，或两者都不是。</li>
+<li>STL迭代器系是以指针塑膜出来，作用跟T*指针一样。声明迭代器为const表示迭代器不指向不同的东西（T *const指针）。但是希望迭代器所指的东西不可改动（模拟const T*指针），需要的是<font color="red"><code>const_iterator</code></font>。</li>
+<li><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextBlock</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// operator[] for const 对象</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position) <span class="keyword">const</span>  </span><br><span class="line">    &#123; <span class="keyword">return</span> text[position]; &#125;</span><br><span class="line">    <span class="comment">// operator[] for non-const对象</span></span><br><span class="line">    <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position)  </span><br><span class="line">    &#123; <span class="keyword">return</span> text[position]; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> text;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TextBlock的operator[]可这么使用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">TextBlock <span class="title">tb</span><span class="params">(<span class="string">"Hello"</span>)</span></span>;</span><br><span class="line"><span class="comment">// 调用non-const TextBlock::operator[]</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; tb[<span class="number">0</span>]; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">const</span> TextBlock <span class="title">ctb</span><span class="params">(<span class="string">"World"</span>)</span></span>;</span><br><span class="line"><span class="comment">// 调用const TextBlock::operator[]</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; ctb[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意：non-const operator[]的返回类型是reference to cahr，不是char。因为如果返回类型是个内置类型，那么改动返回值就不合法，即使合法，C++以by value返回对象意味着返回值是副本，而不是本身。<br>4. <font color="red"><code>mutable</code>成员变量</font>总是会被更改，即使在const成员函数内。<br>5. 当const和non-const成员函数有着实质等价的实现时，令non-const版本调用const版本可避免代码重复。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextBlock</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position) <span class="keyword">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        ...</span><br><span class="line">        ...</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">return</span> text[position];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">char</span>&amp; <span class="keyword">operator</span>[](<span class="built_in">std</span>::<span class="keyword">size_t</span> position)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 将op[]返回值的const转除；为*this加上const；调用const op[]</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>&amp;&gt;(</span><br><span class="line">            <span class="keyword">static_cast</span>&lt;<span class="keyword">const</span> TextBlock&amp;&gt;(*<span class="keyword">this</span>)</span><br><span class="line">                [position]</span><br><span class="line">            );</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="条款04：确定对象被使用前已先被初始化"><a href="#条款04：确定对象被使用前已先被初始化" class="headerlink" title="条款04：确定对象被使用前已先被初始化"></a>条款04：确定对象被使用前已先被初始化</h4><ol>
+<li>永远在使用对象之前将它初始化。对于无任何成员的内置类型，必须手工完成，因为C++不保证初始化它们。</li>
+<li>构造函数最好使用<font color="red">成员初值列</font>（<font color="green">member initialization list</font>）</li>
+<li><font color="red">non-local static</font>对象被<font color="red">local static</font>对象替换。以“函数调用”替换“直接访问non-local static对象“。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FileSYstem</span> &#123;</span> ... &#125;;</span><br><span class="line"><span class="function">FileSystem&amp; <span class="title">tfs</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> FileSystem fs;</span><br><span class="line">    <span class="keyword">return</span> fs;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Directory</span> &#123;</span> ... &#125;;</span><br><span class="line">Directory::Directory(params)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">size_t</span> disks = tfs().numDisks();</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Directory&amp; <span class="title">tempDir</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> Directory td;</span><br><span class="line">    <span class="keyword">return</span> td;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这些<font color="red">reference-returning</font>函数往往十分单纯，这些函数”内涵static对象“的事实使它们在多线程系统中带有不确定性。此时的做法是：在程序的单线程启动阶段（single-threaded startup portion）手工调用所有reference-returning函数，可消除与初始化有关的”&lt;/font color=red&gt;竞速形势（race conditions）“。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/13/一些调试工具命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2810,8 +3162,9 @@
         
           
             <ul>
-<li><p>关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。</p>
-<h4 id="2-1-Default-Constructor的构造操作"><a href="#2-1-Default-Constructor的构造操作" class="headerlink" title="2.1 Default Constructor的构造操作"></a>2.1 Default Constructor的构造操作</h4><h5 id="“带有Default-Constructor”的Member-Class-Object"><a href="#“带有Default-Constructor”的Member-Class-Object" class="headerlink" title="“带有Default Constructor”的Member Class Object"></a>“带有Default Constructor”的Member Class Object</h5></li>
+<li>关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。</li>
+</ul>
+<h4 id="2-1-Default-Constructor的构造操作"><a href="#2-1-Default-Constructor的构造操作" class="headerlink" title="2.1 Default Constructor的构造操作"></a>2.1 Default Constructor的构造操作</h4><h5 id="“带有Default-Constructor”的Member-Class-Object"><a href="#“带有Default-Constructor”的Member-Class-Object" class="headerlink" title="“带有Default Constructor”的Member Class Object"></a>“带有Default Constructor”的Member Class Object</h5><ul>
 <li><p>如果class没有constructor，但有一个member object，而且这个object有default constructor，那么这个class的implicit default constructor是<font color="red">nontrivial</font>的。举个例子，下面程序片段中，编译器为class Bar合成一个default constructor：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> &#123;</span> <span class="keyword">public</span>: Foo(), Foo(<span class="keyword">int</span>) ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span> &#123;</span> <span class="keyword">public</span>: Foo foo; <span class="keyword">char</span> *str; &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo_bar</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Bar bar;    <span class="comment">// Bar::foo 必须在此处初始化。</span></span><br><span class="line">    <span class="keyword">if</span> (str) &#123; &#125; ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -2821,11 +3174,13 @@
 <p>  而且，被合成default constructor只满足编译期需求，并不是程序员需求。如果default constructor由程序员显式定义出来了，那么编译器的行动是：</p>
 </li>
 <li><p>如果class A内含一个或一个以上的member class objects，那么class A的每一个constructor必须调用每一个member classes的default constructor。编译器会扩张已存在的constructors，使得user code被执行之前，先调用的default constructor。</p>
-<h5 id="“带有Default-Constructor”的Base-Class"><a href="#“带有Default-Constructor”的Base-Class" class="headerlink" title="“带有Default Constructor”的Base Class"></a>“带有Default Constructor”的Base Class</h5></li>
-<li><p>如果class没有constructors，却派生自有default constructor的base class，那么这个derived class的default constructor会被视为nontrivial。</p>
 </li>
-<li><p>如果提供多个constructor，但都没有default constructor，编译器会扩张现有的每一个constructors，将用以调用必要default constructors的程序代码加进去。它不会合成一个新的default constructor。</p>
-<h5 id="“带有一个Virtual-Function”的Class"><a href="#“带有一个Virtual-Function”的Class" class="headerlink" title="“带有一个Virtual Function”的Class"></a>“带有一个Virtual Function”的Class</h5></li>
+</ul>
+<h5 id="“带有Default-Constructor”的Base-Class"><a href="#“带有Default-Constructor”的Base-Class" class="headerlink" title="“带有Default Constructor”的Base Class"></a>“带有Default Constructor”的Base Class</h5><ul>
+<li>如果class没有constructors，却派生自有default constructor的base class，那么这个derived class的default constructor会被视为nontrivial。</li>
+<li>如果提供多个constructor，但都没有default constructor，编译器会扩张现有的每一个constructors，将用以调用必要default constructors的程序代码加进去。它不会合成一个新的default constructor。</li>
+</ul>
+<h5 id="“带有一个Virtual-Function”的Class"><a href="#“带有一个Virtual-Function”的Class" class="headerlink" title="“带有一个Virtual Function”的Class"></a>“带有一个Virtual Function”的Class</h5><ul>
 <li><p>另外有<font color="red">两种情况</font>，也要合成default constructor：</p>
 <ol>
 <li><p><strong>class声明（或继承）一个virtual function</strong></p>
@@ -2857,9 +3212,10 @@
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">const</span> A *pa)</span> </span>&#123;pa-&gt;__vbcX-&gt;i = <span class="number">1024</span>; &#125;</span><br></pre></td></tr></table></figure>
 
 <p> __vbcX实在class object构造期间被完成的。编译器会安插允许每个virtual base class在执行器存取操作的代码，如果base没有声明任何constructor，编译器必须为它合成一个default的。</p>
-<h4 id="2-2-Copy-Constructor的构造操作"><a href="#2-2-Copy-Constructor的构造操作" class="headerlink" title="2.2 Copy Constructor的构造操作"></a>2.2 Copy Constructor的构造操作</h4></li>
-<li><p>有三种情况，会以一个obect的内容作为另一个class object的初值。</p>
-<ul>
+</li>
+</ul>
+<h4 id="2-2-Copy-Constructor的构造操作"><a href="#2-2-Copy-Constructor的构造操作" class="headerlink" title="2.2 Copy Constructor的构造操作"></a>2.2 Copy Constructor的构造操作</h4><ul>
+<li>有三种情况，会以一个obect的内容作为另一个class object的初值。<ul>
 <li><strong>对object做显式初始化操作</strong></li>
 <li><strong>当object作为参数交给某个函数时</strong></li>
 <li><strong>函数回传一个class object时</strong></li>
@@ -3252,8 +3608,9 @@
 </li>
 </ul>
 <h4 id="1-2-关键词所带来的差异（A-Keyword-Distinction）"><a href="#1-2-关键词所带来的差异（A-Keyword-Distinction）" class="headerlink" title="1.2 关键词所带来的差异（A Keyword Distinction）"></a>1.2 关键词所带来的差异（A Keyword Distinction）</h4><h5 id="关键词的困扰"><a href="#关键词的困扰" class="headerlink" title="关键词的困扰"></a>关键词的困扰</h5><ul>
-<li><p>关键词struct的意思是一个数据集合体，没有private data，也没有data的相应操作。它和C++的<font color="red">使用者自定义类型</font>（<font color="green">user-defined type</font>）区分开来。struct关键词的使用实现了C的<font colo="red">数据抽象观念</font>，而class关键词实现的是C++的<font color="red">ADT</font>（<font color="grren">Abstract Data Type</font>）观念。</p>
-<h5 id="策略性正确的struct（The-Politically-Correct-Struct）"><a href="#策略性正确的struct（The-Politically-Correct-Struct）" class="headerlink" title="策略性正确的struct（The Politically Correct Struct）"></a>策略性正确的struct（The Politically Correct Struct）</h5></li>
+<li>关键词struct的意思是一个数据集合体，没有private data，也没有data的相应操作。它和C++的<font color="red">使用者自定义类型</font>（<font color="green">user-defined type</font>）区分开来。struct关键词的使用实现了C的<font colo="red">数据抽象观念</font>，而class关键词实现的是C++的<font color="red">ADT</font>（<font color="grren">Abstract Data Type</font>）观念。</li>
+</ul>
+<h5 id="策略性正确的struct（The-Politically-Correct-Struct）"><a href="#策略性正确的struct（The-Politically-Correct-Struct）" class="headerlink" title="策略性正确的struct（The Politically Correct Struct）"></a>策略性正确的struct（The Politically Correct Struct）</h5><ul>
 <li><p>C的巧计有时候是C++的陷阱。例如一个在struct尾端的单一数组，也是每个struct objects有可变长数据：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mutable</span> &#123;</span></span><br><span class="line">    <span class="comment">/* stuff */</span></span><br><span class="line">    <span class="keyword">char</span> pc[<span class="number">1</span>];</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 为struct本身和该字符串配置足够的内存</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mumble</span> *<span class="title">pmumb1</span> = (<span class="title">struct</span> <span class="title">memble</span>*)<span class="title">malloc</span>(<span class="title">sizeof</span>(<span class="title">struct</span> <span class="title">mumble</span>) + <span class="title">strlen</span>(<span class="title">string</span>) + 1);</span></span><br><span class="line"><span class="built_in">strcpy</span>(&amp;mumble.pc, <span class="built_in">string</span>);</span><br></pre></td></tr></table></figure>
 
@@ -3263,22 +3620,23 @@
 </li>
 </ul>
 <h4 id="1-3-对象的差异（An-Object-Distinction）"><a href="#1-3-对象的差异（An-Object-Distinction）" class="headerlink" title="1.3 对象的差异（An Object Distinction）"></a>1.3 对象的差异（An Object Distinction）</h4><ul>
-<li><p>C++有以下方法支持<font color="red"><strong>多态</strong></font>：</p>
-<ul>
+<li>C++有以下方法支持<font color="red"><strong>多态</strong></font>：<ul>
 <li><font color="red">隐式转化操作</font>。（<code>Shape *ps = new Circle()</code>）</li>
 <li><font color="red">经由virtual function机制</font>。（<code>ps-&gt;rotate();</code>）</li>
 <li><font color="red">经由dynamic_cast和typeid操作符</font>。（<code>if（Circle \*pc = dynamic\_cast&lt;Circle\*&gt;(ps))</code>）</li>
 </ul>
 </li>
-<li><p>需要多少内存才能够表现一个<font color="red"><strong>class object大小</strong></font>？</p>
-<ul>
+<li>需要多少内存才能够表现一个<font color="red"><strong>class object大小</strong></font>？<ul>
 <li><strong>nonstatic data members的总和大小</strong>。</li>
 <li><strong>根据alignment需求padding的空间</strong>。（alignment是将数值调整到某数的倍数。32位机器上位4 bytes，64位机器上位8bytes）。</li>
-<li><strong>支持virtual而内部产生的额外负担（overhead）</strong>。<h5 id="指针的类型（The-Type-of-a-Pointer）"><a href="#指针的类型（The-Type-of-a-Pointer）" class="headerlink" title="指针的类型（The Type of a Pointer）"></a>指针的类型（The Type of a Pointer）</h5></li>
+<li><strong>支持virtual而内部产生的额外负担（overhead）</strong>。</li>
 </ul>
 </li>
-<li><p>一个指向ZooAnimal的指针与一个指向整数的指针或template Array的指针在内存上没什么区别。真正的不同是其所寻址出来的<font color="red"><strong>object类型</strong></font>不同，因为<font color="red">指针类型会教导编译器如何解释某个地址中的内存内容及其大小</font>。所以，这就是为什么void<em>能持有一个地址，但不同操作该地址的原因了。而<font color="red">转换</font>（<font color="green">cast</font>）也是一种编译器指令，*</em>它不改变地址，只影响内存大小和内容的解释方式**。</p>
-<h5 id="加上多态之后（Adding-Polymorphism）"><a href="#加上多态之后（Adding-Polymorphism）" class="headerlink" title="加上多态之后（Adding Polymorphism）"></a>加上多态之后（Adding Polymorphism）</h5></li>
+</ul>
+<h5 id="指针的类型（The-Type-of-a-Pointer）"><a href="#指针的类型（The-Type-of-a-Pointer）" class="headerlink" title="指针的类型（The Type of a Pointer）"></a>指针的类型（The Type of a Pointer）</h5><ul>
+<li>一个指向ZooAnimal的指针与一个指向整数的指针或template Array的指针在内存上没什么区别。真正的不同是其所寻址出来的<font color="red"><strong>object类型</strong></font>不同，因为<font color="red">指针类型会教导编译器如何解释某个地址中的内存内容及其大小</font>。所以，这就是为什么void<em>能持有一个地址，但不同操作该地址的原因了。而<font color="red">转换</font>（<font color="green">cast</font>）也是一种编译器指令，*</em>它不改变地址，只影响内存大小和内容的解释方式**。</li>
+</ul>
+<h5 id="加上多态之后（Adding-Polymorphism）"><a href="#加上多态之后（Adding-Polymorphism）" class="headerlink" title="加上多态之后（Adding Polymorphism）"></a>加上多态之后（Adding Polymorphism）</h5><ul>
 <li><p>定义一个Bear，作为一种ZooAnimal：</p>
   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">ZooAnimal --- Bear</span><br></pre></td></tr></table></figure>
 
@@ -3298,504 +3656,6 @@
 <li><p>C++支持具体的ADT程序风格，被称为<font color="red">object-based</font>（<font color="red">OB</font>）。一个OB设计可能比一个对等oo设计速度更快而且空间更紧凑，因为所有函数调用操作在编译时期解析完成，对象构建起来不再设置virtual机制，而且空间紧凑，缺点是OB设计比较没有弹性。</p>
 </li>
 </ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker的dockerfile编写/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/12/Docker的dockerfile编写/" itemprop="url">Docker的dockerfile编写</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T22:10:03+08:00">
-                2020-06-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2020-06/" itemprop="url" rel="index">
-                    <span itemprop="name">2020.06</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="使用Dockerfile创建镜像"><a href="#使用Dockerfile创建镜像" class="headerlink" title="使用Dockerfile创建镜像"></a>使用Dockerfile创建镜像</h2><ul>
-<li>Dockerfile分为四部分<ul>
-<li>基础镜像信息</li>
-<li>维护者信息</li>
-<li>镜像操作指令</li>
-<li>容器启动时执行指令<h3 id="detail"><a href="#detail" class="headerlink" title="detail"></a>detail</h3><table>
-<thead>
-<tr>
-<th align="left">指令</th>
-<th align="left">说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>FROM</code></td>
-<td align="left">指定基础镜像</td>
-</tr>
-<tr>
-<td align="left"><code>MAINTAINER</code></td>
-<td align="left">维护者信息</td>
-</tr>
-<tr>
-<td align="left"><code>RUN</code></td>
-<td align="left">运行命令</td>
-</tr>
-<tr>
-<td align="left"><code>CMD</code></td>
-<td align="left">启动容器时默认执行命令，最多只能执行一个命令</td>
-</tr>
-<tr>
-<td align="left"><code>LABEL</code></td>
-<td align="left">元数据标签信息</td>
-</tr>
-<tr>
-<td align="left"><code>EXPOSE</code></td>
-<td align="left">监听端口</td>
-</tr>
-<tr>
-<td align="left"><code>ENV</code></td>
-<td align="left">环境变量</td>
-</tr>
-<tr>
-<td align="left"><code>ADD</code></td>
-<td align="left">复制&lt;src&gt;到容器&lt;dest&gt;，如果是tar自动解压，src可以是URL</td>
-</tr>
-<tr>
-<td align="left"><code>COPY</code></td>
-<td align="left">复制本地&lt;src&gt;到容器&lt;dest&gt;</td>
-</tr>
-<tr>
-<td align="left"><code>ENTRYPOINT</code></td>
-<td align="left">指定镜像默认入口，最多只有一个，可以被<code>docker run --entrypoint</code>覆盖掉</td>
-</tr>
-<tr>
-<td align="left"><code>VOLUME</code></td>
-<td align="left">创建数据卷挂载点</td>
-</tr>
-<tr>
-<td align="left"><code>USER</code></td>
-<td align="left">指定运行容器时的USER或UID</td>
-</tr>
-<tr>
-<td align="left"><code>WORKDIR</code></td>
-<td align="left">为<code>RUN</code>、<code>CMD</code>和<code>ENTRYPOINT</code>指令配置工作目录</td>
-</tr>
-<tr>
-<td align="left"><code>ARG</code></td>
-<td align="left">指定一些镜像内使用的参数</td>
-</tr>
-<tr>
-<td align="left"><code>ONBUILD</code></td>
-<td align="left">当创建的镜像为其他镜像的基础镜像时执行的操作命令</td>
-</tr>
-<tr>
-<td align="left"><code>STOPSIGNAL</code></td>
-<td align="left">指定创建镜像启动的容器接收退出的信号值</td>
-</tr>
-<tr>
-<td align="left"><code>HEALTHCHECK</code></td>
-<td align="left">配置启动容器如何进行健康检查</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-</li>
-<li>使用<code>.dockerignore</code>文件可以让Docker忽略匹配路径下的目录和文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># comment</span><br><span class="line">*/temp*</span><br><span class="line">*/*/temp*</span><br><span class="line">tmp?</span><br><span class="line">~*</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="desc"><a href="#desc" class="headerlink" title="desc"></a>desc</h3><table>
-<thead>
-<tr>
-<th align="left">指令</th>
-<th align="left">格式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>FROM</code></td>
-<td align="left"><code>&lt;image&gt;:&lt;tag&gt;</code> || <code>&lt;image&gt;@&lt;digest&gt;</code></td>
-</tr>
-<tr>
-<td align="left"><code>MAINTAINER</code></td>
-<td align="left"><code>&lt;name&gt;</code></td>
-</tr>
-<tr>
-<td align="left"><code>RUN</code></td>
-<td align="left">shell:<code>&lt;command&gt;</code> || exec:<code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
-</tr>
-<tr>
-<td align="left"><code>CMD</code></td>
-<td align="left"><code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code> || <code>command param1 param2</code> || [“param1”, “param2”]</td>
-</tr>
-<tr>
-<td align="left"><code>LABEL</code></td>
-<td align="left"><code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
-</tr>
-<tr>
-<td align="left"><code>EXPOSE</code></td>
-<td align="left"><code>&lt;port&gt;[&lt;port&gt;...]</code></td>
-</tr>
-<tr>
-<td align="left"><code>ENV</code></td>
-<td align="left"><code>&lt;key&gt; &lt;value&gt;</code> || <code>&lt;key&gt;=&lt;value&gt;[&lt;key&gt;=&lt;value&gt;...]</code></td>
-</tr>
-<tr>
-<td align="left"><code>ADD</code></td>
-<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
-</tr>
-<tr>
-<td align="left"><code>COPY</code></td>
-<td align="left"><code>&lt;src&gt; &lt;dest&gt;</code></td>
-</tr>
-<tr>
-<td align="left"><code>ENTRYPOINT</code></td>
-<td align="left">shell:<code>command param1 param2</code> || exec: <code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></td>
-</tr>
-<tr>
-<td align="left"><code>VOLUME</code></td>
-<td align="left"><code>[&quot;/data&quot;]</code></td>
-</tr>
-<tr>
-<td align="left"><code>USER</code></td>
-<td align="left"><code>daemon</code></td>
-</tr>
-<tr>
-<td align="left"><code>WORKDIR</code></td>
-<td align="left"><code>/path/to/workdir</code>，如果是相对路径，路径是基于前个<code>WORKDIR</code>的</td>
-</tr>
-<tr>
-<td align="left">### exampe</td>
-<td align="left"></td>
-</tr>
-<tr>
-<td align="left"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM debian:jessie</span><br><span class="line">MAINTAINER NGINX Docker Maintainers &quot;docker-maint@nginx.com&quot;</span><br><span class="line">ENV NGINX_VERSION 1.10.1-1-jessie</span><br><span class="line">RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys ....</span><br><span class="line">RUN ln -sf /dev/stdout /var/log/nginx/access.log \</span><br><span class="line">        $$ ln -sf /dev/stderr /var/log/nginx/error.log</span><br><span class="line">EXPOSE 80 443</span><br><span class="line">CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</span><br></pre></td></tr></table></figure></td>
-<td align="left"></td>
-</tr>
-</tbody></table>
-<h3 id="sys"><a href="#sys" class="headerlink" title="sys"></a>sys</h3><h4 id="如果使用alpine镜像"><a href="#如果使用alpine镜像" class="headerlink" title="如果使用alpine镜像"></a>如果使用alpine镜像</h4><blockquote>
-<p>安装软件包需要用apk包管理器替换apt工具</p>
-</blockquote>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apk add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>可以从<a href="https://pkgs.alpinelinux.org/packages" target="_blank" rel="noopener">alpine</a>搜索并确定安装包名称<br>如果需要指定社区的安装包，则：</p>
-</blockquote>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"http://dl-4.alpinelinux.org/alpine/edge/teseting"</span> &gt;&gt; /etc/apk/repositories</span><br><span class="line">$ apk --update add --no-cache &lt;package&gt;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/12/Docker数据卷/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/12/Docker数据卷/" itemprop="url">Docker数据卷</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-12T21:00:57+08:00">
-                2020-06-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2020-06/" itemprop="url" rel="index">
-                    <span itemprop="name">2020.06</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h2><blockquote>
-<p>使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作</p>
-</blockquote>
-<ul>
-<li>数据管理主要有两种方式：<ul>
-<li>数据卷（Data Volumes）：容器数据直接映射到本地主机环境</li>
-<li>数据卷容器（Data Volume Containers）：使用特定容器维护数据卷</li>
-</ul>
-</li>
-</ul>
-<h4 id="数据卷-1"><a href="#数据卷-1" class="headerlink" title="数据卷"></a>数据卷</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/webapp目录</span></span><br><span class="line"><span class="comment"># 创建数据卷，-P是映射本地临时端口</span></span><br><span class="line"><span class="comment"># 挂在主机目录为数据卷: from/path:to/path</span></span><br><span class="line"><span class="comment"># 指定数据卷读写权限: ro/rw</span></span><br><span class="line">$ docker run -d -P --name web -v /src/webapp:/opt/webapp:ro training/webapp python app.py</span><br></pre></td></tr></table></figure>
-
-<h4 id="数据卷容器"><a href="#数据卷容器" class="headerlink" title="数据卷容器"></a>数据卷容器</h4><blockquote>
-<p>创建数据卷容器dbdata，创建数据卷挂载到容器dbdata</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it -v /dbdata --name dbdata ubuntu</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>其他容器对其进行挂载，之后三方任何一方修改各方都可见</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --volumes-from dbdata --name db1 ubuntu</span><br><span class="line">$ docker run -it --volumes-from dbdata --name db2 ubuntu</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>删除最后挂载容器需要使用<code>docker rm -v</code>同时删除关联容器</p>
-</blockquote>
-<hr>
-<h3 id="使用数据卷容器迁移数据"><a href="#使用数据卷容器迁移数据" class="headerlink" title="使用数据卷容器迁移数据"></a>使用数据卷容器迁移数据</h3><h4 id="备份"><a href="#备份" class="headerlink" title="备份"></a>备份</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from dbdata -v $(<span class="built_in">pwd</span>):/backup --name worker ubuntu tar cvf /backup/backup.tar /dbdata</span><br></pre></td></tr></table></figure>
-
-<h4 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h4><blockquote>
-<p>首先创建容器dbdata2</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -v /dbupdate --name dbdata2 ubuntu ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>新容器挂载dbdata2，然后untar解压备份文件到所挂载的容器卷中</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --volumes-from dbdata2 -v $(<span class="built_in">pwd</span>):/backup busybox tar xvf /backup/backup.tar</span><br></pre></td></tr></table></figure>
-
-<h2 id="端口映射和容器互联"><a href="#端口映射和容器互联" class="headerlink" title="端口映射和容器互联"></a>端口映射和容器互联</h2><h3 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以-p映射多端口-p po -p po</span></span><br><span class="line"><span class="comment"># 可以指定ip:po:po</span></span><br><span class="line"><span class="comment"># 还可以本地随机端口ip::po</span></span><br><span class="line"><span class="comment"># 还可以指定udp端口ip:po:po/udp</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="容器互联"><a href="#容器互联" class="headerlink" title="容器互联"></a>容器互联</h3><blockquote>
-<p>创建新容器</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d --name db training/postgres</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>创建新容器连接到db容器</p>
-</blockquote>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --link　name:alias</span></span><br><span class="line">$ docker run -d -P --name web --link db:db traning/webapp</span><br></pre></td></tr></table></figure>
-
 
           
         
@@ -3883,7 +3743,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -3905,7 +3765,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

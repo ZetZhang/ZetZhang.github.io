@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="语言交互 外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思  应用程序二进制接口（ABI）涵盖内容：  调用约定。参数、函数、返回值 内存布局。大小和对齐方式 处理器指令集。不同平台实现 目标文件和库的二进制形式。   Rust中使用FFI需要通过extern和">
+<meta name="description" content="语言交互 外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思 应用程序二进制接口（ABI）涵盖内容： 调用约定。参数、函数、返回值 内存布局。大小和对齐方式 处理器指令集。不同平台实现 目标文件和库的二进制形式。   Rust中使用FFI需要通过extern和ex">
 <meta name="keywords" content="Rust,FFI,ABI">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rust跨语言">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/Rust跨语言/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="语言交互 外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思  应用程序二进制接口（ABI）涵盖内容：  调用约定。参数、函数、返回值 内存布局。大小和对齐方式 处理器指令集。不同平台实现 目标文件和库的二进制形式。   Rust中使用FFI需要通过extern和">
+<meta property="og:description" content="语言交互 外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思 应用程序二进制接口（ABI）涵盖内容： 调用约定。参数、函数、返回值 内存布局。大小和对齐方式 处理器指令集。不同平台实现 目标文件和库的二进制形式。   Rust中使用FFI需要通过extern和ex">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T07:37:26.870Z">
+<meta property="og:updated_time" content="2020-06-14T08:12:13.533Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rust跨语言">
-<meta name="twitter:description" content="语言交互 外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思  应用程序二进制接口（ABI）涵盖内容：  调用约定。参数、函数、返回值 内存布局。大小和对齐方式 处理器指令集。不同平台实现 目标文件和库的二进制形式。   Rust中使用FFI需要通过extern和">
+<meta name="twitter:description" content="语言交互 外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思 应用程序二进制接口（ABI）涵盖内容： 调用约定。参数、函数、返回值 内存布局。大小和对齐方式 处理器指令集。不同平台实现 目标文件和库的二进制形式。   Rust中使用FFI需要通过extern和ex">
 
 
 
@@ -353,36 +353,32 @@
 
       
         <h2 id="语言交互"><a href="#语言交互" class="headerlink" title="语言交互"></a>语言交互</h2><ul>
-<li><p>外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思</p>
-</li>
-<li><p>应用程序二进制接口（ABI）涵盖内容：</p>
-<ul>
+<li>外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思</li>
+<li>应用程序二进制接口（ABI）涵盖内容：<ul>
 <li>调用约定。参数、函数、返回值</li>
 <li>内存布局。大小和对齐方式</li>
 <li>处理器指令集。不同平台实现</li>
 <li>目标文件和库的二进制形式。</li>
 </ul>
 </li>
-<li><p>Rust中使用FFI需要通过extern和extern块对FFI接口进行标注，编译时会由LLVM默认生成C-ABI</p>
-<h3 id="链接与Crate-Type"><a href="#链接与Crate-Type" class="headerlink" title="链接与Crate Type"></a>链接与Crate Type</h3></li>
-<li><p>链接产生于程序开发的模块化。C和C++每个文件都是一个编译单元，Rust是以包（crate）为编译单元</p>
-</li>
-<li><p>链接过程就是编译器经过符号解析、存储空间分配和重定位的过程，最终生成可执行文件或库。</p>
-</li>
-<li><p>库分为静态库和动态库。静态库是普通目标文件集合的简单拼接，使用简单，但浪费空间；动态库则是把链接过程延迟到运行时，如运行时重定位，这比较省空间</p>
-</li>
-<li><p>Rust支持四种库：Rust的dylib、rlib，和其他语言的cdylib、staticlib</p>
-</li>
-<li><p>Rust库类型的命令行参数或crate_type属性：</p>
-<ul>
+<li>Rust中使用FFI需要通过extern和extern块对FFI接口进行标注，编译时会由LLVM默认生成C-ABI</li>
+</ul>
+<h3 id="链接与Crate-Type"><a href="#链接与Crate-Type" class="headerlink" title="链接与Crate Type"></a>链接与Crate Type</h3><ul>
+<li>链接产生于程序开发的模块化。C和C++每个文件都是一个编译单元，Rust是以包（crate）为编译单元</li>
+<li>链接过程就是编译器经过符号解析、存储空间分配和重定位的过程，最终生成可执行文件或库。</li>
+<li>库分为静态库和动态库。静态库是普通目标文件集合的简单拼接，使用简单，但浪费空间；动态库则是把链接过程延迟到运行时，如运行时重定位，这比较省空间</li>
+<li>Rust支持四种库：Rust的dylib、rlib，和其他语言的cdylib、staticlib</li>
+<li>Rust库类型的命令行参数或crate_type属性：<ul>
 <li><code>--crate-type=bin</code>或<code>#[crate_type = &quot;bin&quot;]</code>，表示是可执行文件，程序必须包含main函数</li>
 <li><code>--crate-type=lib</code>或<code>#[crate_type = &quot;lib&quot;]</code>，表示生成Rust库，什么库编译器决定，一般是rlib静态库</li>
 <li><code>--crate-type=rlib</code>或<code>#[crate_type = &quot;rlib&quot;]</code>，生成静态Rust库</li>
 <li><code>--crate-type=dylib</code>或<code>#[crate_type = &quot;dylib&quot;]</code>，生成动态Rust库</li>
 <li><code>--crate-type=staitclib</code>或<code>#[crate_type = &quot;staticlib&quot;]</code>，将生成静态系统库，Rust编译器永远不会链接它。用于和C语言链接</li>
-<li><code>--crate-type=cdylib</code>或<code>#[crate_type = &quot;cdylib&quot;]</code>，生成动态系统库<h3 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h3></li>
+<li><code>--crate-type=cdylib</code>或<code>#[crate_type = &quot;cdylib&quot;]</code>，生成动态系统库</li>
 </ul>
 </li>
+</ul>
+<h3 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h3><ul>
 <li><p>本地平台上编译出需要在其他平台运行的程序叫做交叉编译。</p>
 </li>
 <li><p>可以使用rustc进行交叉编译，只需要传递target参数即可：如<code>$ rustc --target=arm-unknown-linux-gnueabihf hello.rs</code></p>
@@ -391,36 +387,32 @@
 <figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># $ car ~/.cargo/config</span></span><br><span class="line"><span class="section">[target.arm-unknown-linux-gnueabihf]</span></span><br><span class="line"><span class="attr">linker</span> = <span class="string">"arm-linux-gnueabihf-gcc-4.8"</span>  <span class="comment"># 指定链接器</span></span><br><span class="line"><span class="comment"># 使用cargo交叉编译</span></span><br><span class="line"><span class="comment"># $ cargo build --target=arm-unknown-linux-gnueabihf</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>target triple格式是<code>{arch}-{vendor}-{sys}-{abi}</code>，分别代表编译程序的主机系统、供应商、操作系统、ABI接口，最后abi有时候可以省略</p>
-<h3 id="extern语法"><a href="#extern语法" class="headerlink" title="extern语法"></a>extern语法</h3></li>
-<li><p>有extern关键字和extern块。有三个extern API字符串是跨平台的：<code>extern &quot;Rust&quot;</code>、<code>extern &quot;C&quot;</code>、<code>extern &quot;system&quot;</code></p>
 </li>
-<li><p>另外有三个Rust编译器专用的ABI字符串：</p>
-<ul>
+</ul>
+<h3 id="extern语法"><a href="#extern语法" class="headerlink" title="extern语法"></a>extern语法</h3><ul>
+<li>有extern关键字和extern块。有三个extern API字符串是跨平台的：<code>extern &quot;Rust&quot;</code>、<code>extern &quot;C&quot;</code>、<code>extern &quot;system&quot;</code></li>
+<li>另外有三个Rust编译器专用的ABI字符串：<ul>
 <li><code>extern &quot;rust-intrinsic&quot;</code>，代表Rust编译器内部函数的ABI</li>
 <li><code>extern &quot;rust-call&quot;</code>，Fn::call的ABI</li>
-<li><code>extern &quot;platform-intrinsic&quot;</code>，特定平台内在函数的ABI<h2 id="与C-C-交互"><a href="#与C-C-交互" class="headerlink" title="与C/C++交互"></a>与C/C++交互</h2><h3 id="Rust调用C函数"><a href="#Rust调用C函数" class="headerlink" title="Rust调用C函数"></a>Rust调用C函数</h3></li>
+<li><code>extern &quot;platform-intrinsic&quot;</code>，特定平台内在函数的ABI</li>
 </ul>
 </li>
-<li><p>首先新建C/C++源代码文件夹，编写好代码后，使用<code>extern &quot;C&quot; {}</code>外暴露接口</p>
-</li>
-<li><p>在caogo.toml配置文件中，<code>[build-dependencies]</code>中使用cc库，然后在<code>[package]</code>中将某个build.rs文件指定为自动化编译配置文件</p>
-</li>
-<li><p>在build.rs中引进包<code>extern crate cc</code>，使用<code>cc.Build::new()</code>等方法初始化，在Rust源文件中正常使用时，用<code>extern { ... }</code>声明指定的外部接口</p>
-<h3 id="C调用Rust库"><a href="#C调用Rust库" class="headerlink" title="C调用Rust库"></a>C调用Rust库</h3></li>
-<li><p>首先在cargo.toml配置文件中<code>[lib]</code>设置Rust链接库名称，如：<code>name = &quot;callrust&quot;</code>，将在Rust同级目录下写C头文件用于暴露Rust接口，并设置<code>crate-type  = [&quot;staticlib&quot;, &quot;cdylib&quot;]</code>用于生成什么类型的链接库，库将产生在target/Debug下</p>
-</li>
-<li><p>编写Rust程序，将对应接口写在callrust.c中，并编写markdown文件：cargo用于编译Rust代码，gcc用于链接库并生成对应二进制文件</p>
-</li>
-<li><p>在另起的C源代码文件夹中直接<code>#include &quot;callrust&quot;</code>，然后调用接口函数即可</p>
-<h3 id="第三方工具"><a href="#第三方工具" class="headerlink" title="第三方工具"></a>第三方工具</h3></li>
-<li><p>rust-bindgen：根据头文件自动生成Rust FFI的C绑定，支持部分C++功能</p>
-</li>
-<li><p>cbindgen：根据Rust代码自动生成头文件</p>
-</li>
-<li><p>ctest：为Rust FFI的C绑定自动生成测试文件</p>
-</li>
-<li><p>移动平台下也有两个库：</p>
-<ul>
+</ul>
+<h2 id="与C-C-交互"><a href="#与C-C-交互" class="headerlink" title="与C/C++交互"></a>与C/C++交互</h2><h3 id="Rust调用C函数"><a href="#Rust调用C函数" class="headerlink" title="Rust调用C函数"></a>Rust调用C函数</h3><ul>
+<li>首先新建C/C++源代码文件夹，编写好代码后，使用<code>extern &quot;C&quot; {}</code>外暴露接口</li>
+<li>在caogo.toml配置文件中，<code>[build-dependencies]</code>中使用cc库，然后在<code>[package]</code>中将某个build.rs文件指定为自动化编译配置文件</li>
+<li>在build.rs中引进包<code>extern crate cc</code>，使用<code>cc.Build::new()</code>等方法初始化，在Rust源文件中正常使用时，用<code>extern { ... }</code>声明指定的外部接口</li>
+</ul>
+<h3 id="C调用Rust库"><a href="#C调用Rust库" class="headerlink" title="C调用Rust库"></a>C调用Rust库</h3><ul>
+<li>首先在cargo.toml配置文件中<code>[lib]</code>设置Rust链接库名称，如：<code>name = &quot;callrust&quot;</code>，将在Rust同级目录下写C头文件用于暴露Rust接口，并设置<code>crate-type  = [&quot;staticlib&quot;, &quot;cdylib&quot;]</code>用于生成什么类型的链接库，库将产生在target/Debug下</li>
+<li>编写Rust程序，将对应接口写在callrust.c中，并编写markdown文件：cargo用于编译Rust代码，gcc用于链接库并生成对应二进制文件</li>
+<li>在另起的C源代码文件夹中直接<code>#include &quot;callrust&quot;</code>，然后调用接口函数即可</li>
+</ul>
+<h3 id="第三方工具"><a href="#第三方工具" class="headerlink" title="第三方工具"></a>第三方工具</h3><ul>
+<li>rust-bindgen：根据头文件自动生成Rust FFI的C绑定，支持部分C++功能</li>
+<li>cbindgen：根据Rust代码自动生成头文件</li>
+<li>ctest：为Rust FFI的C绑定自动生成测试文件</li>
+<li>移动平台下也有两个库：<ul>
 <li>cargo-lipo：提供<code>cargo lipo</code>命令，自动生成用于iOS的通用库</li>
 <li>jni：提供Rust的JNI绑定，用于和Android平台交互</li>
 </ul>
@@ -432,25 +424,23 @@
 </ul>
 <h2 id="Rust与WebAssembly"><a href="#Rust与WebAssembly" class="headerlink" title="Rust与WebAssembly"></a>Rust与WebAssembly</h2><p>WebAssembly是兴起的新的字节码格式，缩写是“WASM”，它是一个面向Web通用二进制和文本格式项目，它是为了作为C/C++/Rust语言的一种编译目标，在客户端提供一种接近本地运行速度的多语言编写代码的方式。某种意义上说，WebAssembly是一种中间语言（<br>IR），就像汇编（Assembly）语言那样是所有语言转换成机器码的通用底层语言，WebAssembly就是面向Web的汇编</p>
 <ul>
-<li><p>WebAssembly比JavaScript快的原因：</p>
-<ul>
+<li>WebAssembly比JavaScript快的原因：<ul>
 <li>WebAssembly体积更小，下载和解析更快。</li>
 <li>WebAssembly不受JavaScript约束，可以利用更多CPU特性。如64位整数、内存读写偏移量、非内存对齐读写和多种CPU指令等。</li>
 <li>生成WebAssembly编译器工具链的优化和改进。如在Rust中，可以用wasm-gc工具优化生成的wasm文件大小。</li>
 <li>WebAssembly不需要垃圾回收。内存操作是手动控制，但也没必要担心内存泄漏，它的内存空间是JavaScript分配的对象，最终Javascript的GC管理</li>
-<li>WebAssembly在Web只是一个应用环境，WebAssembly还可以应用其他领域：桌面图形化程序、区块链智能合约和编写操作系统微内核<h2 id="WebAssembly要点"><a href="#WebAssembly要点" class="headerlink" title="WebAssembly要点"></a>WebAssembly要点</h2></li>
+<li>WebAssembly在Web只是一个应用环境，WebAssembly还可以应用其他领域：桌面图形化程序、区块链智能合约和编写操作系统微内核</li>
 </ul>
 </li>
-<li><p>模块。一个.wasm文件局势一个基本编译单位</p>
-</li>
-<li><p>线性内存。用于和JavaScript通信，是个可变大小的ArrayBuffer，由JavaScript分配</p>
-</li>
-<li><p>表格。用于存放函数引用，支持动态调用函数</p>
-</li>
-<li><p>实例。同一个模块的多个实例共享相同的内存和表格</p>
-</li>
-<li><p>栈式机器。WebAssembly指令的运行基于栈式机器定义，每种指令都是在站上进行出栈和入站操作</p>
-<h2 id="使用Rust开发WebAssembly"><a href="#使用Rust开发WebAssembly" class="headerlink" title="使用Rust开发WebAssembly"></a>使用Rust开发WebAssembly</h2></li>
+</ul>
+<h2 id="WebAssembly要点"><a href="#WebAssembly要点" class="headerlink" title="WebAssembly要点"></a>WebAssembly要点</h2><ul>
+<li>模块。一个.wasm文件局势一个基本编译单位</li>
+<li>线性内存。用于和JavaScript通信，是个可变大小的ArrayBuffer，由JavaScript分配</li>
+<li>表格。用于存放函数引用，支持动态调用函数</li>
+<li>实例。同一个模块的多个实例共享相同的内存和表格</li>
+<li>栈式机器。WebAssembly指令的运行基于栈式机器定义，每种指令都是在站上进行出栈和入站操作</li>
+</ul>
+<h2 id="使用Rust开发WebAssembly"><a href="#使用Rust开发WebAssembly" class="headerlink" title="使用Rust开发WebAssembly"></a>使用Rust开发WebAssembly</h2><ul>
 <li><p>可以手写wat文本格式开发wasm模块，但效率不高，WebAssmebly设计之初是为了作为编译目标存在的，因此可以作为很多变成语言的编译目标：</p>
 <ul>
 <li><p>C/C++，可以通过EmScripten工具来编译到wasm。EmScripten是个LLVM后端工具，可以将LLVM中间码编译到asm.js。所以C/C++的编译流程可以通过任何一个LLVM前端工具生成LLVM IR，然后通过EmScripten生成asm.js，最后通过WebAssembly编译工具链Binaryen将asm.js生成wasm二进制格式。一些不支持wasm的浏览器也可以使用asm.js来代替</p>
@@ -626,7 +616,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -648,7 +638,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

@@ -87,7 +87,7 @@
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
 <meta property="og:description" content="性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A | grep range # 查看端口范围  ntptime # 查看ntp时间  ntpq -pn # ntp同步情况，service ntp start启动  nc # netcat $ nc ip p">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T07:55:16.346Z">
+<meta property="og:updated_time" content="2020-06-14T08:11:27.730Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Muduo技要2">
 <meta name="twitter:description" content="性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A | grep range # 查看端口范围  ntptime # 查看ntp时间  ntpq -pn # ntp同步情况，service ntp start启动  nc # netcat $ nc ip p">
@@ -399,11 +399,15 @@
 <h3 id="网络神话"><a href="#网络神话" class="headerlink" title="网络神话"></a>网络神话</h3><h4 id="Reactor和Proactor"><a href="#Reactor和Proactor" class="headerlink" title="Reactor和Proactor"></a>Reactor和Proactor</h4><ul>
 <li>Reactor模式指“non-blocking IO + IO multiplexing”，Proactor模式是另一个。</li>
 <li>Recator的基本结构是事件循环（event loop）和事件驱动（event-driven）和事件回调实现业务逻辑，提高并发度和吞吐量，适合IO密集型横须</li>
-<li>CPU密集型程序应该使用线程池，即blocking_queue实现的任务队列<h4 id="线程分配"><a href="#线程分配" class="headerlink" title="线程分配"></a>线程分配</h4></li>
+<li>CPU密集型程序应该使用线程池，即blocking_queue实现的任务队列</li>
+</ul>
+<h4 id="线程分配"><a href="#线程分配" class="headerlink" title="线程分配"></a>线程分配</h4><ul>
 <li>当线程很廉价时，创造多于CPU数目的线程，一线程处理一个TCP连接，通常使用阻塞Blocking IO</li>
 <li>当线程很宝贵时，创造跟CPU数目一样多的线程，一个线程处理多个TCP连接上的IO，即”non-blocking IO + IO multiplexing”</li>
 <li>进程指fork的产物，线程指pthread_create的宝贵的原生NPTL Pthread线程，每个线程由clone产生，对应内核的task_struct</li>
-<li>两种场合必须使用单线程：程序fork和限制程序的CPU占用率。此外，只有单线程能使用fork<h4 id="多线程的性能优势"><a href="#多线程的性能优势" class="headerlink" title="多线程的性能优势"></a>多线程的性能优势</h4></li>
+<li>两种场合必须使用单线程：程序fork和限制程序的CPU占用率。此外，只有单线程能使用fork</li>
+</ul>
+<h4 id="多线程的性能优势"><a href="#多线程的性能优势" class="headerlink" title="多线程的性能优势"></a>多线程的性能优势</h4><ul>
 <li>如果很少CPU负载让IO跑满，或很少IO负载就让CPU跑满，那么多线程没有性能优势</li>
 <li>多线程适用场景：<ul>
 <li>多个CPU可用。</li>
@@ -431,9 +435,10 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>;</span>  <span class="comment">// 前向生命</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(Foo &amp;foo)</span> </span>&#123;</span><br><span class="line">    Foo *p = &amp;foo;  <span class="comment">// 取foo地址，重载了意思就变了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>C++的链接模型相比C多了一些内容，name mangling和vague linkage，即一个符号多份互不冲突。C中不允许重复定义</p>
-<h4 id="一些名词"><a href="#一些名词" class="headerlink" title="一些名词"></a>一些名词</h4></li>
-<li><p>一次定义原则（ODR），C是的，C++不是的</p>
 </li>
+</ul>
+<h4 id="一些名词"><a href="#一些名词" class="headerlink" title="一些名词"></a>一些名词</h4><ul>
+<li>一次定义原则（ODR），C是的，C++不是的</li>
 </ul>
 <h4 id="C-设计"><a href="#C-设计" class="headerlink" title="C++设计"></a>C++设计</h4><ul>
 <li>POD和非POD</li>
@@ -454,16 +459,22 @@
 <h3 id="C-并发相关错误类型"><a href="#C-并发相关错误类型" class="headerlink" title="C++并发相关错误类型"></a>C++并发相关错误类型</h3><h4 id="不必要的阻塞"><a href="#不必要的阻塞" class="headerlink" title="不必要的阻塞"></a>不必要的阻塞</h4><ul>
 <li>死锁：指第一个线程等待第二个线程执行后才能继续，而第二个线程又在等待第一个线程，构成一个线程等待循环状态。</li>
 <li>活锁：当第一个线程等待第二个线程，第二个线程又在等待第一个线程时，活锁类似死锁。活锁死锁区别在于等待过程不是阻塞状态而是不断循环检测状态，如spinlock。</li>
-<li>在I/O或外部输入上的阻塞：当线程阻塞是因为等待某外部输入而无法继续执行，可能外部输入永远都不到来<h4 id="竞争条件"><a href="#竞争条件" class="headerlink" title="竞争条件"></a>竞争条件</h4></li>
+<li>在I/O或外部输入上的阻塞：当线程阻塞是因为等待某外部输入而无法继续执行，可能外部输入永远都不到来</li>
+</ul>
+<h4 id="竞争条件"><a href="#竞争条件" class="headerlink" title="竞争条件"></a>竞争条件</h4><ul>
 <li>数据竞争：指没有同步好对某个共享内存的并发访问</li>
 <li>破坏不变量：表现为悬挂指针（线程删除了被访问的数据）、随机存储损坏（线程为局部更新造成读取数据不一致）或者双闲状态（重复释放？）</li>
-<li>生存期问题：线程超时访问的某些数据已经被删除、销毁或访问的内存已经被另一个对象重用<h4 id="需要思考的问题"><a href="#需要思考的问题" class="headerlink" title="需要思考的问题"></a>需要思考的问题</h4></li>
+<li>生存期问题：线程超时访问的某些数据已经被删除、销毁或访问的内存已经被另一个对象重用</li>
+</ul>
+<h4 id="需要思考的问题"><a href="#需要思考的问题" class="headerlink" title="需要思考的问题"></a>需要思考的问题</h4><ul>
 <li>哪些数据需要保护，防止并行访问？</li>
 <li>如何保证数据是被保护的？</li>
 <li>此时其他线程执行到代码的何处？</li>
 <li>该线程用了哪些信号量？其他线程用了哪些信号量？</li>
 <li>该线程各操作间有先后顺序要求吗？</li>
-<li>线程载入的数据是否有效，是否被其他线程修改？<h4 id="假如测试一个队列需要考虑的不同应用场景"><a href="#假如测试一个队列需要考虑的不同应用场景" class="headerlink" title="假如测试一个队列需要考虑的不同应用场景"></a>假如测试一个队列需要考虑的不同应用场景</h4></li>
+<li>线程载入的数据是否有效，是否被其他线程修改？</li>
+</ul>
+<h4 id="假如测试一个队列需要考虑的不同应用场景"><a href="#假如测试一个队列需要考虑的不同应用场景" class="headerlink" title="假如测试一个队列需要考虑的不同应用场景"></a>假如测试一个队列需要考虑的不同应用场景</h4><ul>
 <li>一个线程在自身队列调用push()或pop()验证</li>
 <li>空队列上一个线程调用push()另一个线程pop()</li>
 <li>空队列和满队列上分别多个线程push()</li>
@@ -514,6 +525,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/14/PostgreSQL插件及安装/" rel="prev" title="PostgreSQL插件及安装">
+                PostgreSQL插件及安装 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -592,7 +607,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -614,7 +629,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

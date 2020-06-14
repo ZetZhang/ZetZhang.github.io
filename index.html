@@ -259,6 +259,443 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/PostgreSQL查询优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/14/PostgreSQL查询优化/" itemprop="url">PostgreSQL查询优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T16:03:48+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-04/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.04</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="EXPLAIN语法"><a href="#EXPLAIN语法" class="headerlink" title="EXPLAIN语法"></a>EXPLAIN语法</h3><ul>
+<li><code>ANALYZE[boolean]</code>：执行statement，得到真是运行时间和统计信息</li>
+<li><code>VERBOSE[boolean]</code>：详细信息</li>
+<li><code>COSTS[boolean]</code>：cost值，默认打开</li>
+<li><code>BUFFERS[boolean]</code>：本次QUERY shared或local buffer的信息，包括命中未命中，脏写</li>
+<li><code>TIMING[boolean]</code>：输出时间开销</li>
+<li><code>FORMAT{TEXT|XML|JSON|YAML}</code>：输出格式</li>
+</ul>
+<h3 id="EXPLAIN代价因子校准"><a href="#EXPLAIN代价因子校准" class="headerlink" title="EXPLAIN代价因子校准"></a>EXPLAIN代价因子校准</h3><h4 id="cpu-tuple-cost因子"><a href="#cpu-tuple-cost因子" class="headerlink" title="cpu_tuple_cost因子"></a>cpu_tuple_cost因子</h4><ol>
+<li><p>创建测试表</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> tbl_cost_align(<span class="keyword">id</span> <span class="built_in">int</span>, info <span class="built_in">text</span>, crt_time <span class="built_in">timestamp</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>插入测试数据</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tbl_cost_align <span class="keyword">select</span>(random() * <span class="number">2000000000</span>)::<span class="built_in">int</span>, <span class="keyword">md5</span>(random()::<span class="built_in">text</span>), clock_timestamp() frmo gnerate_series(<span class="number">1</span>, <span class="number">10000000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tbl_cost_align <span class="keyword">select</span>(random() * <span class="number">2000000000</span>)::<span class="built_in">int</span>, <span class="keyword">md5</span>(random()::<span class="built_in">text</span>), clock_timestamp() frmo gnerate_series(<span class="number">1</span>, <span class="number">1000000000</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>分析表，获得统计信息</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">analyze</span> tbl_cost_align;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可以查看到占用的数据块个数</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> relpages <span class="keyword">from</span> pg_class <span class="keyword">where</span> relname=<span class="string">'tbl_cost_align'</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行checkpoint后关闭数据库，为了得到纯粹的物理磁盘的连续io请求cost常量，不能有shared buffer干扰</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checkpoint;</span><br></pre></td></tr></table></figure>
+
+ <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl stop -m fast</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同时不能有OS Cache干扰，清除系统cachce</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sync; echo 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用systemtab来脚本分析</p>
+</li>
+</ol>
+<ul>
+<li>为了增加IO响应时间的柱状图输出，首先启动数据库，CPU亲和设置为1  <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ taskset -c 1 postgres &gt;/dev/null 2&amp;&gt;1</span><br><span class="line">$ psql</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="8">
+<li><p>指定启动脚本</p>
+ <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ taskset -c 7 stap -e `...`</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在psql执行explain analyze</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">explain</span> (<span class="keyword">analyze</span>, verbose, costs, buffers, timing) <span class="keyword">select</span> * <span class="keyword">from</span> tbl_cost_align;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过数据求得</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- cpu_tuple_cost：total time - actual time = shared read * 块处理时间 + rows * x(xpu_tuple_cost)</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="random-page-cost因子校准-cpu-index-tuple-cst因子校准-cpu-operator-cost因子校准"><a href="#random-page-cost因子校准-cpu-index-tuple-cst因子校准-cpu-operator-cost因子校准" class="headerlink" title="random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准"></a>random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准</h4><ol>
+<li><p>为了保证公式准确性方面验证，把所有常亮设置为1</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> random_page_cost = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">set</span> cpu_tuple_cost = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">set</span> cpu_index_tuple_cost = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">set</span> cpu_operator_cost = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>QUERY PLAN</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">set</span> enable_seqscan = <span class="keyword">off</span>; </span><br><span class="line">    <span class="keyword">set</span> enable_bitmapscan = <span class="keyword">off</span>;</span><br><span class="line">    <span class="keyword">explain</span> (<span class="keyword">analyze</span>, verbose, costs, buffers, timing) <span class="keyword">select</span> * <span class="keyword">from</span> tbl_cost_align <span class="keyword">where</span> <span class="keyword">id</span> &gt; <span class="number">1998999963</span>;</span><br><span class="line">    ``` </span><br><span class="line">3. 计算公式为：</span><br><span class="line">    ```sql</span><br><span class="line">    <span class="comment">-- = blocks * random_page_cost + cpu_tuple_cost * rows + cpu_index_tuple_cost * rows + cpu_operator_cost * ?</span></span><br><span class="line">    <span class="comment">-- 其中cpu_index_tuple_cost和cpu_operator_cost的比例默认是2:1</span></span><br><span class="line">    <span class="comment">-- 需要设置</span></span><br><span class="line">    <span class="keyword">set</span> cpu_operator_cost = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>cao，略</p>
+</li>
+</ol>
+<h3 id="auto-explain？not-found"><a href="#auto-explain？not-found" class="headerlink" title="auto_explain？not found"></a>auto_explain？not found</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 例如，以下设置将执行超过10ms的记录写到日志</span></span><br><span class="line"><span class="keyword">set</span> auto_explain.log_min_duration=<span class="number">10</span>ms;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果需要配置到文件，则写入，然后重启：  <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shared_reload_libraries = <span class="string">'pg_stat_statements, auto_explain'</span></span><br><span class="line">auto_explain.log_min_duration = 100ms</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/PostgreSQL插件及安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/14/PostgreSQL插件及安装/" itemprop="url">PostgreSQL插件及安装</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T15:59:46+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="PostgreSQL源码目录简介"><a href="#PostgreSQL源码目录简介" class="headerlink" title="PostgreSQL源码目录简介"></a>PostgreSQL源码目录简介</h3><h4 id="contrib目录下的第三方插件"><a href="#contrib目录下的第三方插件" class="headerlink" title="contrib目录下的第三方插件"></a>contrib目录下的第三方插件</h4><ul>
+<li>adminpack：一些管理函数</li>
+<li>auth_delay：认证失败后延迟报异常，防止暴力破解</li>
+<li>auto_explain：将超过指定执行时间的SQL执行计划输出到日志</li>
+<li>btree_gin：gin索引方法的btree操作符扩展（某些情况下“多列gin组合索引”比“锁哥btree单列索引”的bitmap anding更高效</li>
+<li>chkpass：自动加密的字段类型（用UNIXcrypt()进行封装，仅支持前8位安全）<code>&#39;abcdefghijkl&#39;::chkpass = &#39;abcdefgh&#39;</code></li>
+<li>citext：不区分大小写的数据类型</li>
+<li>cube：多维立方体类型，支持立方体对象的相同、相交和包含等关系</li>
+<li>dblink：PostgreSQL跨库操作插件</li>
+<li>dict_int：全文检索的字典模块，控制数字拆分最大长度，以确定数字在全文检索中的分词个数（maxlen = 6: 12345678被截断，rejectlong = true则忽略这个分词）</li>
+<li>dict_xsyn：全文检索的字典模块，设置分词同义词，支持同义词匹配</li>
+<li>dummy_seclabel：用于安全标签SQL测试</li>
+<li>earthdistance：cube、point类型计算地球两点间距离</li>
+<li>file_fdw：文件外部表模块</li>
+<li>fuzzystrmatch：单字节字符串之间的相似性判断</li>
+<li>hstore：存储kv数据类型，插件还提供了多个kv类型的函数和操作符，如数组、json、hstore间转换，kv存在判断，删除kv值</li>
+<li>intagg：int类型数组聚合函数</li>
+<li>intarray：int类型数组功能扩展</li>
+<li>isn：国际通用产品标识码数据类型，如ISBN、ISMN等</li>
+<li>lo：大对象可选木块，lo烈性和自动unlink大对象的trigger</li>
+<li>ltree：异构数据类型及操作函数操作符</li>
+<li>oid2name：oid转换成name的命令行工具，不属于extension</li>
+<li>pageinspect：用于读取数据库PAGE裸信息插件，可以读main、fsm、vm、FORK的页数据，用于debug</li>
+<li>passwordcheck：创建用户或修改用户密码时，检查密码安全性</li>
+<li>pg_archivecleanup：清除归档文件的命令，不属于extension</li>
+<li>pgbeanch：数据库性能测试，不属于extension</li>
+<li>pg_buffercache，输出当前shared buffer状态数据，细化到page number</li>
+<li>pgcrypto：服务端数据加密的扩展库</li>
+<li>pg_freespacemap：从行头信息的infomask获取行锁信息</li>
+<li>pg_standby：便于创建warm standby的命令行工具</li>
+<li>pg_stat_statements：跟踪数据库SQL，收集统计信息</li>
+<li>pgstattuple：行级统计信息，dead tuple、live tuples、table_len、free_space</li>
+<li>pg_tset_fsync：测试磁盘fsync速率</li>
+<li>pg_test_timing：测试系统定时器开销，开销越大，explain analyze时间结果越不准</li>
+<li>pg_trgm：将字符串拆分成3个一组的多个单元，用于测试两个字符串之间相似度，比分词暴力</li>
+<li>pg_upgrade：跨大版本的升级工具，如9.0-&gt;9.1 </li>
+<li>pg_upgrade_support –pg_upgrade用到的服务端函数集</li>
+<li>pg_xlogdump：从xlog中dump出易读的底层信息</li>
+<li>postgresfdw：跨库的外部表插件</li>
+<li>seg：线段类型和浮点数的区间类型，及相关操作符，索引访问方法</li>
+<li>sepgsql：基于SELinux安全策略的访问控制模块</li>
+<li>spi：一些服务端的trigger函数</li>
+<li>sslinfo：输入ssl认证的客户端认证信息</li>
+<li>start-scripts：数据库启动脚本模块</li>
+<li>tablefunc：用于行列变换，异构数据处理</li>
+<li>tcn：提供异步消息输出的trigger </li>
+<li>test_parser：全文检索中的自定义parser的测试插件</li>
+<li>tserach2：全文检索相关插件，8.3以后不需要这个</li>
+<li>unaccent：全文检索插件</li>
+<li>uuid-ossp：生成UUID插件</li>
+<li>vacuumlo：大对象垃圾回收命令</li>
+<li>worker_spi：服务端worker编程返利</li>
+<li>xml2：xml相关插件</li>
+</ul>
+<h4 id="PostgreSQL数据库结构介绍"><a href="#PostgreSQL数据库结构介绍" class="headerlink" title="PostgreSQL数据库结构介绍"></a>PostgreSQL数据库结构介绍</h4><ul>
+<li>base：对应pg_default(\db)表空间</li>
+<li>global：对应pg_global表空间，存放集群中共享对象例pg__database表，包含控制文件等</li>
+<li>pg_commit_ts：事务提交状态数据</li>
+<li>pg_hba.conf：数据库访问控制文件</li>
+<li>pg_log：数据库日志目录，根据配置定义，可能没有这个目录</li>
+<li>pg_multixact：共享行锁的事务状态数据</li>
+<li>pg_notify：异步消息相关的状态数据</li>
+<li>pg_serial：串行隔离级别的事务状态数据</li>
+<li>pg_snapshots：存储执行了事务snapshot导出的状态数据</li>
+<li>pg_stat_tmp：统计信息的临时文件</li>
+<li>pg_subtrans：子事务状态数据</li>
+<li>pg_tblspc：表空间的软链接目录</li>
+<li>pg_twophase：二阶事务的状态数据</li>
+<li>PG_VERSION：数据库版本</li>
+<li>postgresql.cofn：配置文件</li>
+<li>postgresql.auto.conf</li>
+<li>postmaster.opts：记录数据库启动时的命令行选项</li>
+<li>postmaster.pid：数据库启动的主进程信息文件，如$PGDATA目录，数据库启动时间、监听端口、IPC信息等</li>
+<li>pg_dynshmem</li>
+<li>pg_ident.conf</li>
+<li>pg_logical</li>
+<li>pg_replslot</li>
+<li>pg_stat</li>
+<li>pg_wal：应该就是存储WAL文件吧</li>
+<li>pg_xact</li>
+</ul>
+<h4 id="PostgreSQL第三方插件安装"><a href="#PostgreSQL第三方插件安装" class="headerlink" title="PostgreSQL第三方插件安装"></a>PostgreSQL第三方插件安装</h4><ul>
+<li>通常的安装方法：<ul>
+<li>把第三方插件源码目录拷贝到contrib目录中</li>
+<li>把pg_config加到PATH中</li>
+<li>make clean -j8 &amp;&amp; make -j8 &amp;&amp; make install -j8</li>
+<li>create externsion XXX;方式进行插件安装</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/Muduo技要2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -399,11 +836,15 @@
 <h3 id="网络神话"><a href="#网络神话" class="headerlink" title="网络神话"></a>网络神话</h3><h4 id="Reactor和Proactor"><a href="#Reactor和Proactor" class="headerlink" title="Reactor和Proactor"></a>Reactor和Proactor</h4><ul>
 <li>Reactor模式指“non-blocking IO + IO multiplexing”，Proactor模式是另一个。</li>
 <li>Recator的基本结构是事件循环（event loop）和事件驱动（event-driven）和事件回调实现业务逻辑，提高并发度和吞吐量，适合IO密集型横须</li>
-<li>CPU密集型程序应该使用线程池，即blocking_queue实现的任务队列<h4 id="线程分配"><a href="#线程分配" class="headerlink" title="线程分配"></a>线程分配</h4></li>
+<li>CPU密集型程序应该使用线程池，即blocking_queue实现的任务队列</li>
+</ul>
+<h4 id="线程分配"><a href="#线程分配" class="headerlink" title="线程分配"></a>线程分配</h4><ul>
 <li>当线程很廉价时，创造多于CPU数目的线程，一线程处理一个TCP连接，通常使用阻塞Blocking IO</li>
 <li>当线程很宝贵时，创造跟CPU数目一样多的线程，一个线程处理多个TCP连接上的IO，即”non-blocking IO + IO multiplexing”</li>
 <li>进程指fork的产物，线程指pthread_create的宝贵的原生NPTL Pthread线程，每个线程由clone产生，对应内核的task_struct</li>
-<li>两种场合必须使用单线程：程序fork和限制程序的CPU占用率。此外，只有单线程能使用fork<h4 id="多线程的性能优势"><a href="#多线程的性能优势" class="headerlink" title="多线程的性能优势"></a>多线程的性能优势</h4></li>
+<li>两种场合必须使用单线程：程序fork和限制程序的CPU占用率。此外，只有单线程能使用fork</li>
+</ul>
+<h4 id="多线程的性能优势"><a href="#多线程的性能优势" class="headerlink" title="多线程的性能优势"></a>多线程的性能优势</h4><ul>
 <li>如果很少CPU负载让IO跑满，或很少IO负载就让CPU跑满，那么多线程没有性能优势</li>
 <li>多线程适用场景：<ul>
 <li>多个CPU可用。</li>
@@ -431,9 +872,10 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>;</span>  <span class="comment">// 前向生命</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(Foo &amp;foo)</span> </span>&#123;</span><br><span class="line">    Foo *p = &amp;foo;  <span class="comment">// 取foo地址，重载了意思就变了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>C++的链接模型相比C多了一些内容，name mangling和vague linkage，即一个符号多份互不冲突。C中不允许重复定义</p>
-<h4 id="一些名词"><a href="#一些名词" class="headerlink" title="一些名词"></a>一些名词</h4></li>
-<li><p>一次定义原则（ODR），C是的，C++不是的</p>
 </li>
+</ul>
+<h4 id="一些名词"><a href="#一些名词" class="headerlink" title="一些名词"></a>一些名词</h4><ul>
+<li>一次定义原则（ODR），C是的，C++不是的</li>
 </ul>
 <h4 id="C-设计"><a href="#C-设计" class="headerlink" title="C++设计"></a>C++设计</h4><ul>
 <li>POD和非POD</li>
@@ -454,16 +896,22 @@
 <h3 id="C-并发相关错误类型"><a href="#C-并发相关错误类型" class="headerlink" title="C++并发相关错误类型"></a>C++并发相关错误类型</h3><h4 id="不必要的阻塞"><a href="#不必要的阻塞" class="headerlink" title="不必要的阻塞"></a>不必要的阻塞</h4><ul>
 <li>死锁：指第一个线程等待第二个线程执行后才能继续，而第二个线程又在等待第一个线程，构成一个线程等待循环状态。</li>
 <li>活锁：当第一个线程等待第二个线程，第二个线程又在等待第一个线程时，活锁类似死锁。活锁死锁区别在于等待过程不是阻塞状态而是不断循环检测状态，如spinlock。</li>
-<li>在I/O或外部输入上的阻塞：当线程阻塞是因为等待某外部输入而无法继续执行，可能外部输入永远都不到来<h4 id="竞争条件"><a href="#竞争条件" class="headerlink" title="竞争条件"></a>竞争条件</h4></li>
+<li>在I/O或外部输入上的阻塞：当线程阻塞是因为等待某外部输入而无法继续执行，可能外部输入永远都不到来</li>
+</ul>
+<h4 id="竞争条件"><a href="#竞争条件" class="headerlink" title="竞争条件"></a>竞争条件</h4><ul>
 <li>数据竞争：指没有同步好对某个共享内存的并发访问</li>
 <li>破坏不变量：表现为悬挂指针（线程删除了被访问的数据）、随机存储损坏（线程为局部更新造成读取数据不一致）或者双闲状态（重复释放？）</li>
-<li>生存期问题：线程超时访问的某些数据已经被删除、销毁或访问的内存已经被另一个对象重用<h4 id="需要思考的问题"><a href="#需要思考的问题" class="headerlink" title="需要思考的问题"></a>需要思考的问题</h4></li>
+<li>生存期问题：线程超时访问的某些数据已经被删除、销毁或访问的内存已经被另一个对象重用</li>
+</ul>
+<h4 id="需要思考的问题"><a href="#需要思考的问题" class="headerlink" title="需要思考的问题"></a>需要思考的问题</h4><ul>
 <li>哪些数据需要保护，防止并行访问？</li>
 <li>如何保证数据是被保护的？</li>
 <li>此时其他线程执行到代码的何处？</li>
 <li>该线程用了哪些信号量？其他线程用了哪些信号量？</li>
 <li>该线程各操作间有先后顺序要求吗？</li>
-<li>线程载入的数据是否有效，是否被其他线程修改？<h4 id="假如测试一个队列需要考虑的不同应用场景"><a href="#假如测试一个队列需要考虑的不同应用场景" class="headerlink" title="假如测试一个队列需要考虑的不同应用场景"></a>假如测试一个队列需要考虑的不同应用场景</h4></li>
+<li>线程载入的数据是否有效，是否被其他线程修改？</li>
+</ul>
+<h4 id="假如测试一个队列需要考虑的不同应用场景"><a href="#假如测试一个队列需要考虑的不同应用场景" class="headerlink" title="假如测试一个队列需要考虑的不同应用场景"></a>假如测试一个队列需要考虑的不同应用场景</h4><ul>
 <li>一个线程在自身队列调用push()或pop()验证</li>
 <li>空队列上一个线程调用push()另一个线程pop()</li>
 <li>空队列和满队列上分别多个线程push()</li>
@@ -613,36 +1061,32 @@
         
           
             <h2 id="语言交互"><a href="#语言交互" class="headerlink" title="语言交互"></a>语言交互</h2><ul>
-<li><p>外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思</p>
-</li>
-<li><p>应用程序二进制接口（ABI）涵盖内容：</p>
-<ul>
+<li>外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思</li>
+<li>应用程序二进制接口（ABI）涵盖内容：<ul>
 <li>调用约定。参数、函数、返回值</li>
 <li>内存布局。大小和对齐方式</li>
 <li>处理器指令集。不同平台实现</li>
 <li>目标文件和库的二进制形式。</li>
 </ul>
 </li>
-<li><p>Rust中使用FFI需要通过extern和extern块对FFI接口进行标注，编译时会由LLVM默认生成C-ABI</p>
-<h3 id="链接与Crate-Type"><a href="#链接与Crate-Type" class="headerlink" title="链接与Crate Type"></a>链接与Crate Type</h3></li>
-<li><p>链接产生于程序开发的模块化。C和C++每个文件都是一个编译单元，Rust是以包（crate）为编译单元</p>
-</li>
-<li><p>链接过程就是编译器经过符号解析、存储空间分配和重定位的过程，最终生成可执行文件或库。</p>
-</li>
-<li><p>库分为静态库和动态库。静态库是普通目标文件集合的简单拼接，使用简单，但浪费空间；动态库则是把链接过程延迟到运行时，如运行时重定位，这比较省空间</p>
-</li>
-<li><p>Rust支持四种库：Rust的dylib、rlib，和其他语言的cdylib、staticlib</p>
-</li>
-<li><p>Rust库类型的命令行参数或crate_type属性：</p>
-<ul>
+<li>Rust中使用FFI需要通过extern和extern块对FFI接口进行标注，编译时会由LLVM默认生成C-ABI</li>
+</ul>
+<h3 id="链接与Crate-Type"><a href="#链接与Crate-Type" class="headerlink" title="链接与Crate Type"></a>链接与Crate Type</h3><ul>
+<li>链接产生于程序开发的模块化。C和C++每个文件都是一个编译单元，Rust是以包（crate）为编译单元</li>
+<li>链接过程就是编译器经过符号解析、存储空间分配和重定位的过程，最终生成可执行文件或库。</li>
+<li>库分为静态库和动态库。静态库是普通目标文件集合的简单拼接，使用简单，但浪费空间；动态库则是把链接过程延迟到运行时，如运行时重定位，这比较省空间</li>
+<li>Rust支持四种库：Rust的dylib、rlib，和其他语言的cdylib、staticlib</li>
+<li>Rust库类型的命令行参数或crate_type属性：<ul>
 <li><code>--crate-type=bin</code>或<code>#[crate_type = &quot;bin&quot;]</code>，表示是可执行文件，程序必须包含main函数</li>
 <li><code>--crate-type=lib</code>或<code>#[crate_type = &quot;lib&quot;]</code>，表示生成Rust库，什么库编译器决定，一般是rlib静态库</li>
 <li><code>--crate-type=rlib</code>或<code>#[crate_type = &quot;rlib&quot;]</code>，生成静态Rust库</li>
 <li><code>--crate-type=dylib</code>或<code>#[crate_type = &quot;dylib&quot;]</code>，生成动态Rust库</li>
 <li><code>--crate-type=staitclib</code>或<code>#[crate_type = &quot;staticlib&quot;]</code>，将生成静态系统库，Rust编译器永远不会链接它。用于和C语言链接</li>
-<li><code>--crate-type=cdylib</code>或<code>#[crate_type = &quot;cdylib&quot;]</code>，生成动态系统库<h3 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h3></li>
+<li><code>--crate-type=cdylib</code>或<code>#[crate_type = &quot;cdylib&quot;]</code>，生成动态系统库</li>
 </ul>
 </li>
+</ul>
+<h3 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h3><ul>
 <li><p>本地平台上编译出需要在其他平台运行的程序叫做交叉编译。</p>
 </li>
 <li><p>可以使用rustc进行交叉编译，只需要传递target参数即可：如<code>$ rustc --target=arm-unknown-linux-gnueabihf hello.rs</code></p>
@@ -651,36 +1095,32 @@
 <figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># $ car ~/.cargo/config</span></span><br><span class="line"><span class="section">[target.arm-unknown-linux-gnueabihf]</span></span><br><span class="line"><span class="attr">linker</span> = <span class="string">"arm-linux-gnueabihf-gcc-4.8"</span>  <span class="comment"># 指定链接器</span></span><br><span class="line"><span class="comment"># 使用cargo交叉编译</span></span><br><span class="line"><span class="comment"># $ cargo build --target=arm-unknown-linux-gnueabihf</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>target triple格式是<code>{arch}-{vendor}-{sys}-{abi}</code>，分别代表编译程序的主机系统、供应商、操作系统、ABI接口，最后abi有时候可以省略</p>
-<h3 id="extern语法"><a href="#extern语法" class="headerlink" title="extern语法"></a>extern语法</h3></li>
-<li><p>有extern关键字和extern块。有三个extern API字符串是跨平台的：<code>extern &quot;Rust&quot;</code>、<code>extern &quot;C&quot;</code>、<code>extern &quot;system&quot;</code></p>
 </li>
-<li><p>另外有三个Rust编译器专用的ABI字符串：</p>
-<ul>
+</ul>
+<h3 id="extern语法"><a href="#extern语法" class="headerlink" title="extern语法"></a>extern语法</h3><ul>
+<li>有extern关键字和extern块。有三个extern API字符串是跨平台的：<code>extern &quot;Rust&quot;</code>、<code>extern &quot;C&quot;</code>、<code>extern &quot;system&quot;</code></li>
+<li>另外有三个Rust编译器专用的ABI字符串：<ul>
 <li><code>extern &quot;rust-intrinsic&quot;</code>，代表Rust编译器内部函数的ABI</li>
 <li><code>extern &quot;rust-call&quot;</code>，Fn::call的ABI</li>
-<li><code>extern &quot;platform-intrinsic&quot;</code>，特定平台内在函数的ABI<h2 id="与C-C-交互"><a href="#与C-C-交互" class="headerlink" title="与C/C++交互"></a>与C/C++交互</h2><h3 id="Rust调用C函数"><a href="#Rust调用C函数" class="headerlink" title="Rust调用C函数"></a>Rust调用C函数</h3></li>
+<li><code>extern &quot;platform-intrinsic&quot;</code>，特定平台内在函数的ABI</li>
 </ul>
 </li>
-<li><p>首先新建C/C++源代码文件夹，编写好代码后，使用<code>extern &quot;C&quot; {}</code>外暴露接口</p>
-</li>
-<li><p>在caogo.toml配置文件中，<code>[build-dependencies]</code>中使用cc库，然后在<code>[package]</code>中将某个build.rs文件指定为自动化编译配置文件</p>
-</li>
-<li><p>在build.rs中引进包<code>extern crate cc</code>，使用<code>cc.Build::new()</code>等方法初始化，在Rust源文件中正常使用时，用<code>extern { ... }</code>声明指定的外部接口</p>
-<h3 id="C调用Rust库"><a href="#C调用Rust库" class="headerlink" title="C调用Rust库"></a>C调用Rust库</h3></li>
-<li><p>首先在cargo.toml配置文件中<code>[lib]</code>设置Rust链接库名称，如：<code>name = &quot;callrust&quot;</code>，将在Rust同级目录下写C头文件用于暴露Rust接口，并设置<code>crate-type  = [&quot;staticlib&quot;, &quot;cdylib&quot;]</code>用于生成什么类型的链接库，库将产生在target/Debug下</p>
-</li>
-<li><p>编写Rust程序，将对应接口写在callrust.c中，并编写markdown文件：cargo用于编译Rust代码，gcc用于链接库并生成对应二进制文件</p>
-</li>
-<li><p>在另起的C源代码文件夹中直接<code>#include &quot;callrust&quot;</code>，然后调用接口函数即可</p>
-<h3 id="第三方工具"><a href="#第三方工具" class="headerlink" title="第三方工具"></a>第三方工具</h3></li>
-<li><p>rust-bindgen：根据头文件自动生成Rust FFI的C绑定，支持部分C++功能</p>
-</li>
-<li><p>cbindgen：根据Rust代码自动生成头文件</p>
-</li>
-<li><p>ctest：为Rust FFI的C绑定自动生成测试文件</p>
-</li>
-<li><p>移动平台下也有两个库：</p>
-<ul>
+</ul>
+<h2 id="与C-C-交互"><a href="#与C-C-交互" class="headerlink" title="与C/C++交互"></a>与C/C++交互</h2><h3 id="Rust调用C函数"><a href="#Rust调用C函数" class="headerlink" title="Rust调用C函数"></a>Rust调用C函数</h3><ul>
+<li>首先新建C/C++源代码文件夹，编写好代码后，使用<code>extern &quot;C&quot; {}</code>外暴露接口</li>
+<li>在caogo.toml配置文件中，<code>[build-dependencies]</code>中使用cc库，然后在<code>[package]</code>中将某个build.rs文件指定为自动化编译配置文件</li>
+<li>在build.rs中引进包<code>extern crate cc</code>，使用<code>cc.Build::new()</code>等方法初始化，在Rust源文件中正常使用时，用<code>extern { ... }</code>声明指定的外部接口</li>
+</ul>
+<h3 id="C调用Rust库"><a href="#C调用Rust库" class="headerlink" title="C调用Rust库"></a>C调用Rust库</h3><ul>
+<li>首先在cargo.toml配置文件中<code>[lib]</code>设置Rust链接库名称，如：<code>name = &quot;callrust&quot;</code>，将在Rust同级目录下写C头文件用于暴露Rust接口，并设置<code>crate-type  = [&quot;staticlib&quot;, &quot;cdylib&quot;]</code>用于生成什么类型的链接库，库将产生在target/Debug下</li>
+<li>编写Rust程序，将对应接口写在callrust.c中，并编写markdown文件：cargo用于编译Rust代码，gcc用于链接库并生成对应二进制文件</li>
+<li>在另起的C源代码文件夹中直接<code>#include &quot;callrust&quot;</code>，然后调用接口函数即可</li>
+</ul>
+<h3 id="第三方工具"><a href="#第三方工具" class="headerlink" title="第三方工具"></a>第三方工具</h3><ul>
+<li>rust-bindgen：根据头文件自动生成Rust FFI的C绑定，支持部分C++功能</li>
+<li>cbindgen：根据Rust代码自动生成头文件</li>
+<li>ctest：为Rust FFI的C绑定自动生成测试文件</li>
+<li>移动平台下也有两个库：<ul>
 <li>cargo-lipo：提供<code>cargo lipo</code>命令，自动生成用于iOS的通用库</li>
 <li>jni：提供Rust的JNI绑定，用于和Android平台交互</li>
 </ul>
@@ -692,25 +1132,23 @@
 </ul>
 <h2 id="Rust与WebAssembly"><a href="#Rust与WebAssembly" class="headerlink" title="Rust与WebAssembly"></a>Rust与WebAssembly</h2><p>WebAssembly是兴起的新的字节码格式，缩写是“WASM”，它是一个面向Web通用二进制和文本格式项目，它是为了作为C/C++/Rust语言的一种编译目标，在客户端提供一种接近本地运行速度的多语言编写代码的方式。某种意义上说，WebAssembly是一种中间语言（<br>IR），就像汇编（Assembly）语言那样是所有语言转换成机器码的通用底层语言，WebAssembly就是面向Web的汇编</p>
 <ul>
-<li><p>WebAssembly比JavaScript快的原因：</p>
-<ul>
+<li>WebAssembly比JavaScript快的原因：<ul>
 <li>WebAssembly体积更小，下载和解析更快。</li>
 <li>WebAssembly不受JavaScript约束，可以利用更多CPU特性。如64位整数、内存读写偏移量、非内存对齐读写和多种CPU指令等。</li>
 <li>生成WebAssembly编译器工具链的优化和改进。如在Rust中，可以用wasm-gc工具优化生成的wasm文件大小。</li>
 <li>WebAssembly不需要垃圾回收。内存操作是手动控制，但也没必要担心内存泄漏，它的内存空间是JavaScript分配的对象，最终Javascript的GC管理</li>
-<li>WebAssembly在Web只是一个应用环境，WebAssembly还可以应用其他领域：桌面图形化程序、区块链智能合约和编写操作系统微内核<h2 id="WebAssembly要点"><a href="#WebAssembly要点" class="headerlink" title="WebAssembly要点"></a>WebAssembly要点</h2></li>
+<li>WebAssembly在Web只是一个应用环境，WebAssembly还可以应用其他领域：桌面图形化程序、区块链智能合约和编写操作系统微内核</li>
 </ul>
 </li>
-<li><p>模块。一个.wasm文件局势一个基本编译单位</p>
-</li>
-<li><p>线性内存。用于和JavaScript通信，是个可变大小的ArrayBuffer，由JavaScript分配</p>
-</li>
-<li><p>表格。用于存放函数引用，支持动态调用函数</p>
-</li>
-<li><p>实例。同一个模块的多个实例共享相同的内存和表格</p>
-</li>
-<li><p>栈式机器。WebAssembly指令的运行基于栈式机器定义，每种指令都是在站上进行出栈和入站操作</p>
-<h2 id="使用Rust开发WebAssembly"><a href="#使用Rust开发WebAssembly" class="headerlink" title="使用Rust开发WebAssembly"></a>使用Rust开发WebAssembly</h2></li>
+</ul>
+<h2 id="WebAssembly要点"><a href="#WebAssembly要点" class="headerlink" title="WebAssembly要点"></a>WebAssembly要点</h2><ul>
+<li>模块。一个.wasm文件局势一个基本编译单位</li>
+<li>线性内存。用于和JavaScript通信，是个可变大小的ArrayBuffer，由JavaScript分配</li>
+<li>表格。用于存放函数引用，支持动态调用函数</li>
+<li>实例。同一个模块的多个实例共享相同的内存和表格</li>
+<li>栈式机器。WebAssembly指令的运行基于栈式机器定义，每种指令都是在站上进行出栈和入站操作</li>
+</ul>
+<h2 id="使用Rust开发WebAssembly"><a href="#使用Rust开发WebAssembly" class="headerlink" title="使用Rust开发WebAssembly"></a>使用Rust开发WebAssembly</h2><ul>
 <li><p>可以手写wat文本格式开发wasm模块，但效率不高，WebAssmebly设计之初是为了作为编译目标存在的，因此可以作为很多变成语言的编译目标：</p>
 <ul>
 <li><p>C/C++，可以通过EmScripten工具来编译到wasm。EmScripten是个LLVM后端工具，可以将LLVM中间码编译到asm.js。所以C/C++的编译流程可以通过任何一个LLVM前端工具生成LLVM IR，然后通过EmScripten生成asm.js，最后通过WebAssembly编译工具链Binaryen将asm.js生成wasm二进制格式。一些不支持wasm的浏览器也可以使用asm.js来代替</p>
@@ -912,12 +1350,15 @@
 <li><p>优先使用工具而不是拙劣的帮助来减轻编程任务的负担。工欲善其事，必先利其器。</p>
 </li>
 </ol>
-<p>原 则1：你无法断定程序会在什么地方耗费运行时间。瓶颈经常出现在想不到的地方，所以别急于胡乱找个地方改代码，除非你已经证实那儿就是瓶颈所在。</p>
-<p>原 则2：估量。在你没对代码进行估量，特别是没找到最耗时的那部分之前，别去优化速度。</p>
-<p>原则3：花哨的算法在n很小时通常很慢，而n通常很小。花哨 算法的常数复杂度很大。除非你确定n总是很大，否则不要用花哨算法（即使n很大，也优先考虑原则2）。</p>
-<p>原则4：花哨的算法比简单算法更容易出 bug、更难实现。尽量使用简单的算法配合简单的数据结构。</p>
-<p>原则5：数据压倒一切。如果已经选择了正确的数据结构并且把一切都组织得井井有条，正 确的算法也就不言自明。编程的核心是数据结构，而不是算法[7]。</p>
-<p>原则6：没有原则6。</p>
+<hr>
+<ul>
+<li>原则1：你无法断定程序会在什么地方耗费运行时间。瓶颈经常出现在想不到的地方，所以别急于胡乱找个地方改代码，除非你已经证实那儿就是瓶颈所在</li>
+<li>原则2：估量。在你没对代码进行估量，特别是没找到最耗时的那部分之前，别去优化速度</li>
+<li>算法的常数复杂度很大。除非你确定n总是很大，否则不要用花哨算法（即使n很大，也优先考虑原则2）</li>
+<li>原则4：花哨的算法比简单算法更容易出 bug、更难实现。尽量使用简单的算法配合简单的数据结构</li>
+<li>原则5：数据压倒一切。如果已经选择了正确的数据结构并且把一切都组织得井井有条，正确的算法也就不言自明。编程的核心是数据结构，而不是算法</li>
+<li>原则6：没有原则</li>
+</ul>
 <blockquote>
 <p>《The Art of Unix Programming》</p>
 </blockquote>
@@ -1088,21 +1529,31 @@
 <li>assert_ne!：断言两个表达式是否不相等</li>
 <li>debug_assert!：等价于assert!，用于调试模式</li>
 <li>debug_assert_eq!</li>
-<li>debug_assert_ne!<h2 id="分层处理错误"><a href="#分层处理错误" class="headerlink" title="分层处理错误"></a>分层处理错误</h2></li>
+<li>debug_assert_ne!</li>
 </ul>
 </li>
+</ul>
+<h2 id="分层处理错误"><a href="#分层处理错误" class="headerlink" title="分层处理错误"></a>分层处理错误</h2><ul>
 <li>Option<t>：处理有和无的情况，包含Some(T)和None两个选体。不存在的对应值应返回None，开发者需要对None进行处理，而不是直接引发恐慌</t></li>
 <li>Result&lt;T, E&gt;：用于处理合理解决的问题，如文件没找到、权限被拒绝、字符串解析出错等</li>
 <li>线程恐慌（Panic）：用于处理无法合理解决的问题</li>
-<li>程序中止（Abort）：使用abort函数将进程正常中止<h3 id="unwrap系列方法"><a href="#unwrap系列方法" class="headerlink" title="unwrap系列方法"></a>unwrap系列方法</h3></li>
+<li>程序中止（Abort）：使用abort函数将进程正常中止</li>
+</ul>
+<h3 id="unwrap系列方法"><a href="#unwrap系列方法" class="headerlink" title="unwrap系列方法"></a>unwrap系列方法</h3><ul>
 <li>unwrap方法可以取出包含于Some内部的值，但遇到None会引发线程恐慌</li>
 <li>unwrap_or方法是对match匹配包装的语法糖，该方法可以指定处理None时返回的值</li>
-<li>unwrap_or_else方法和unwrap_or类似，只不过参数是FnOnce()-&gt;T闭包<h3 id="map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"><a href="#map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况" class="headerlink" title="map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"></a>map系列方法：把Option<t>中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况</t></h3></li>
+<li>unwrap_or_else方法和unwrap_or类似，只不过参数是FnOnce()-&gt;T闭包</li>
+</ul>
+<h3 id="map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"><a href="#map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况" class="headerlink" title="map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"></a>map系列方法：把Option<t>中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况</t></h3><ul>
 <li>map方法是泛型方法，内部是match匹配，对于Some和None分别做了相应处理，参数为FnOnce(T)-&gt;U闭包，在无需取Option<t>的情况下在Option<t>内部计算，这种map叫组合子</t></t></li>
 <li>map_or方法</li>
 <li>map_orelse方法</li>
-<li>and_then组合子，直接返回值内容，而不经过Some包装<h3 id="错误处理Result-lt-T-E-gt"><a href="#错误处理Result-lt-T-E-gt" class="headerlink" title="错误处理Result&lt;T, E&gt;"></a>错误处理Result&lt;T, E&gt;</h3></li>
-<li>从语义上来说，Option<t>可以看做是忽略了错误类型的Result&lt;T, ()&gt;，Result&lt;T, E&gt;枚举体包含两个变体：Ok(T)和Err(E)。使用#[must_use]用来警告应该进行错误处理<h2 id="恐慌（Panic）"><a href="#恐慌（Panic）" class="headerlink" title="恐慌（Panic）"></a>恐慌（Panic）</h2></t></li>
+<li>and_then组合子，直接返回值内容，而不经过Some包装</li>
+</ul>
+<h3 id="错误处理Result-lt-T-E-gt"><a href="#错误处理Result-lt-T-E-gt" class="headerlink" title="错误处理Result&lt;T, E&gt;"></a>错误处理Result&lt;T, E&gt;</h3><ul>
+<li>从语义上来说，Option<t>可以看做是忽略了错误类型的Result&lt;T, ()&gt;，Result&lt;T, E&gt;枚举体包含两个变体：Ok(T)和Err(E)。使用#[must_use]用来警告应该进行错误处理</t></li>
+</ul>
+<h2 id="恐慌（Panic）"><a href="#恐慌（Panic）" class="headerlink" title="恐慌（Panic）"></a>恐慌（Panic）</h2><ul>
 <li>Rust中，使用恐慌安全（Panic Safety）来代替异常安全的说法。Rust中有一些代码会引发恐慌，如None进行unwrap操作、除以0等。Rust提供一个叫UnwindSafe的标记trait，专门标记恐慌安全你的类型，catch_unwind方法可以捕获恐慌，恢复当前线程，除了使用abort引发的进程中止无法捕获</li>
 <li>可以使用std::panic::set_hook方法来自定义消息</li>
 </ul>
@@ -1444,7 +1895,9 @@
 <li><code>Hash</code></li>
 <li><code>Ord</code></li>
 <li><code>PartialEq</code></li>
-<li><code>PartialOrd</code><h3 id="其他一些实现trait"><a href="#其他一些实现trait" class="headerlink" title="其他一些实现trait"></a>其他一些实现trait</h3></li>
+<li><code>PartialOrd</code></li>
+</ul>
+<h3 id="其他一些实现trait"><a href="#其他一些实现trait" class="headerlink" title="其他一些实现trait"></a>其他一些实现trait</h3><ul>
 <li>检查相等问题需要实现<code>core::cmp::PartialEq</code>的trait</li>
 <li>构造和析构可以实现<code>new</code>方法和<code>Drop trait</code>的<code>drop</code>方法</li>
 <li>调用函数可以重载trait系统，有三个，分别是<code>Fn</code>、<code>FnMut</code>和<code>FnOnce</code></li>
@@ -1452,7 +1905,7 @@
 <li>实现错误类型需要实现<code>error::Error trait</code>(<code>std::error</code>)的description方法和cause方法</li>
 <li>如果需要重载<code>+</code>运算符可以通过重载Add特性实现 <a href="https://doc.rust-lang.org/stable/std/ops/" target="_blank" rel="noopener">std::ops</a></li>
 <li>想要自定义指针类型，可以通过重载<code>Deref</code>和<code>DereMut</code>(<code>std::ops::Deref</code>)特性的<code>deref</code>方法来实现解引用运算符</li>
-<li>实现自定义派生属性，则需要在函数前加上<code>#[proc_macro_derive(attr_name)]</code>，并且<code>input</code>参数和返回值为<code>TokenStream</code>，实现函数名为<code>derive</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Add +.</span><br><span class="line">AddAssign +=.</span><br><span class="line">BitAnd &amp;.</span><br><span class="line">BitAndAssign &amp;=.</span><br><span class="line">BitOr |.</span><br><span class="line">BitOrAssign |=.</span><br><span class="line">BitXor ^.</span><br><span class="line">BitXorAssign ^=.</span><br><span class="line">Deref *v.</span><br><span class="line">DerefMut *v = 1;.</span><br><span class="line">Div /.</span><br><span class="line">DivAssign /=.</span><br><span class="line">Drop &apos;destructor&apos;.</span><br><span class="line">Fn an immutable receiver.</span><br><span class="line">FnMut a mutable receiver.</span><br><span class="line">FnOnce a by-value receiver.</span><br><span class="line">Index (container[index]).</span><br><span class="line">IndexMut (container[index]).</span><br><span class="line">Mul *.</span><br><span class="line">MulAssign *=.</span><br><span class="line">Neg -.</span><br><span class="line">Not !.</span><br><span class="line">RangeBounds RangeBounds is implemented by Rust&apos;s built-in range types, produced by range syntax like .., a.., ..b, ..=c, d..e, or f..=g.</span><br><span class="line">Rem %.</span><br><span class="line">RemAssign %=.</span><br><span class="line">Shl &lt;&lt;</span><br><span class="line">ShlAssign &lt;&lt;=.</span><br><span class="line">Shr &gt;&gt; </span><br><span class="line">ShrAssign &gt;&gt;=.</span><br><span class="line">Sub -.</span><br><span class="line">SubAssign -=.</span><br><span class="line">CoerceUnsized	Experimental Trait that indicates that this is a pointer or a wrapper for one, where unsizing can be performed on the pointee.</span><br><span class="line">DispatchFromDyn	Experimental This is used for object safety, to check that a method&apos;s receiver type can be dispatched on.</span><br><span class="line">Generator	Experimental The trait implemented by builtin generator types.</span><br><span class="line">Try	Experimental A trait for customizing the behavior of the ? operator.</span><br></pre></td></tr></table></figure>
+<li>实现自定义派生属性，则需要在函数前加上<code>#[proc_macro_derive(attr_name)]</code>，并且<code>input</code>参数和返回值为<code>TokenStream</code>，实现函数名为<code>derive</code>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Add +.</span><br><span class="line">AddAssign +=.</span><br><span class="line">BitAnd &amp;.</span><br><span class="line">BitAndAssign &amp;=.</span><br><span class="line">BitOr |.</span><br><span class="line">BitOrAssign |=.</span><br><span class="line">BitXor ^.</span><br><span class="line">BitXorAssign ^=.</span><br><span class="line">Deref *v.</span><br><span class="line">DerefMut *v = 1;.</span><br><span class="line">Div /.</span><br><span class="line">DivAssign /=.</span><br><span class="line">Drop &apos;destructor&apos;.</span><br><span class="line">Fn an immutable receiver.</span><br><span class="line">FnMut a mutable receiver.</span><br><span class="line">FnOnce a by-value receiver.</span><br><span class="line">Index (container[index]).</span><br><span class="line">IndexMut (container[index]).</span><br><span class="line">Mul *.</span><br><span class="line">MulAssign *=.</span><br><span class="line">Neg -.</span><br><span class="line">Not !.</span><br><span class="line">RangeBounds RangeBounds is implemented by Rust&apos;s built-in range types, produced by range syntax like .., a.., ..b, ..=c, d..e, or f..=g.</span><br><span class="line">Rem %.</span><br><span class="line">RemAssign %=.</span><br><span class="line">Shl &lt;&lt;</span><br><span class="line">ShlAssign &lt;&lt;=.</span><br><span class="line">Shr &gt;&gt; </span><br><span class="line">ShrAssign &gt;&gt;=.</span><br><span class="line">Sub -.</span><br><span class="line">SubAssign -=.</span><br><span class="line">CoerceUnsized	Experimental Trait that indicates that this is a pointer or a wrapper for one, where unsizing can be performed on the pointee.</span><br><span class="line">DispatchFromDyn	Experimental This is used for object safety, to check that a method&apos;s receiver type can be dispatched on.</span><br><span class="line">Generator	Experimental The trait implemented by builtin generator types.</span><br><span class="line">Try	Experimental A trait for customizing the behavior of the ? operator.</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
@@ -1468,13 +1921,15 @@
 <li><code>meta</code>：一个元数据项，可以从属性中找到。如：cfg(target_os = “windows”)，包含在#[…]或![…]属性内信息</li>
 <li><code>tt</code>：TokenTree缩写，指代词条树</li>
 <li><code>vis</code>：指代可见性，如pub</li>
-<li><code>lifetime</code>：指代生命周期<h4 id="对于原变量后面的记号有额外的规则："><a href="#对于原变量后面的记号有额外的规则：" class="headerlink" title="对于原变量后面的记号有额外的规则："></a>对于原变量后面的记号有额外的规则：</h4></li>
+<li><code>lifetime</code>：指代生命周期</li>
+</ul>
+<h4 id="对于原变量后面的记号有额外的规则："><a href="#对于原变量后面的记号有额外的规则：" class="headerlink" title="对于原变量后面的记号有额外的规则："></a>对于原变量后面的记号有额外的规则：</h4><ul>
 <li>expr和stmt变量必须后跟任意一个：=&gt; , ;</li>
 <li>ty和path变量必须后跟任意一个：=&gt; , = | ; : &gt; [ { as where</li>
 <li>pat变量必须后跟任意一个：=&gt; , = | if in</li>
-<li>其他变量可以跟任何记号<h4 id="宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：-I-i-ident-E-e-expr"><a href="#宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：-I-i-ident-E-e-expr" class="headerlink" title="宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：$(I $i:ident)* E $e:expr"></a>宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：$(I $i:ident)* E $e:expr</h4><h4 id="macro-use-、-macro-export-、-no-link"><a href="#macro-use-、-macro-export-、-no-link" class="headerlink" title="#[macro_use]、#[macro_export]、#[no_link]"></a>#[macro_use]、#[macro_export]、#[no_link]</h4></li>
+<li>其他变量可以跟任何记号</li>
 </ul>
-
+<h4 id="宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：-I-i-ident-E-e-expr"><a href="#宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：-I-i-ident-E-e-expr" class="headerlink" title="宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：$(I $i:ident)* E $e:expr"></a>宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：$(I $i:ident)* E $e:expr</h4><h4 id="macro-use-、-macro-export-、-no-link"><a href="#macro-use-、-macro-export-、-no-link" class="headerlink" title="#[macro_use]、#[macro_export]、#[no_link]"></a>#[macro_use]、#[macro_export]、#[no_link]</h4>
           
         
       
@@ -1626,9 +2081,11 @@
 <li><code>PhantomData&lt;T&gt;</code>是一个零大小类型的标记结构体，也叫幻影类型，它扮演三个角色：<ul>
 <li>型变</li>
 <li>标记拥有关系(drop)</li>
-<li>自动trait实现(Send和Sync)<h2 id="几个重要的型变列表"><a href="#几个重要的型变列表" class="headerlink" title="几个重要的型变列表"></a>几个重要的型变列表</h2></li>
+<li>自动trait实现(Send和Sync)</li>
 </ul>
 </li>
+</ul>
+<h2 id="几个重要的型变列表"><a href="#几个重要的型变列表" class="headerlink" title="几个重要的型变列表"></a>几个重要的型变列表</h2><ul>
 <li>&amp;’a T在<code>&#39;a</code>和<code>T</code>上是协变的，对应*<code>const T</code>也是协变</li>
 <li>&amp;’a mut T在<code>&#39;a</code>上是协变，但在<code>T</code>上是不变的</li>
 <li><code>Fn(T)-&gt;U</code>在<code>T</code>上是不变，在<code>U</code>上是协变</li>
@@ -1834,291 +2291,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/VIM配置/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/14/VIM配置/" itemprop="url">VIM配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T14:27:08+08:00">
-                2020-06-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2020-04/" itemprop="url" rel="index">
-                    <span itemprop="name">2020.04</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>抛却<code>vim-spf13</code>后，偷窃了一些配置，拼凑为自己的<code>VIM</code>配置</p>
-</blockquote>
-<h3 id="通过以下命令，安装VIM插件，仅限Manjaro操作系统"><a href="#通过以下命令，安装VIM插件，仅限Manjaro操作系统" class="headerlink" title="通过以下命令，安装VIM插件，仅限Manjaro操作系统"></a>通过以下命令，安装VIM插件，<strong>仅限Manjaro操作系统</strong></h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/ZetZhang/vim-congiration-installer.git</span><br><span class="line">$ <span class="built_in">cd</span> vim-congiration-installer</span><br><span class="line">$ ./install.sh</span><br><span class="line"></span><br><span class="line"><span class="comment">### 效果图</span></span><br></pre></td></tr></table></figure>
-
-<p><a href="https://imgchr.com/i/tzado9" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/06/14/tzado9.png" alt="tzado9.png"></a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/如何使共享库可执行/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/14/如何使共享库可执行/" itemprop="url">如何使共享库可执行</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T14:16:44+08:00">
-                2020-06-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>以<code>shared_hello.c</code>为例子，里面有函数和main入口</p>
-</blockquote>
-<h3 id="让可执行文件可共享"><a href="#让可执行文件可共享" class="headerlink" title="让可执行文件可共享"></a>让可执行文件可共享</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -m32 -pie -fpie -rdynamic -o libshared_hello.so shared_hello.c</span><br><span class="line">$ gcc -m32 -o shared_hello.noc -L./ -lshared_hello</span><br><span class="line">$ LD_LIBRARY_PATH=<span class="variable">$LD_LIBRARY_PATH</span>:./ ./shared_hello.noc</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="让共享库可执行"><a href="#让共享库可执行" class="headerlink" title="让共享库可执行"></a>让共享库可执行</h3><h4 id="这种生成方式的程序没有入口"><a href="#这种生成方式的程序没有入口" class="headerlink" title="这种生成方式的程序没有入口"></a>这种生成方式的程序没有入口</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -m32 -shared -fpic -o libshared_hello.so shared_hello.c</span><br><span class="line">$ readelf -h libshared_hello.so | grep <span class="string">"Entry point"</span></span><br><span class="line">$ objdump -d libshared_hello.so | grep 1050 | head -2</span><br></pre></td></tr></table></figure>
-
-<h4 id="解决入口问题也是如此"><a href="#解决入口问题也是如此" class="headerlink" title="解决入口问题也是如此"></a>解决入口问题也是如此</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -m32 -shared -fpic -o libshared_hello.so shared_hello.c -Wl,-emain</span><br></pre></td></tr></table></figure>
-
-<h4 id="gdb的core-dump解析"><a href="#gdb的core-dump解析" class="headerlink" title="gdb的core dump解析"></a><code>gdb</code>的core dump解析</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ulimit</span> -c unlimited</span><br></pre></td></tr></table></figure>
-
-<h4 id="通过主动链接器跑一下"><a href="#通过主动链接器跑一下" class="headerlink" title="通过主动链接器跑一下"></a>通过主动链接器跑一下</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /lib/ld-linux.so.2 ./libshared_hello.so</span><br></pre></td></tr></table></figure>
-
-<h4 id="通过程序中加入标准退出函数-exit-0-，就能正常执行了"><a href="#通过程序中加入标准退出函数-exit-0-，就能正常执行了" class="headerlink" title="通过程序中加入标准退出函数_exit(0)，就能正常执行了"></a>通过程序中加入标准退出函数<code>_exit(0)</code>，就能正常执行了</h4><hr>
-<h4 id="实际入口函数并非main-，而是-start，再改造，编译时连入口都不用指定了"><a href="#实际入口函数并非main-，而是-start，再改造，编译时连入口都不用指定了" class="headerlink" title="实际入口函数并非main()，而是_start，再改造，编译时连入口都不用指定了"></a>实际入口函数并非<code>main()</code>，而是<code>_start</code>，再改造，编译时连入口都不用指定了</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -m32 -g -shared -fpic -o libshared_hello.so shared_hello.c</span><br><span class="line">$ /lib/ld-linux.so.2 ./libshared_hello.so</span><br></pre></td></tr></table></figure>
-
-<h4 id="也可以当共享库使用了"><a href="#也可以当共享库使用了" class="headerlink" title="也可以当共享库使用了"></a>也可以当共享库使用了</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -m32 -o shared_hello.noc -L./ -lshared_hello</span><br><span class="line">$ LD_LIBRARY_PATH=<span class="variable">$LD_LIBRARY_PATH</span>:./ ./shared_hello.noc</span><br></pre></td></tr></table></figure>
-
-<h4 id="然后那个asm内嵌汇编解决主动链接问题的跑不起来"><a href="#然后那个asm内嵌汇编解决主动链接问题的跑不起来" class="headerlink" title="然后那个asm内嵌汇编解决主动链接问题的跑不起来"></a>然后那个asm内嵌汇编解决主动链接问题的跑不起来</h4>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2171,7 +2343,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2193,7 +2365,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

@@ -87,7 +87,7 @@
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
 <meta property="og:description" content="修改镜像源 （manjaro）只需要添加配置文件/etc/docker/daemon.json  123&amp;#123;    &quot;registry-mirrors&quot;: [&quot;https://docker.mirrors.ustc.edu.cn&quot;]&amp;#125;  或者使用–registry-mirror选项 修改:/etc/default/docker 添加:DOCKER_OPTS=”–registry-">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-12T14:12:58.949Z">
+<meta property="og:updated_time" content="2020-06-14T08:38:02.837Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker基本使用">
 <meta name="twitter:description" content="修改镜像源 （manjaro）只需要添加配置文件/etc/docker/daemon.json  123&amp;#123;    &quot;registry-mirrors&quot;: [&quot;https://docker.mirrors.ustc.edu.cn&quot;]&amp;#125;  或者使用–registry-mirror选项 修改:/etc/default/docker 添加:DOCKER_OPTS=”–registry-">
@@ -469,10 +469,10 @@ CONTAINER</code></p>
 <h3 id="Docker的C-S模式：Remote-API"><a href="#Docker的C-S模式：Remote-API" class="headerlink" title="Docker的C/S模式：Remote API"></a>Docker的C/S模式：<a href="https://docs.docker.com/reference/api/docker_remote_api/" target="_blank" rel="noopener">Remote API</a></h3><h4 id="连接方式"><a href="#连接方式" class="headerlink" title="连接方式"></a>连接方式</h4><ul>
 <li><code>unix:///var/run/docker.dock</code></li>
 <li><code>tcp://host:port</code></li>
-<li><code>fd://socketfd</code><h4 id="Docker的远程访问"><a href="#Docker的远程访问" class="headerlink" title="Docker的远程访问"></a>Docker的远程访问</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认配置-H unix:///var/run/docker.sock</span></span><br><span class="line"><span class="comment"># e.g.: docker -H tcp://ip:port COMMAND</span></span><br><span class="line"><span class="comment"># 可选择的环境变量DOCKER_HOST</span></span><br><span class="line"><span class="comment"># e.g.: export DOCKER_HOST="tcp://ip:port"</span></span><br></pre></td></tr></table></figure>
-
-</li>
+<li><code>fd://socketfd</code></li>
 </ul>
+<h4 id="Docker的远程访问"><a href="#Docker的远程访问" class="headerlink" title="Docker的远程访问"></a>Docker的远程访问</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认配置-H unix:///var/run/docker.sock</span></span><br><span class="line"><span class="comment"># e.g.: docker -H tcp://ip:port COMMAND</span></span><br><span class="line"><span class="comment"># 可选择的环境变量DOCKER_HOST</span></span><br><span class="line"><span class="comment"># e.g.: export DOCKER_HOST="tcp://ip:port"</span></span><br></pre></td></tr></table></figure>
+
 <h3 id="Docker容器互联"><a href="#Docker容器互联" class="headerlink" title="Docker容器互联"></a>Docker容器互联</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># --icc=true，允许容器间互联</span></span><br><span class="line"><span class="comment"># 每次镜像重启都可能导致IP的变更，因此使用以下方式</span></span><br><span class="line"> <span class="comment"># --link</span></span><br><span class="line">$ docker run --link=[CONTAINER]:[ALIAS] [IMAGE][COMMAND]</span><br><span class="line"><span class="comment"># e.g. docker run -it --name test --link=other:alias img:test</span></span><br><span class="line"><span class="comment"># 只允许特定容器间连接</span></span><br><span class="line">$ --icc=<span class="literal">false</span> --iptables=<span class="literal">true</span></span><br><span class="line">$ --link</span><br></pre></td></tr></table></figure>
 
 <h3 id="Docker容器的数据卷"><a href="#Docker容器的数据卷" class="headerlink" title="Docker容器的数据卷"></a>Docker容器的数据卷</h3><h4 id="为容器添加数据卷"><a href="#为容器添加数据卷" class="headerlink" title="为容器添加数据卷"></a>为容器添加数据卷</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment"># -v local_catalogue:docker_catalogue:[ro]</span></span><br><span class="line"><span class="comment"># e.g.</span></span><br><span class="line">$ sudo dcoker run -v ~/container_data:/data -it ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
@@ -489,7 +489,9 @@ CONTAINER</code></p>
 <h4 id="Open-vSwitch实现"><a href="#Open-vSwitch实现" class="headerlink" title="Open vSwitch实现"></a>Open vSwitch实现</h4><h5 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h5><ul>
 <li>双网卡，Host-Only &amp; NAT</li>
 <li>安装Open vSwitch和网桥管理工具bridge-utils</li>
-<li>同一网段的IP地址<h5 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h5></li>
+<li>同一网段的IP地址</li>
+</ul>
+<h5 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h5><ul>
 <li>建立ovs网桥</li>
 <li>添加gre连接</li>
 <li>配置docker容器虚拟网桥</li>
@@ -621,7 +623,7 @@ CONTAINER</code></p>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -643,7 +645,7 @@ CONTAINER</code></p>
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
