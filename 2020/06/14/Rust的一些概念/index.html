@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Rust,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="类型系统与多态性 Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型 现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态 参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言 Rust没有GC，内存由编译器分配，Rust代码被">
+<meta name="keywords" content="Rust">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust的一些概念">
+<meta property="og:url" content="http://yoursite.com/2020/06/14/Rust的一些概念/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="类型系统与多态性 Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型 现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态 参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言 Rust没有GC，内存由编译器分配，Rust代码被">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-14T07:25:38.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rust的一些概念">
+<meta name="twitter:description" content="类型系统与多态性 Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型 现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态 参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言 Rust没有GC，内存由编译器分配，Rust代码被">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/14/Rust的一些概念/">
+
+
+
+
+
+  <title>Rust的一些概念 | .27t_lBZ4oZgg_</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">.27t_lBZ4oZgg_</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/Rust的一些概念/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Rust的一些概念</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T15:19:33+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-01/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.01</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="类型系统与多态性"><a href="#类型系统与多态性" class="headerlink" title="类型系统与多态性"></a>类型系统与多态性</h2><ul>
+<li>Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型</li>
+<li>现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态</li>
+<li>参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言</li>
+<li>Rust没有GC，内存由编译器分配，Rust代码被编译为LLVM IR，其中携带内存分配信息</li>
+<li>Rust也有少量的动态大小类型（DST），比如str，因为编译器不可能实现直到字符串，因此字符串切片&amp;str是引用类型，它携带指针和长度信息</li>
+<li>Rust还支持零大小类型（ZST），比如单元类型和单元结构体，大小是0</li>
+<li>如果ZST类型是空，那么底类型表示无，它是!，被称为Bang Type。</li>
+<li>::&lt;&gt;是turbofish操作符。is_positive()可以判断正负</li>
+<li>Rust的泛型是静多态，编译器不管是泛型枚举、泛型函数还是泛型结构体，都会被单态化（Monomorphization）（静态分发）</li>
+<li>trait有4种用法：接口抽象、泛型约束、抽象类型和标签trait</li>
+<li>孤儿原则（Orphan Rule）：如果要实现某个trait，该trait和要实现该trait的类型至少有一个在当前crate中定义。</li>
+<li>Rust的trait限定与Java的泛型限定、Ruby和Python的Duck Typeing、Golang的Structural Typeing类似。trait是类型，是集合impl&lt;T: A + B&gt; C for T意思是为所有T属于A交B实现Trait C</li>
+<li>泛型中使用trait限定，可以将类型的范围根据类型行为限定精确可控的范围。而OOP那套，可以使用trait object，它将在运行期根据虚表指针从虚表（析构函数、大小、对齐和方法等信息）找出正确指针，然后动态调用，这就是动态分发，区别于泛型静态分发</li>
+<li>只有当trait的Self类型参数不能被限定为Sized且trait中所有方法都是对象安全时才能作为trait对象使用</li>
+<li>Sized、Unsize和?Sized的关系是，?Sized包含前者，Sized在编译期确定大小，而UnSize是不确定的</li>
+<li>对象安全的方法必须满足三点之一<ol>
+<li>方法受Self: Sized约束</li>
+<li>方法签名同时满足三点<ul>
+<li>不包含任何泛型参数。（否则trait对象在Vtable中将不确定调用哪个方法）</li>
+<li>第一参数必须为Self类型或可以解引用为Self的类型。（如self、&amp;self、&amp;mut self和self: Box<self></self></li>
+<li>Self不能出现在除第一参数外的地方。</li>
+</ul>
+</li>
+<li>trait中不包含关联常量，不过可以增加默认的关联常量，只需要使用const关键字</li>
+</ol>
+</li>
+<li>Rust提供了5个重要标签trait，定义在std::marker，分别是Sized trait、Unsize trait、Copy trait、Send trait和Sync trait</li>
+<li>动态大小类型不能随意使用，需遵循三条限制规则：<ul>
+<li>只允许通过fat pointer来操作Unsize，类型，如&amp;[T]或&amp;Trait</li>
+<li>变量、参数和枚举变量不能使用DST</li>
+<li>结构体最后一个字段可以使用DST，其他字段不行</li>
+</ul>
+</li>
+<li>Copy trait继承自Clone trait，因此实现Copy功能同时需要实现Clone trait。Copy行为是隐式行为，开发者不能重载，它是简单的位复制，发生执行在变量绑定、函数参数传递和函数返回等场景中</li>
+<li>任何类型都能实现Clone trait，但不是所有类型都能实现Copy trait，前提是所有成员都实现了Copy trait</li>
+<li>Rust可以通过实现Deref trait来自定义解引用操作，如果类型T实现了Deref&lt;Target=U&gt;，则该类型T引用或指针在引用时自动转换为U</li>
+<li>Rust的解引用有std::ops::Deref的.deref()、.as_ref()、std:borrow::Borrow的.borrow()、&amp;*x和&amp;x[..]</li>
+<li>From和Into是定义于std::convert模块中的两个trait，定义了from和into两个方法互为&amp;str和String类型的反操作。标准库中还包含TryFrom和TryInto两种trait，它们是错误处理版本</li>
+<li>Rust标准库中包含了AsRef和AsMut两种trait，将值分别转换为不可变引用和可变引用</li>
+<li>Box<t>（<code>pub struct Box&lt;T: ?Sized&gt;(Unique&lt;T&gt;);</code>）和Fn、FnMut、FnOnce、Sized等都加上#[fundamental]属性，代表享有特权，不必遵守孤儿规则</t></li>
+<li>除了Rust，Rust还有重叠规则（Overlap），规则规定不能为重叠的类型实现同一个trait</li>
+<li>迭代元素时，只能按值迭代，有时必须重新分配数据，不能通过引用来复用原始数据，为了支持引用类型，可以重用内部缓存区不需要重新分配内存，需要更高级的类型多态性，即泛型关联类型（Generic Associated Type， GAT）</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Rust/" rel="tag"># Rust</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/14/Rust一些结构体需要实现的trait特质/" rel="next" title="Rust一些结构体需要实现的trait特质">
+                <i class="fa fa-chevron-left"></i> Rust一些结构体需要实现的trait特质
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/14/Rust错误处理/" rel="prev" title="Rust错误处理">
+                Rust错误处理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/MY.jpg" alt="Ichheit">
+            
+              <p class="site-author-name" itemprop="name">Ichheit</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#类型系统与多态性"><span class="nav-number">1.</span> <span class="nav-text">类型系统与多态性</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ichheit</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Rust,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="消除失败 常用六个Assert assert!：断言布尔表达式运行时一定返回true assert_eq!：断言两个表达式是否相等（使用PartialEq） assert_ne!：断言两个表达式是否不相等 debug_assert!：等价于assert!，用于调试模式 debug_assert_eq! debug_assert_ne!分层处理错误   Option：处理有和无的情况，包含Some(">
+<meta name="keywords" content="Rust">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust错误处理">
+<meta property="og:url" content="http://yoursite.com/2020/06/14/Rust错误处理/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="消除失败 常用六个Assert assert!：断言布尔表达式运行时一定返回true assert_eq!：断言两个表达式是否相等（使用PartialEq） assert_ne!：断言两个表达式是否不相等 debug_assert!：等价于assert!，用于调试模式 debug_assert_eq! debug_assert_ne!分层处理错误   Option：处理有和无的情况，包含Some(">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-14T07:26:35.933Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rust错误处理">
+<meta name="twitter:description" content="消除失败 常用六个Assert assert!：断言布尔表达式运行时一定返回true assert_eq!：断言两个表达式是否相等（使用PartialEq） assert_ne!：断言两个表达式是否不相等 debug_assert!：等价于assert!，用于调试模式 debug_assert_eq! debug_assert_ne!分层处理错误   Option：处理有和无的情况，包含Some(">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/14/Rust错误处理/">
+
+
+
+
+
+  <title>Rust错误处理 | .27t_lBZ4oZgg_</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">.27t_lBZ4oZgg_</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/Rust错误处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Rust错误处理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T15:21:57+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-01/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.01</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="消除失败"><a href="#消除失败" class="headerlink" title="消除失败"></a>消除失败</h2><ul>
+<li>常用六个Assert<ul>
+<li>assert!：断言布尔表达式运行时一定返回true</li>
+<li>assert_eq!：断言两个表达式是否相等（使用PartialEq）</li>
+<li>assert_ne!：断言两个表达式是否不相等</li>
+<li>debug_assert!：等价于assert!，用于调试模式</li>
+<li>debug_assert_eq!</li>
+<li>debug_assert_ne!<h2 id="分层处理错误"><a href="#分层处理错误" class="headerlink" title="分层处理错误"></a>分层处理错误</h2></li>
+</ul>
+</li>
+<li>Option<t>：处理有和无的情况，包含Some(T)和None两个选体。不存在的对应值应返回None，开发者需要对None进行处理，而不是直接引发恐慌</t></li>
+<li>Result&lt;T, E&gt;：用于处理合理解决的问题，如文件没找到、权限被拒绝、字符串解析出错等</li>
+<li>线程恐慌（Panic）：用于处理无法合理解决的问题</li>
+<li>程序中止（Abort）：使用abort函数将进程正常中止<h3 id="unwrap系列方法"><a href="#unwrap系列方法" class="headerlink" title="unwrap系列方法"></a>unwrap系列方法</h3></li>
+<li>unwrap方法可以取出包含于Some内部的值，但遇到None会引发线程恐慌</li>
+<li>unwrap_or方法是对match匹配包装的语法糖，该方法可以指定处理None时返回的值</li>
+<li>unwrap_or_else方法和unwrap_or类似，只不过参数是FnOnce()-&gt;T闭包<h3 id="map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"><a href="#map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况" class="headerlink" title="map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"></a>map系列方法：把Option<t>中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况</t></h3></li>
+<li>map方法是泛型方法，内部是match匹配，对于Some和None分别做了相应处理，参数为FnOnce(T)-&gt;U闭包，在无需取Option<t>的情况下在Option<t>内部计算，这种map叫组合子</t></t></li>
+<li>map_or方法</li>
+<li>map_orelse方法</li>
+<li>and_then组合子，直接返回值内容，而不经过Some包装<h3 id="错误处理Result-lt-T-E-gt"><a href="#错误处理Result-lt-T-E-gt" class="headerlink" title="错误处理Result&lt;T, E&gt;"></a>错误处理Result&lt;T, E&gt;</h3></li>
+<li>从语义上来说，Option<t>可以看做是忽略了错误类型的Result&lt;T, ()&gt;，Result&lt;T, E&gt;枚举体包含两个变体：Ok(T)和Err(E)。使用#[must_use]用来警告应该进行错误处理<h2 id="恐慌（Panic）"><a href="#恐慌（Panic）" class="headerlink" title="恐慌（Panic）"></a>恐慌（Panic）</h2></t></li>
+<li>Rust中，使用恐慌安全（Panic Safety）来代替异常安全的说法。Rust中有一些代码会引发恐慌，如None进行unwrap操作、除以0等。Rust提供一个叫UnwindSafe的标记trait，专门标记恐慌安全你的类型，catch_unwind方法可以捕获恐慌，恢复当前线程，除了使用abort引发的进程中止无法捕获</li>
+<li>可以使用std::panic::set_hook方法来自定义消息</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI1MjAzNDI1MA==&mid=2648210671&idx=1&sn=b9b6c5e16944889a82f760d2a65a1f3a&chksm=f1c5314ac6b2b85cbf8e42351a40d84c713d1a66d50b8528fcdd88f21b484dbbac90da9e822a&mpshare=1&scene=1&srcid=0614whr6Ck3XNfLcPK2VOgVF&sharer_sharetime=1592119296188&sharer_shareid=d75e104079b232035471512d1d57b844#rd" target="_blank" rel="noopener">细说Rust错误处理</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Rust/" rel="tag"># Rust</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/14/Rust的一些概念/" rel="next" title="Rust的一些概念">
+                <i class="fa fa-chevron-left"></i> Rust的一些概念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/14/UNIX格言/" rel="prev" title="UNIX格言">
+                UNIX格言 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/MY.jpg" alt="Ichheit">
+            
+              <p class="site-author-name" itemprop="name">Ichheit</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#消除失败"><span class="nav-number">1.</span> <span class="nav-text">消除失败</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分层处理错误"><span class="nav-number">2.</span> <span class="nav-text">分层处理错误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#unwrap系列方法"><span class="nav-number">2.1.</span> <span class="nav-text">unwrap系列方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"><span class="nav-number">2.2.</span> <span class="nav-text">map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#错误处理Result-lt-T-E-gt"><span class="nav-number">2.3.</span> <span class="nav-text">错误处理Result&lt;T, E&gt;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#恐慌（Panic）"><span class="nav-number">3.</span> <span class="nav-text">恐慌（Panic）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ichheit</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

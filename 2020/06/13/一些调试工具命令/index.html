@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="测试工具  三剑客grep、sed、awk的使用 网络分析工具tcpdump的使用 其他：netstat、lsof、nc、tcpcopy、prerf、sysctl、strace、prove等 性能检测工具：perf、ftrace、vmstat    Linux三剑客 grep用法：grep [OPTION...] PATTERN [FILE...]选项： -b：每一行打印字符偏移量 -c：统计符合">
+<meta name="description" content="测试工具  三剑客grep、sed、awk的使用 网络分析工具tcpdump的使用 内存分析：valgrind 其他：netstat、lsof、nc、tcpcopy、prerf、sysctl、strace、prove等 性能检测工具：perf、ftrace、vmstat    Linux三剑客 grep用法：grep [OPTION...] PATTERN [FILE...]选项： -b：每一行打">
 <meta name="keywords" content="Linux,Debug,Tool">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一些调试工具命令">
 <meta property="og:url" content="http://yoursite.com/2020/06/13/一些调试工具命令/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="测试工具  三剑客grep、sed、awk的使用 网络分析工具tcpdump的使用 其他：netstat、lsof、nc、tcpcopy、prerf、sysctl、strace、prove等 性能检测工具：perf、ftrace、vmstat    Linux三剑客 grep用法：grep [OPTION...] PATTERN [FILE...]选项： -b：每一行打印字符偏移量 -c：统计符合">
+<meta property="og:description" content="测试工具  三剑客grep、sed、awk的使用 网络分析工具tcpdump的使用 内存分析：valgrind 其他：netstat、lsof、nc、tcpcopy、prerf、sysctl、strace、prove等 性能检测工具：perf、ftrace、vmstat    Linux三剑客 grep用法：grep [OPTION...] PATTERN [FILE...]选项： -b：每一行打">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T05:36:50.046Z">
+<meta property="og:updated_time" content="2020-06-14T07:48:58.893Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一些调试工具命令">
-<meta name="twitter:description" content="测试工具  三剑客grep、sed、awk的使用 网络分析工具tcpdump的使用 其他：netstat、lsof、nc、tcpcopy、prerf、sysctl、strace、prove等 性能检测工具：perf、ftrace、vmstat    Linux三剑客 grep用法：grep [OPTION...] PATTERN [FILE...]选项： -b：每一行打印字符偏移量 -c：统计符合">
+<meta name="twitter:description" content="测试工具  三剑客grep、sed、awk的使用 网络分析工具tcpdump的使用 内存分析：valgrind 其他：netstat、lsof、nc、tcpcopy、prerf、sysctl、strace、prove等 性能检测工具：perf、ftrace、vmstat    Linux三剑客 grep用法：grep [OPTION...] PATTERN [FILE...]选项： -b：每一行打">
 
 
 
@@ -356,6 +356,7 @@
 <ul>
 <li>三剑客<a href="#grep">grep</a>、<a href="#sed">sed</a>、<a href="#awk">awk</a>的使用</li>
 <li>网络分析工具<a href="#tcpdump">tcpdump</a>的使用</li>
+<li>内存分析：<a href="#valgrind">valgrind</a></li>
 <li>其他：netstat、lsof、nc、tcpcopy、prerf、sysctl、<a href="#strace">strace</a>、prove等</li>
 <li>性能检测工具：<a href="#perf">perf</a>、ftrace、vmstat</li>
 </ul>
@@ -602,17 +603,22 @@
 </li>
 </ul>
 <h4 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a><span id="tcpdump">tcpdump</span></h4><h3 id="其他一些工具"><a href="#其他一些工具" class="headerlink" title="其他一些工具"></a>其他一些工具</h3><h4 id="strace"><a href="#strace" class="headerlink" title="strace"></a><span id="strace">strace</span></h4><h3 id="perf性能分析工具"><a href="#perf性能分析工具" class="headerlink" title="perf性能分析工具"></a><span id="perf">perf</span>性能分析工具</h3><h4 id="调试关注点"><a href="#调试关注点" class="headerlink" title="调试关注点"></a>调试关注点</h4><ul>
-<li>基于性能分析：可以<strong>算法优化</strong>、<strong>代码优化</strong></li>
-<li>硬件资源使用：如cache访问次数、cache丢失次数、流水线停顿周期、前端总线访问次数等</li>
-<li>操作系统资源：如系统调用次数、上下文切换次数、任务迁移次数</li>
-<li>事件以下几种：<ul>
+<li><p>基于性能分析：可以<strong>算法优化</strong>、<strong>代码优化</strong></p>
+</li>
+<li><p>硬件资源使用：如cache访问次数、cache丢失次数、流水线停顿周期、前端总线访问次数等</p>
+</li>
+<li><p>操作系统资源：如系统调用次数、上下文切换次数、任务迁移次数</p>
+</li>
+<li><p>事件以下几种：</p>
+<ul>
 <li>Hardware Event：由PMU部件产生，特定条件下探测性能事件是否发生以及发生次数，如cache命中</li>
 <li>Software Event：由内核产生的事件，分布各个功能模块，统计与操作系统相关的事件，如进程切换，tick数等</li>
 <li>Tracepoint Event：由内核中静态tracepoint所触发的事件，tracepoint用来判断程序运行期间内核的行为细节，如slab分配器分配次数等</li>
 <li>Tool Event：duration_time<h4 id="用法：perf-version-help-OPTIONS-COMMAND-ARGS"><a href="#用法：perf-version-help-OPTIONS-COMMAND-ARGS" class="headerlink" title="用法：perf [--version] [--help] [OPTIONS] COMMAND [ARGS]"></a>用法：<code>perf [--version] [--help] [OPTIONS] COMMAND [ARGS]</code></h4></li>
 </ul>
 </li>
-<li>The most commonly used perf commands are:<ul>
+<li><p>The most commonly used perf commands are:</p>
+<ul>
 <li><code>annotate</code>        Read perf.data (created by perf record) and display annotated code</li>
 <li><code>archive</code>         Create archive with object files with build-ids found in perf.data file</li>
 <li><code>bench</code>           General framework for benchmark suites</li>
@@ -644,26 +650,83 @@
 <li><code>trace</code>           strace inspired tool<h4 id="功能分类"><a href="#功能分类" class="headerlink" title="功能分类"></a>功能分类</h4><h5 id="全局性概况"><a href="#全局性概况" class="headerlink" title="全局性概况"></a>全局性概况</h5></li>
 </ul>
 </li>
-<li><code>list</code>：查看系统支持的性能事件</li>
-<li><code>bench</code>：对系统性能摸底</li>
-<li><code>test</code>：对系统健全性测试</li>
-<li><code>stat</code>：对全局性能进行统计<h5 id="全局细节"><a href="#全局细节" class="headerlink" title="全局细节"></a>全局细节</h5></li>
-<li><code>top</code>：实时查看系统进程函数占用率情况</li>
-<li><code>probe</code>：自定义动态事件<h5 id="特定功能分析"><a href="#特定功能分析" class="headerlink" title="特定功能分析"></a>特定功能分析</h5></li>
-<li><code>kmem</code>：支队slab子系统性能分析</li>
-<li><code>kvm</code>：针对kvm虚拟化分析</li>
-<li><code>lock</code>：分析锁性能</li>
-<li><code>mem</code>：分析内核调度器性能</li>
-<li><code>trace</code>：记录系统调用轨迹<h5 id="记录与分析"><a href="#记录与分析" class="headerlink" title="记录与分析"></a>记录与分析</h5></li>
-<li><code>record</code>：记录信息到perf.data</li>
-<li><code>report</code>：生成报告</li>
-<li><code>diff</code>：对两个记录进行diff</li>
-<li><code>evlist</code>：列出记录的性能事件</li>
-<li><code>annotate</code>：显式perf.data函数代码</li>
-<li><code>archive</code>：将相关符号打包，方便其他机器进行分析</li>
-<li><code>script</code>：将perf.data输出可读性文本<h5 id="可视化工具"><a href="#可视化工具" class="headerlink" title="可视化工具"></a>可视化工具</h5></li>
-<li><code>timechart record</code>：记录事件</li>
-<li><code>timechart</code>：生成output.svg文档</li>
+<li><p><code>list</code>：查看系统支持的性能事件</p>
+</li>
+<li><p><code>bench</code>：对系统性能摸底</p>
+</li>
+<li><p><code>test</code>：对系统健全性测试</p>
+</li>
+<li><p><code>stat</code>：对全局性能进行统计</p>
+<h5 id="全局细节"><a href="#全局细节" class="headerlink" title="全局细节"></a>全局细节</h5></li>
+<li><p><code>top</code>：实时查看系统进程函数占用率情况</p>
+</li>
+<li><p><code>probe</code>：自定义动态事件</p>
+<h5 id="特定功能分析"><a href="#特定功能分析" class="headerlink" title="特定功能分析"></a>特定功能分析</h5></li>
+<li><p><code>kmem</code>：支队slab子系统性能分析</p>
+</li>
+<li><p><code>kvm</code>：针对kvm虚拟化分析</p>
+</li>
+<li><p><code>lock</code>：分析锁性能</p>
+</li>
+<li><p><code>mem</code>：分析内核调度器性能</p>
+</li>
+<li><p><code>trace</code>：记录系统调用轨迹</p>
+<h5 id="记录与分析"><a href="#记录与分析" class="headerlink" title="记录与分析"></a>记录与分析</h5></li>
+<li><p><code>record</code>：记录信息到perf.data<br>(FrameGraph)[<a href="https://gitee.com/mirrors/FlameGraph.git]" target="_blank" rel="noopener">https://gitee.com/mirrors/FlameGraph.git]</a></p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用perf录制数据并使用FrameGraph查看火焰图</span></span><br><span class="line"><span class="comment"># 录制程序十秒</span></span><br><span class="line">$ perf record -F 99 -a -g -- sleep 10</span><br><span class="line"><span class="comment"># 数据展开</span></span><br><span class="line">$ perf script | ../stackcollapse-perf.pl &gt; out.perf-folded</span><br><span class="line"><span class="comment"># 生成svg矢量图</span></span><br><span class="line">$ ../flamegraph.pl out.perf-folded &gt; perf-kernel.svg</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>report</code>：生成报告</p>
+</li>
+<li><p><code>diff</code>：对两个记录进行diff</p>
+</li>
+<li><p><code>evlist</code>：列出记录的性能事件</p>
+</li>
+<li><p><code>annotate</code>：显式perf.data函数代码</p>
+</li>
+<li><p><code>archive</code>：将相关符号打包，方便其他机器进行分析</p>
+</li>
+<li><p><code>script</code>：将perf.data输出可读性文本</p>
+<h5 id="可视化工具"><a href="#可视化工具" class="headerlink" title="可视化工具"></a>可视化工具</h5></li>
+<li><p><code>timechart record</code>：记录事件</p>
+</li>
+<li><p><code>timechart</code>：生成output.svg文档</p>
+</li>
+</ul>
+<h4 id="一些技巧"><a href="#一些技巧" class="headerlink" title="一些技巧"></a>一些技巧</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看程序的pid、ppid、pgid、sid、comm信息</span></span><br><span class="line">$ ps -C program o pid,ppid,pgid,sid,comm</span><br><span class="line"><span class="comment"># 查看进程层次关系</span></span><br><span class="line">$ ps -ejH</span><br><span class="line">$ ps axjf</span><br></pre></td></tr></table></figure>
+
+<h3 id="valgrind"><a href="#valgrind" class="headerlink" title="valgrind"></a><span id="grep">valgrind</span></h3><h4 id="用法：valgrind-VALGRIND-OPTIONS-programing-PROG-OPTIONS"><a href="#用法：valgrind-VALGRIND-OPTIONS-programing-PROG-OPTIONS" class="headerlink" title="用法：valgrind [VALGRIND_OPTIONS] programing [PROG_OPTIONS]"></a>用法：valgrind [VALGRIND_OPTIONS] programing [PROG_OPTIONS]</h4><h5 id="基本选项"><a href="#基本选项" class="headerlink" title="基本选项"></a>基本选项</h5><ul>
+<li><p><code>-h</code>：帮助</p>
+</li>
+<li><p><code>-q</code>：静默模式</p>
+</li>
+<li><p><code>-v</code>：输出额外的信息，如加载的共享对象，检测和执行引擎进度，和异常行为警告，重复选项会增加详细程序</p>
+<h4 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h4><h5 id="开始编译"><a href="#开始编译" class="headerlink" title="开始编译"></a>开始编译</h5></li>
+<li><p>使用<code>-g</code>有助于获得直接指向源代码行的消息</p>
+</li>
+<li><p>如果使用C++，使用<code>-fno-inline</code>可以轻松看到函数调用链，或者使用valgrind选项<code>--read-inline-info=yes</code>让valgrind读取内联信息</p>
+</li>
+<li><p>开启<code>-O1</code>以上程序优化会导致memcheck误报未定义等错误，尽量不优化，且开启<code>-Wall</code></p>
+<h5 id="注释输出"><a href="#注释输出" class="headerlink" title="注释输出"></a>注释输出</h5></li>
+<li><p>默认valgrind将消息输出文件描述符2（stderr），如果要写入其他文件描述符，可以使用<code>--log-fd=&lt;n&gt;</code>来指定fd减少干扰项</p>
+</li>
+<li><p>为了减少干扰项，最好通过<code>-log-file=&lt;filename&gt;</code>将调试日志写到指定文件</p>
+</li>
+<li><p>最少干扰是通过<code>--log-socket=&lt;ip:port&gt;</code>指定网络套接字进行输出，可以省略端口号，将默认使用端口1500，默认值由<code>VG_CLO_DEFAULT_LOGPORT</code>定义。而valgrind监听端则使用<code>valgrind-listener</code>来进行监听，连接的切断listener并不会杀死valgrind，而是会自动切换回写入stderr</p>
+<ul>
+<li><code>valgrind-listener</code>接受多大50个valgrinded进程同时连接，它接收三个选项：<ul>
+<li><code>-e --exit-at-zero</code>：当连接进程数为0时退出，否则将永远运行</li>
+<li><code>--max-connect=&lt;n&gt;</code>：进程上限，默认50，可以自动设限</li>
+<li><code>portnumber</code>：更改默认端口（1500）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>检测重复错误会有大量开销，valgrind会在发现1000个不同的错误或总共发现10000000个错误后停止错误收集，为了避免中断，可以使用<code>--error-limit=no</code>选项</p>
+</li>
+<li><p>错误检查工具会检测系统中预装系统库的很多问题，如果不想看到这些错误，可以使用<code>--gen-suppressions=yes</code>选项进行消除。如果使用了<code>-v</code>选项，则在程序结束时打印已使用抑制行</p>
+</li>
+<li><p><code>--tool=&lt;toolname&gt;</code>：可以决定运行哪个valgrind工具。默认为<code>memcheck</code>，除此之外还有<code>cachegrind</code>、<code>callgrind</code>、<code>helgrind</code>、<code>drd</code>、<code>massif</code>、<code>dhat</code>、<code>bouchey</code>、<code>none</code>、<code>exp-sgcheck</code>、<code>exp-bbv</code>等</p>
+</li>
 </ul>
 <h4 id="一些技巧记录"><a href="#一些技巧记录" class="headerlink" title="一些技巧记录"></a>一些技巧记录</h4><ul>
 <li>显式本地IP：<code>curl myip.ipip.net</code></li>
@@ -795,7 +858,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -817,7 +880,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -850,7 +913,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#测试工具"><span class="nav-number">1.</span> <span class="nav-text">测试工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux三剑客"><span class="nav-number">1.1.</span> <span class="nav-text">Linux三剑客</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#grep"><span class="nav-number">1.1.1.</span> <span class="nav-text">grep</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#用法：grep-OPTION-PATTERN-FILE"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">用法：grep [OPTION...] PATTERN [FILE...]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#选项："><span class="nav-number">1.1.1.2.</span> <span class="nav-text">选项：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sed"><span class="nav-number">1.1.2.</span> <span class="nav-text">sed</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#用法：sed-OPTION-SCRIPTorCOMMAND-FILE"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">用法：sed [OPTION]... [SCRIPTorCOMMAND] [FILE]...</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#选项：-1"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">选项：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#awk"><span class="nav-number">1.1.3.</span> <span class="nav-text">awk</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#用法："><span class="nav-number">1.1.3.1.</span> <span class="nav-text">用法：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#awk-F-SEPSTRING-v-ASSIGNMENT-program-ARGUMENT"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">awk [-F SEPSTRING] [-v ASSIGNMENT]... program [ARGUMENT...]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#awk-F-SEPSTRING-f-PROFILE-f-v-ASSIGNMENT-ARGUMENT"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">awk [-F SEPSTRING] -f PROFILE [-f]... [-v ASSIGNMENT]... [ARGUMENT...]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#选项：-2"><span class="nav-number">1.1.3.4.</span> <span class="nav-text">选项：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#环境变量"><span class="nav-number">1.1.3.5.</span> <span class="nav-text">环境变量</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcpdump"><span class="nav-number">1.1.4.</span> <span class="nav-text">tcpdump</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他一些工具"><span class="nav-number">1.2.</span> <span class="nav-text">其他一些工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#strace"><span class="nav-number">1.2.1.</span> <span class="nav-text">strace</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#perf性能分析工具"><span class="nav-number">1.3.</span> <span class="nav-text">perf性能分析工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#调试关注点"><span class="nav-number">1.3.1.</span> <span class="nav-text">调试关注点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用法：perf-version-help-OPTIONS-COMMAND-ARGS"><span class="nav-number">1.3.2.</span> <span class="nav-text">用法：perf [--version] [--help] [OPTIONS] COMMAND [ARGS]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#功能分类"><span class="nav-number">1.3.3.</span> <span class="nav-text">功能分类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#全局性概况"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">全局性概况</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#全局细节"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">全局细节</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#特定功能分析"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">特定功能分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#记录与分析"><span class="nav-number">1.3.3.4.</span> <span class="nav-text">记录与分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#可视化工具"><span class="nav-number">1.3.3.5.</span> <span class="nav-text">可视化工具</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一些技巧记录"><span class="nav-number">1.3.4.</span> <span class="nav-text">一些技巧记录</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#测试工具"><span class="nav-number">1.</span> <span class="nav-text">测试工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux三剑客"><span class="nav-number">1.1.</span> <span class="nav-text">Linux三剑客</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#grep"><span class="nav-number">1.1.1.</span> <span class="nav-text">grep</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#用法：grep-OPTION-PATTERN-FILE"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">用法：grep [OPTION...] PATTERN [FILE...]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#选项："><span class="nav-number">1.1.1.2.</span> <span class="nav-text">选项：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sed"><span class="nav-number">1.1.2.</span> <span class="nav-text">sed</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#用法：sed-OPTION-SCRIPTorCOMMAND-FILE"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">用法：sed [OPTION]... [SCRIPTorCOMMAND] [FILE]...</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#选项：-1"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">选项：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#awk"><span class="nav-number">1.1.3.</span> <span class="nav-text">awk</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#用法："><span class="nav-number">1.1.3.1.</span> <span class="nav-text">用法：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#awk-F-SEPSTRING-v-ASSIGNMENT-program-ARGUMENT"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">awk [-F SEPSTRING] [-v ASSIGNMENT]... program [ARGUMENT...]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#awk-F-SEPSTRING-f-PROFILE-f-v-ASSIGNMENT-ARGUMENT"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">awk [-F SEPSTRING] -f PROFILE [-f]... [-v ASSIGNMENT]... [ARGUMENT...]</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#选项：-2"><span class="nav-number">1.1.3.4.</span> <span class="nav-text">选项：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#环境变量"><span class="nav-number">1.1.3.5.</span> <span class="nav-text">环境变量</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tcpdump"><span class="nav-number">1.1.4.</span> <span class="nav-text">tcpdump</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他一些工具"><span class="nav-number">1.2.</span> <span class="nav-text">其他一些工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#strace"><span class="nav-number">1.2.1.</span> <span class="nav-text">strace</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#perf性能分析工具"><span class="nav-number">1.3.</span> <span class="nav-text">perf性能分析工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#调试关注点"><span class="nav-number">1.3.1.</span> <span class="nav-text">调试关注点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用法：perf-version-help-OPTIONS-COMMAND-ARGS"><span class="nav-number">1.3.2.</span> <span class="nav-text">用法：perf [--version] [--help] [OPTIONS] COMMAND [ARGS]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#功能分类"><span class="nav-number">1.3.3.</span> <span class="nav-text">功能分类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#全局性概况"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">全局性概况</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#全局细节"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">全局细节</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#特定功能分析"><span class="nav-number">1.3.3.3.</span> <span class="nav-text">特定功能分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#记录与分析"><span class="nav-number">1.3.3.4.</span> <span class="nav-text">记录与分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#可视化工具"><span class="nav-number">1.3.3.5.</span> <span class="nav-text">可视化工具</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一些技巧"><span class="nav-number">1.3.4.</span> <span class="nav-text">一些技巧</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#valgrind"><span class="nav-number">1.4.</span> <span class="nav-text">valgrind</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法：valgrind-VALGRIND-OPTIONS-programing-PROG-OPTIONS"><span class="nav-number">1.4.1.</span> <span class="nav-text">用法：valgrind [VALGRIND_OPTIONS] programing [PROG_OPTIONS]</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#基本选项"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">基本选项</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#要点"><span class="nav-number">1.4.2.</span> <span class="nav-text">要点</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#开始编译"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">开始编译</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#注释输出"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">注释输出</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一些技巧记录"><span class="nav-number">1.4.3.</span> <span class="nav-text">一些技巧记录</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
