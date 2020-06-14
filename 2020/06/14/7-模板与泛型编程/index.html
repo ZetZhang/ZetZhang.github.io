@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,Effecive C++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="C++templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。泛型编程（genericprogramming）——写出的代码和其所处理的对象类型彼此独立（for_each、find、merge等）。最终人们发现C++template机制自身是完整的图灵机（Turing-complete）">
+<meta name="keywords" content="C++,Effecive C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="7 模板与泛型编程">
+<meta property="og:url" content="http://yoursite.com/2020/06/14/7-模板与泛型编程/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="C++templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。泛型编程（genericprogramming）——写出的代码和其所处理的对象类型彼此独立（for_each、find、merge等）。最终人们发现C++template机制自身是完整的图灵机（Turing-complete）">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-14T05:46:15.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="7 模板与泛型编程">
+<meta name="twitter:description" content="C++templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。泛型编程（genericprogramming）——写出的代码和其所处理的对象类型彼此独立（for_each、find、merge等）。最终人们发现C++template机制自身是完整的图灵机（Turing-complete）">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/14/7-模板与泛型编程/">
+
+
+
+
+
+  <title>7 模板与泛型编程 | .27t_lBZ4oZgg_</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">.27t_lBZ4oZgg_</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/7-模板与泛型编程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">7 模板与泛型编程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T13:45:58+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-01/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.01</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>C++<br>templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。<font color="red">泛型编程</font>（<font color="green">generic<br>programming</font>）——<em>写出的代码和其所处理的对象类型彼此独立</em>（for_each、find、merge等）。最终人们发现C++<br>template机制自身是完整的<font color="red">图灵机</font>（<font color="green">Turing-complete</font>）。于是导出<font color="red">模板元编程</font>（<font color="green">template<br>metaprogramming</font>），创造出在C++编译器内执行并于编译完成时停止执行的程序。</p>
+<h4 id="条款41：了解隐式接口和编译期多态"><a href="#条款41：了解隐式接口和编译期多态" class="headerlink" title="条款41：了解隐式接口和编译期多态"></a>条款41：了解隐式接口和编译期多态</h4><ol>
+<li><p>面向对象编程世界总是以<font color="red">显示接口</font>（<font color="green">explicit interfaces</font>）和<font color="red">运行期多态</font>（<font color="green">runtime polymorphism</font>）解决问题。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Widget();</span><br><span class="line">    <span class="keyword">virtual</span> ~Widget();</span><br><span class="line">    virutal <span class="built_in">std</span>::<span class="keyword">size_t</span> size() <span class="keyword">const</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">normalize</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(Widget &amp;other)</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doProcessing</span><span class="params">(Widget &amp;w)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (w.size() &gt; <span class="number">10</span> &amp;&amp; w != someNastyWidget)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">Widget <span class="title">temp</span><span class="params">(w)</span></span>;</span><br><span class="line">        temp.normalize();</span><br><span class="line">        temp.swap(w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> template及泛型编程的世界，显式接口和运行期多态仍然存在，但重要性降低。反倒是<font color="red">隐式接口</font>（<font color="green">implicit interfaces</font>）和<font color="red">编译期多态</font>（<font color="green">compile-time polymorphism</font>）移到前头。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doProcessing</span><span class="params">(T &amp;w)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (w.size() &gt; <span class="number">10</span> &amp;&amp; w != someNastyWidget)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">T <span class="title">temp</span><span class="params">(w)</span></span>;</span><br><span class="line">        temp.normalize();</span><br><span class="line">        temp.swap(w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 这组表达式便是T必须支持的一组隐式接口（implicit interface）。凡涉及w相关的函数调用，如operator&gt;和operator!=，有可能造成template<font color="red">具体化</font>（<font color="green">instantiated</font>），使这些调用成功，这样的具现行为发生在编译期，这就是所谓的编译期多态（compile-time polymorphism）。</p>
+</li>
+<li><p>对classes而言接口是显式的（explicit），以函数签名为中心。多态则是通过virtual函数发生于运行期。对template参数而言，接口是隐式的（implicit），奠基于有效表达式。多态则是通过template具现化和函数重载解析（function overloading resolution）发生于编译期。</p>
+</li>
+</ol>
+<h4 id="条款42：了解typename的双重意义"><a href="#条款42：了解typename的双重意义" class="headerlink" title="条款42：了解typename的双重意义"></a>条款42：了解typename的双重意义</h4><ol>
+<li>template内出现的名称如果相依于某个template参数，称之为<font color="red">从属名称</font>（<font color="green">dependent names</font>）。如果从属名称在class内呈嵌套状，称之为<font color="red">嵌套从属名称</font>（<font color="green">nested dependent name</font>），也就是嵌套从属名称并且指涉某类型；否则一个并不依赖任何template参数的名称。这样的名称是<font color="red">非从属名称</font>（<font color="green">non-dependent names</font>）。</li>
+<li>任何当你想要在template中指涉一个嵌套嵌套类型名称，必须在它的前一个位置放上关键字typename。这一规则的例外是，typename不可以出现在base classes list内的嵌套从属类型名称之前，也不可在member initialization list中作为base class修饰符。例如： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// base class list中不允许typename</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base&lt;T&gt;::Nested </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// mem init list中不允许typename</span></span><br><span class="line">    expliit Derived(int x) : Base&lt;T&gt;::Nested(x) //</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 既不在base class list中也不在mem init list中，需要加上typename</span></span><br><span class="line">        <span class="keyword">typename</span> Base&lt;T&gt;::Nested temp;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IterT&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">workWithIterator</span><span class="params">(IterT iter)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// traits class相当于类型为IterT对象所指对象的类型，如果IterT是list&lt;string&gt;::iterator, temp的类型就是string</span></span><br><span class="line">    <span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;IterT&gt;::<span class="function">value_type <span class="title">temp</span><span class="params">(*iter)</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="条款43：学习处理模板化基类内的名称"><a href="#条款43：学习处理模板化基类内的名称" class="headerlink" title="条款43：学习处理模板化基类内的名称"></a>条款43：学习处理模板化基类内的名称</h4><ol>
+<li><p>以下代码编译时出错：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printBase</span><span class="params">()</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"base"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">derived</span> :</span> <span class="keyword">public</span> base&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printDerived</span><span class="params">()</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"derived"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        printBase();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p> 问题在于当编译器遭遇class template derived定义式时，并不知道它继承什么样的class，它不知道T是个template参数，不到后来具现化无法确切知道它是什么。而不知道T是什么，也就不知道class base看起来像什么。</p>
+</li>
+<li><p>针对某个类产生一个特化版，需要在class定义式最前头加上“template&lt;&gt;”。这就是所谓的<font color="red">模板全特化</font>（<font color="green">total template specialization</font>）。对于某个被特化的base class templates，那个特化版本可能不提供和一般性template相同的接口，因此它往往拒绝在<font color="green">templatized base classes</font>（<font color="red">模板化基类</font>）内<strong>寻找</strong>继承而来的名称。就某种意义上来说，从Object Oriented C++跨进Template C++就不是畅通无阻了。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// example</span></span><br><span class="line"><span class="keyword">template</span>&lt;&gt; </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>&lt;int&gt;</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    printBase() </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"A::int special"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为了进入templatized base classes，有三个办法：</p>
+<ul>
+<li><p>第一是在调用base class函数动作之前加上“this-&gt;”</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>-&gt;printBase();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二是使用using声明式。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> A&lt;T&gt;::printBase();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三种是明白指出调用的函数位于base class内。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A&lt;T&gt;::printBase();</span><br></pre></td></tr></table></figure>
+
+<p>这是最不让人满意的揭发，如果被调用的是virtual函数，上述的<font color="red">明确资格修饰</font>（<font color="green">explicit qualification</font>）会关闭“virtual绑定行为”。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="条款44：将与参数无关的代码抽离templates"><a href="#条款44：将与参数无关的代码抽离templates" class="headerlink" title="条款44：将与参数无关的代码抽离templates"></a>条款44：将与参数无关的代码抽离templates</h4><ol>
+<li><p>举个例子，用固定尺寸的正方矩阵编写一个template：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// n * n矩阵</span></span><br><span class="line">tepmlate&lt;<span class="keyword">typename</span> T, <span class="built_in">std</span>::<span class="keyword">size_t</span> n&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SquareMatrix</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 求逆矩阵</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">invert</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line">SquareMatrix&lt;<span class="keyword">double</span>, <span class="number">5</span>&gt; sm1;</span><br><span class="line">sm1.invert();</span><br><span class="line">SquareMatrix&lt;<span class="keyword">double</span>, <span class="number">10</span>&gt; sm2;</span><br><span class="line">sm2.invert();</span><br></pre></td></tr></table></figure>
+
+<p> 这个template接受一个类型参数T，还接受一个size_t的参数，这是<font color="red">非类型参数</font>（<font color="green">non-type parameter</font>）。这些函数并非完全相同，除了常量5和10的区别外完全相同，这就是template引出<strong>代码膨胀</strong>的经典例子。改进方式：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SquareMatrixBase</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    SquareMatrixBase(<span class="built_in">std</span>::<span class="keyword">size_t</span> n, T *pMem) : size(n), pData(pMem) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setDataPtr</span><span class="params">(T *ptr)</span> </span>&#123; pData = ptr; &#125;</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">std</span>::<span class="keyword">size_t</span> size;</span><br><span class="line">    T *pData;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="built_in">std</span>::<span class="keyword">size_t</span> n&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SquareMatrix</span> :</span> <span class="keyword">private</span> SquareMatrixBase&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    SquareMatrix() : SquareMatrixBase&lt;T&gt;(n, data) &#123;&#125;</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T data[n * n];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态分配办法</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="built_in">std</span>::<span class="keyword">size_t</span> n&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SquareMatrix</span> :</span> <span class="keyword">private</span> SquareMatrixBase&lt;T&gt;</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    SquareMatrix() : SquareMatrixBase&lt;T&gt;(n, <span class="number">0</span>), pData(<span class="keyword">new</span> T[n * n])</span><br><span class="line">    &#123; <span class="keyword">this</span>-&gt;setDataPtr(pData.get()); &#125;</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    boost::scoped_array&lt;T&gt; pData; <span class="comment">// std::array??</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这个条款讨论的是<font color="green">non-type template parameters</font>（非类型模板参数）带来的膨胀，其实<font color="red">type parameters</font>（类型参数）也会导致膨胀。因此凡templates持有指针者应该对每个成员函数使用唯一一份底层实现。这意味着实现某些成员函数操作<font color="red">强型指针</font>（<font color="green">strongly typed pointers</font>，即T*），令它们调用<font color="red">无类型指针</font>（<font color="green">untyped pointers</font>，即void*）的函数。</p>
+</li>
+<li><p>因非类型模板参数而造成的代码膨胀，往往可消除，做法是以函数参数或class成员变量替换template参数。因类型参数而造成的代码膨胀，往往可降低，做法是让带有完全相同<font color="red">二进制表述</font>（<font color="green">binary representations</font>）的<font color="red">具体类型</font>（<font color="green">instantiation types</font>）共享实现码。</p>
+</li>
+</ol>
+<h4 id="条款45：运用成员函数模板接受所有兼容类型"><a href="#条款45：运用成员函数模板接受所有兼容类型" class="headerlink" title="条款45：运用成员函数模板接受所有兼容类型"></a>条款45：运用成员函数模板接受所有兼容类型</h4><ol>
+<li><p>智能指针（Smart pointers）是“行为像指针“的对象，提供指针没有的机能。真实的指针支持隐式转换（inplicit conversions）。而用户自定义的智能指针模拟转换有点麻烦：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Top</span> &#123;</span> ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Middle</span> :</span> <span class="keyword">public</span> Top &#123; ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bottom</span> :</span> <span class="keyword">public</span> Middle &#123; ... &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SmartPtr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 以other的heldPtr初始化this的heldPtr</span></span><br><span class="line">    tempalte&lt;<span class="keyword">typename</span> U&gt;</span><br><span class="line">    SmartPtr(<span class="keyword">const</span> SmartPtr&lt;U&gt; &amp;oher) : heldPtr(other.get()) &#123; ... &#125;</span><br><span class="line">    <span class="function">T* <span class="title">get</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> heldPtr; &#125;</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T* heldPtr;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p> 根据对象u创建对象t，根据SmartPtr&lt;U&gt;创建SmartPtr<t>，同一个template不同具现体称为泛化（generalized）copy构造函数。以上使用member initialization list来初始化SmartPtr&lt;t&gt;内类型为T<em>的成员变量，并以类型为U</em>的指针为初值。</t></p>
+</li>
+<li><p>成员函数模板作用不限于构造函数。TR1的shared_ptr支持所有兼容它的内置指针、shared_ptrs、auto_ptrs、week_ptrs的构造行为以及赋值作用：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">shared_ptr</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// copy构造函数</span></span><br><span class="line">    <span class="built_in">shared_ptr</span>(<span class="built_in">shared_ptr</span> <span class="keyword">const</span> &amp;r);</span><br><span class="line">    <span class="comment">// copy assignment</span></span><br><span class="line">    <span class="built_in">shared_ptr</span>&amp; <span class="keyword">operator</span>=(<span class="built_in">shared_ptr</span> <span class="keyword">const</span> &amp;r);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 任何兼容的内置指针</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">Y</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">explicit</span> <span class="title">shared_ptr</span>(<span class="title">Y</span> *<span class="title">p</span>);</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// shared_ptr</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">Y</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">shared_ptr</span>(<span class="title">shared_ptr</span>&lt;Y&gt; <span class="title">const</span> &amp;<span class="title">r</span>);</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// week_ptr</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">Y</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">explicit</span> <span class="title">shared_ptr</span>(<span class="title">week_ptr</span>&lt;Y&gt; <span class="title">const</span> &amp;<span class="title">r</span>);</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// auto_ptr</span></span><br><span class="line">    <span class="keyword">template</span>&lt;classs Y&gt;</span><br><span class="line">    <span class="function">explcit <span class="title">shared_ptr</span><span class="params">(<span class="built_in">auto_ptr</span>&lt;Y&gt; &amp;r)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 赋值</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">Y</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">shared_ptr</span>&amp; <span class="title">operator</span>=(<span class="title">shared_ptr</span>&lt;Y&gt; <span class="title">const</span> &amp;<span class="title">r</span>);</span></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">Y</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="title">shared_ptr</span>&amp; <span class="title">operator</span>=(<span class="title">auto_ptr</span>&lt;Y&gt; &amp;<span class="title">r</span>);</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 在class内声明泛型copy构造函数（member template）并不会阻止编译期生成它们自己的copy构造函数（一个non-template）。</p>
+</li>
+</ol>
+<h4 id="条款46：需要类型转换时请为模板定义非成员函数"><a href="#条款46：需要类型转换时请为模板定义非成员函数" class="headerlink" title="条款46：需要类型转换时请为模板定义非成员函数"></a>条款46：需要类型转换时请为模板定义非成员函数</h4><ol>
+<li><p>参考条款24：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Rational(<span class="keyword">const</span> T &amp;numerator = <span class="number">0</span>, <span class="keyword">const</span> T &amp;denominator = <span class="number">1</span>);</span><br><span class="line">    <span class="function"><span class="keyword">const</span> T <span class="title">numerator</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">const</span> T <span class="title">denominator</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">const</span> Rational&lt;T&gt; <span class="keyword">operator</span>*(<span class="keyword">const</span> Rational&lt;T&gt; &amp;lhs, <span class="keyword">const</span> Rational&lt;T&gt; &amp;rhs)</span><br><span class="line">&#123; ... &#125;</span><br><span class="line"></span><br><span class="line">Rational&lt;<span class="keyword">int</span>&gt; oneHalf(<span class="number">1</span>, <span class="number">2</span>);        <span class="comment">// 这个例子来自条款24</span></span><br><span class="line">Rational&lt;<span class="keyword">int</span>&gt; result = oneHalf * <span class="number">2</span>; <span class="comment">// 错误，无法通过编译。</span></span><br></pre></td></tr></table></figure>
+
+<p> 它给我们的启示是，模板化的Rational内的某些东西似乎和其non-template版本不同。编译期不知道它要调用哪个函数。operator*的第一个参数被声明为Rational&lt;T&gt;，而传递给operator*的的第一个实参的类型是Rational&lt;int&gt;，所以T是int。operator*的第二参数被声明为Rational<t>，但传递给operator*的第二实参的类型是int。你期望编译器使用Rational&lt;int&gt;的non-explicit构造函数将2转换为Rational&lt;int&gt;，但它不这么做。template实参推导过程中并不考虑采纳”通过构造函数而发生的“隐式类型转换。</t></p>
+</li>
+<li><p>只要利用一个事实，可以缓和编译器在template实参推导方面受到的挑战：<strong>template class内的friend声明式可以指涉某个特定函数</strong>。class templates并不依赖template实参推导（后者只施行于function templates身上），所以编译器总是能够在class Rational<t>具现化时得知T。令Rational<t> class声明适当的operator*为其friend函数，可简化整个问题：</t></t></p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 为了让这个函数自动具现化，在class内声明non-member函数的唯一方法是让它称为一个friend</span></span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">const</span> Rational <span class="keyword">operator</span>*(<span class="keyword">const</span> Rational &amp;lhs, <span class="keyword">const</span> Rational &amp;rhs)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> Rational(lhs.numerator() * rhs.numerator(), lhs.denominator() * rhs.denominaotr());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 为了让类型转换可能发生于所有实参身上，其实这个函数可以当作friend函数的辅助函数</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">const</span> Rational&lt;T&gt; <span class="keyword">operator</span>*(<span class="keyword">const</span> Rational&lt;T&gt; &amp;lhs, <span class="keyword">const</span> Rational&lt;T&gt; &amp;rhs)</span><br><span class="line">&#123; ... &#125;</span><br></pre></td></tr></table></figure>
+
+<p> 现在对operator*的混合式调用可以通过编译了，因为当对象oneHalf被声明为一个Rational&lt;int&gt;，class Rationao&lt;int&gt;就被具化出来，friend函数也就被自动声明出来（这里的Rational&lt;T&gt;可以省略）。后者身为一个函数而非函数模板，因而编译器在调用它时使用隐式转换函数。</p>
+</li>
+</ol>
+<h4 id="条款47：请使用traits-classes表现类型信息"><a href="#条款47：请使用traits-classes表现类型信息" class="headerlink" title="条款47：请使用traits classes表现类型信息"></a>条款47：请使用traits classes表现类型信息</h4><ol>
+<li><p>STL迭代器有5种分类，每类迭代器之间都是继承关系：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// input迭代器只能向前移动，一次一步，只可读取，只能读一次。如istream_iterator</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">input_iterator_tag</span> &#123;</span>&#125;;</span><br><span class="line"><span class="comment">// output迭代器一切只为输出，它向前移动，一次一步，只能涂写一次。如ostream_iterator</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">output_iterator_tag</span> &#123;</span>&#125;;</span><br><span class="line"><span class="comment">// 这两类只能向前移动，而且只能读或写一些，它们只适合”一次性操作算法“（one-pass algorithms）。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// forward迭代器可以读或写多次，可施行于多次行操作算法（multi-pass algorithms）。</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">forward_iterator_tag</span> :</span> <span class="keyword">public</span> input _iterator_tag &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// bidirectional迭代器除了可以向前移动，还可向后移动（set、multiset、map和multimap</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bidirectional_iterator_tag</span> :</span> <span class="keyword">public</span> forward_iterator_tag &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// random access迭代器除了可以向前向后，还可随机访问</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">random_access_iterator_tag</span> :</span> <span class="keyword">public</span> bdirectional_iterator_tag &#123;&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>STL中有个工具性template，叫advance，用来将某个迭代器移动若干给定距离：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 所有工作都运行期，这这个typeid-based解法比traits解法效率低</span></span><br><span class="line"><span class="comment">// 48条款</span></span><br><span class="line">templaet&lt;<span class="keyword">typename</span> IterT, <span class="keyword">typename</span> DistT&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">advance</span><span class="params">(IterT &amp;iter, DistT d)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (iter i a random access iterator) &#123;</span><br><span class="line">        iter += d;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (d &gt;= <span class="number">0</span>) &#123; <span class="keyword">while</span> (d--) ++iter; &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123; <span class="keyword">while</span> (d++) --iter; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 为了处理迭代器分类的相关信息，我们需要traits来在编译期间取得某些类型信息，而traits技术必须对<font oclor="red">内置</font>（<font color="green">built-in</font>）类型和<font color="red">用户自定义</font>（<font color="green">user-defined</font>）类型一样有效运行。这样的template在STL中有若干个，其中针对迭代器的有<code>iterator_traits</code>。<br> 它的运作方式是，它首先要求每个用户自定义的迭代器类型嵌套一个typedef，名为iterator_category，用来确认适当的<font color="red">卷标结构</font>（<font color="green">tag struct</font>）。<br> 例如，针对deque和双向list：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt; ... &gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">deque</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">iterator</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="keyword">typedef</span> random_access_iterator_tag iterator_category;</span><br><span class="line">        ...</span><br><span class="line">    &#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt; ... &gt; </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">list</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">iterator</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="keyword">typedef</span> bidirectional_iterator_tag iterator_category;</span><br><span class="line">        ...</span><br><span class="line">    &#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// iterator_traits只是鹦鹉学舌</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IterT&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iterator_traits</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> IterT::iterator_category iterator_category;</span><br><span class="line">    ..</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p> 这对用户自定义类型行得通，对指针（也是一种迭代器）行不通。为了支持指针迭代器，iterator_traits针对指针类型提供了一个<font color="red">偏特化版本</font>（<font color="green">partial template specialization</font>）：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// iterator_traits的偏特化版本</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IterT&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iterator_traits</span>&lt;IterT*&gt;</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">typedef</span> random_access_iterator_tag iterator_category;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p> 有了std::iterator_traits后，可以对advance践行之前的伪码了，而为了接受不同类型的iterator_category对象，则需要<font color="red">重载</font>（<font color="green">overloading</font>）：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// random access迭代器</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IterT, typenmae DistT&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doAdvance</span><span class="params">(IterT &amp;iter, DistT d, <span class="built_in">std</span>::random_access_iterator_tag)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    iter += d;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// bidirectional迭代器</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IterT, <span class="keyword">typename</span> DistT&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doAdvance</span><span class="params">(IterT &amp;iter, DistT d, <span class="built_in">std</span>::bidirectional_iterator_tag)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (d &gt;= <span class="number">0</span>) &#123; <span class="keyword">while</span> (d--) ++ iter; &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123; <span class="keyword">while</span> (d++) --iter; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// input迭代器</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IterT, <span class="keyword">typename</span> DistT&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doAdvance</span><span class="params">(IterT &amp;iter, DistT d, <span class="built_in">std</span>::input_iterator_tag)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (d &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">std</span>::out_of_range(<span class="string">"Negative distance"</span>);</span><br><span class="line">    <span class="keyword">while</span> (d--) ++iter;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 有了doAdvance重载版本，advance做的只是调用它们并传递对象</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IterT, <span class="keyword">typename</span> DistT&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span>  <span class="title">advance</span><span class="params">(IterT &amp;iter, DistT d)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    if (typeid(typename std::iterator_traits&lt;IterT&gt;::iterator_category) == typeid(std::random_access_iterator_tag))</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    doAdvance(iter, d, <span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;IterT&gt;::iterator_category());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>STL中除了Iterator_traits供应iterator_category还供应另外四种迭代器：<code>value_type</code>、<code>char_traits</code>、<code>numeric_limits</code>等。STL中还有很多其他新的traits classes用以提供类型信息，如<code>is_fundamental&lt;T&gt;</code>（判断T是否为内置类型），<code>is_array&lt;T&gt;</code>（判断T是否为数组类型）以及<code>is_base_of&lt;T1, T2&gt;</code>（T1和T2相同，或T1是T2的base class）。</p>
+</li>
+</ol>
+<h4 id="条款48：认适template元编程"><a href="#条款48：认适template元编程" class="headerlink" title="条款48：认适template元编程"></a>条款48：认适template元编程</h4><ol>
+<li><p><font color="green">Template metaprogramming</font>(<font color="red">TMP</font>，<font color="red">模板元编程</font>)是编写template-based C++程序并执行于编译器的过程。</p>
+</li>
+<li><p>47条款中的伪码部分：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 面对某些自定义类型，会编译失败</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> IterT, <span class="keyword">typename</span> DistT&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">advance</span><span class="params">(IterT &amp;iter, DistT d)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeid</span>(<span class="keyword">typename</span> <span class="built_in">std</span>::iterator_traits&lt;IterT&gt;::iterator_category) == <span class="keyword">typeid</span>(<span class="built_in">std</span>::random_access_iterator_tag)) &#123;</span><br><span class="line">        iter += d;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (d &gt;= <span class="number">0</span>) &#123; <span class="keyword">while</span> (d--) ++iter; &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123; <span class="keyword">while</span> (d++) --iter; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>TMP已被证明是”图灵完全“（Turing-complete）机器，针对TMP而涉及的程序库提供了更高级的语法。TMP并没有真正的循环结构，所有的循环效果都是由<font color="red">递归</font>（<font color="green">recursion</font>）完成。TMP主要是个函数时语言（functional language），而递归在这类语言是无法分割的，TMP循环并不涉及递归函数调用，而是涉及”<font color="red">递归模板具现化</font>“（<font color="green">recursive template instantiation</font>）。以下是示例源码：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一般情况下</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">unsigned</span> n&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Factorial</span> &#123;</span></span><br><span class="line">    <span class="keyword">enum</span> &#123; value = n * Factorial&lt;n - <span class="number">1</span>&gt;::value &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 特殊情况下，当到0时</span></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Factorial</span>&lt;0&gt; &#123;</span></span><br><span class="line">    <span class="keyword">enum</span> &#123; value = <span class="number">1</span> &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>TMP能够达到什么目标呢：</p>
+<ol>
+<li>确保度量单位正确。在科学和工程应用程序中，可以用TMP确保在编译期时确保所有度量单位组合正确，防范于未然。</li>
+<li>优化矩阵运算。</li>
+<li>生成用户定制之设计模式（custom design pattern）实现品。这项技术已被用来让若干templates实现出智能指针的行为策略（behavioral policies），用来在编译期间生成数以百计不同的智能指针类型。这项技术超越编程工艺如设计模式和智能指针，更广义成为<font color="green">generative programming</font>（<font color="red">殖生式编程</font>）的一个基础。</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Effecive-C/" rel="tag"># Effecive C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/14/6-继承与面向对象设计/" rel="next" title="6 继承与面向对象设计">
+                <i class="fa fa-chevron-left"></i> 6 继承与面向对象设计
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/14/8-定制new和delete/" rel="prev" title="8 定制new和delete">
+                8 定制new和delete <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/MY.jpg" alt="Ichheit">
+            
+              <p class="site-author-name" itemprop="name">Ichheit</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#条款41：了解隐式接口和编译期多态"><span class="nav-number">1.</span> <span class="nav-text">条款41：了解隐式接口和编译期多态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款42：了解typename的双重意义"><span class="nav-number">2.</span> <span class="nav-text">条款42：了解typename的双重意义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款43：学习处理模板化基类内的名称"><span class="nav-number">3.</span> <span class="nav-text">条款43：学习处理模板化基类内的名称</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款44：将与参数无关的代码抽离templates"><span class="nav-number">4.</span> <span class="nav-text">条款44：将与参数无关的代码抽离templates</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款45：运用成员函数模板接受所有兼容类型"><span class="nav-number">5.</span> <span class="nav-text">条款45：运用成员函数模板接受所有兼容类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款46：需要类型转换时请为模板定义非成员函数"><span class="nav-number">6.</span> <span class="nav-text">条款46：需要类型转换时请为模板定义非成员函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款47：请使用traits-classes表现类型信息"><span class="nav-number">7.</span> <span class="nav-text">条款47：请使用traits classes表现类型信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款48：认适template元编程"><span class="nav-number">8.</span> <span class="nav-text">条款48：认适template元编程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ichheit</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

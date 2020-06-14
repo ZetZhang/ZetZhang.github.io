@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,Effecive C++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="以下operator new和operator delete的规则同样适用于operator new[]和operatordelete[] 条款49：了解new-handler的行为 当operator new无法满足某一内存分配需求时，就会抛出异常。在它抛出异常前，会先调用一个用户指定的错误处理函数，一个所谓的new-handler，为了指定这个函数，用户需要调用set_new_handler，">
+<meta name="keywords" content="C++,Effecive C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="8 定制new和delete">
+<meta property="og:url" content="http://yoursite.com/2020/06/14/8-定制new和delete/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="以下operator new和operator delete的规则同样适用于operator new[]和operatordelete[] 条款49：了解new-handler的行为 当operator new无法满足某一内存分配需求时，就会抛出异常。在它抛出异常前，会先调用一个用户指定的错误处理函数，一个所谓的new-handler，为了指定这个函数，用户需要调用set_new_handler，">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-14T05:46:51.779Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="8 定制new和delete">
+<meta name="twitter:description" content="以下operator new和operator delete的规则同样适用于operator new[]和operatordelete[] 条款49：了解new-handler的行为 当operator new无法满足某一内存分配需求时，就会抛出异常。在它抛出异常前，会先调用一个用户指定的错误处理函数，一个所谓的new-handler，为了指定这个函数，用户需要调用set_new_handler，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/14/8-定制new和delete/">
+
+
+
+
+
+  <title>8 定制new和delete | .27t_lBZ4oZgg_</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">.27t_lBZ4oZgg_</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/8-定制new和delete/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">8 定制new和delete</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T13:46:29+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-01/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.01</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>以下operator new和operator delete的规则同样适用于operator new[]和operator<br>delete[]</p>
+<h4 id="条款49：了解new-handler的行为"><a href="#条款49：了解new-handler的行为" class="headerlink" title="条款49：了解new-handler的行为"></a>条款49：了解new-handler的行为</h4><ol>
+<li><p>当operator new无法满足某一内存分配需求时，就会抛出异常。在它抛出异常前，会先调用一个用户指定的错误处理函数，一个所谓的<code>new-handler</code>，为了指定这个函数，用户需要调用<code>set_new_handler</code>，那是声明于<new>的一个标准程序库函数：</new></p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="built_in">std</span> &#123;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*new_handler)</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">new_handler <span class="title">set_new_handler</span><span class="params">(new_handler p)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用时</span></span><br><span class="line"><span class="built_in">std</span>::set_new_handler(outOfMem);</span><br></pre></td></tr></table></figure>
+
+<p> 一个设计良好的new-handler函数必须做以下事情：</p>
+<ul>
+<li><strong>让更多内存可被使用</strong>。让operator new的下一次内存分配动作可能成功，就让程序一开始执行分配一大块内存，当new-handler第一次被调用，将它们释放给程序使用。</li>
+<li><strong>安装另一个new-handler</strong>。如果目前这个new-handler无法取得个更多可用内存，或许其他new-handler有。那么这个new-handler则set_new_handler来替换自己。下次当operator new调用new-handler时，调用的将是最新安装的那个。</li>
+<li><strong>卸除new-handler</strong>。一旦没有安装任何new-handler，operator new会在内存分配不成功时抛出异常，这时候应该将null指针给set_new_handler。</li>
+<li><strong>抛出bad_alloc（或派生自bad_alloc）的异常</strong>。这样异常不会被operator new捕捉，会被传播到内存索求处。</li>
+<li><strong>不返回</strong>。调用abort或exit。</li>
+</ul>
+</li>
+<li><p>使用class内自定义的operator new的set_new_handler可以替换global new-handler。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NewHandlerHolder</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 取得当前的的new-handler</span></span><br><span class="line">    explicit NewHandlerHolder(std::new_handler nh) : handler(nh) &#123;&#125;</span><br><span class="line">    <span class="comment">// 释放它</span></span><br><span class="line">    ~NewHandlerHolder() &#123;       </span><br><span class="line">        <span class="built_in">std</span>::set_new_handler(handler); </span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">std</span>::new_handler handler;</span><br><span class="line">    <span class="comment">// 禁用copying函数</span></span><br><span class="line">    NewHandlerHolder(<span class="keyword">const</span> NewHandlerHolder&amp;);</span><br><span class="line">    NewHandlerHolder&amp; oeprator=(<span class="keyword">const</span> NewHandlerHolder&amp;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">std</span>::<span class="function">new_handler <span class="title">set_new_handler</span><span class="params">(<span class="built_in">std</span>::new_handler p)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">std</span>::new_handler currentHandler = <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">std</span>::new_handler Widget::set_new_handler(<span class="built_in">std</span>::new_handler p) <span class="keyword">throw</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">std</span>::new_handler oldHandler = currentHandler;</span><br><span class="line">    currentHandler = p;</span><br><span class="line">    <span class="keyword">return</span> oldHandler;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span>* Widget::<span class="function"><span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 安装Widget的new-handler</span></span><br><span class="line">    <span class="function">NewHandlerHolder <span class="title">h</span><span class="params">(<span class="built_in">std</span>::set_new_handler(currentHandler))</span></span>;</span><br><span class="line">    <span class="comment">// 恢复global new-handler</span></span><br><span class="line">    <span class="keyword">return</span> ::<span class="keyword">operator</span> <span class="keyword">new</span>(size);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数声明，将在Widget对象分配失败时被调用</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">outOfMem</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">// 设定outOfMem为Widget的new-hander函数</span></span><br><span class="line">Widget::set_new_handler(outOfMem);</span><br><span class="line"><span class="comment">// 分配失败调用outOfMem</span></span><br><span class="line">Widget *pw1 = <span class="keyword">new</span> Widget;</span><br><span class="line"><span class="comment">// 分配失败调用global new-handler函数</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">string</span> *ps = <span class="keyword">new</span> <span class="built_in">std</span>::<span class="built_in">string</span>;</span><br><span class="line"><span class="comment">// 设定Widget专属的new-handing函数为null</span></span><br><span class="line">Widget::set_new_handler(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 如果分配失败，立刻抛出异常</span></span><br><span class="line">Widget *pw2 = <span class="keyword">new</span> Widget;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>现在设计一个可以被任何有需要的class使用的template：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NewHandlerSupport</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">std</span>::<span class="function">new_handler <span class="title">set_new_handler</span><span class="params">(<span class="built_in">std</span>::new_handler p)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span>;</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">std</span>::new_handler currentHandler;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="built_in">std</span>::new_handler NewHandlerSupport&lt;T&gt;::set_new_handler(<span class="built_in">std</span>::new_handler p) <span class="keyword">throw</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">std</span>::new_handler oldHandler = currentHandler;</span><br><span class="line">    currentHandler = p;</span><br><span class="line">    <span class="keyword">return</span> oldHandler;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">void</span>* NewHandlerSupport&lt;T&gt;::<span class="function"><span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">NewHandlerHolder <span class="title">h</span><span class="params">(<span class="built_in">std</span>::set_new_handler(currentHandler))</span></span>;</span><br><span class="line">    <span class="keyword">return</span> ::<span class="keyword">operator</span> <span class="keyword">new</span>(size);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="built_in">std</span>::new_handler NewHandlerSupport&lt;T&gt;::currenHandler = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对于显式声明nothrow，只能保证operator new不抛出异常，构造函数可能又new一些内存，这就无法强迫了</span></span><br><span class="line"><span class="comment">// Widget *pw = new (std::nothrow)Widget;</span></span><br></pre></td></tr></table></figure>
+
+<p> <font color="red">怪异的循环模板模式</font>（<font color="green">curiously recurring template pattern</font>;<font color="red">CRTP</font>）。</p>
+</li>
+</ol>
+<h4 id="条款50：了解new和delete的合理替换时机"><a href="#条款50：了解new和delete的合理替换时机" class="headerlink" title="条款50：了解new和delete的合理替换时机"></a>条款50：了解new和delete的合理替换时机</h4><ol>
+<li><p>为什么要替换编译期提供的operator new或operator delete呢？由三个理由：</p>
+<ul>
+<li><strong>用来检测运用上的错误</strong>。如果new出的内存delete失败，会导致<font color="red">内存泄露</font>（<font color="green">memory leaks</font>）。new上多次delete会导致不确定行为。如果我们自行定义operator news，超额分配内存，在额外内存上放置byte patterns（签名，signatures）。这样delete时就可以发现分配区中有哪些点发生了overrun（写入点在分配区尾端之后）或underruns（写入点在分配区起点之前）。这时候就可以log那个事实了。</li>
+<li><strong>为了强化效能</strong>。对于一些需求，包括大块内存、小块内存、大小混合型内存。它们接纳各种分配形态，从程序存活期间的少量区块动态分配，到大量短命对象的持续分配和归还。必须考虑<font color="red">破碎问题</font>（<font color="green">fragmentation</font>）。这会导致程序有总量足够但分散为很多小区块的自由内存，却无法分配大区块内存。</li>
+<li><strong>为了收集使用上的统计数据</strong>。制定news和delete之前，先收集软件如何使用动态内存。分配区块的大小分配？寿命分布？FIFO次序还是LIFO次序或随机分配？不同执行阶段有不同分配/归还形态？任何时刻使用最大动态分配量是多少？</li>
+</ul>
+</li>
+<li> <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> signature = <span class="number">0xDEADBEEF</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> Byte;</span><br><span class="line"><span class="comment">// 还有若干错误</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line">    <span class="comment">// 增加大小，使之能够塞入两个signatures</span></span><br><span class="line">    <span class="keyword">size_t</span> realSize = size + <span class="number">2</span> * <span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">    <span class="keyword">void</span>* pMem = <span class="built_in">malloc</span>(realSize);</span><br><span class="line">    <span class="keyword">if</span> (!pMem) <span class="keyword">throw</span> bad_alloc();</span><br><span class="line">    <span class="comment">// 将signature写入内存的前段落和后段落</span></span><br><span class="line">    *(<span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>*&gt;(pMem)) = signature;</span><br><span class="line">    *(reinterrpret_cast&lt;<span class="keyword">int</span>*&gt;(<span class="keyword">static_cast</span>&lt;Byte*&gt;(pMem) + realSize - <span class="keyword">sizeof</span>(<span class="keyword">int</span>))) = signature;</span><br><span class="line">    <span class="comment">// 返回指针，指向第一个signature之后的内存位置</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">static_cast</span>&lt;Byte*&gt;(pMem) + <span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <font color="red">计算机体系结构</font>（<font color="green">computer architectures</font>）要求特定的类型必须放在特定内存地址上，例如指针的地址必须是<font color="red">4倍数</font>（<font color="green">for-byte aligned</font>）或doubles地址是<font oclor="red">8倍数</font>（<font color="green">eight-byte aligned</font>）。<font color="red">齐位</font>（<font color="green">alignment</font>）意义重大，C++要求operator news返回的指针都有适当的内存对齐。malloc就是在这样做的，所以operator new返回一个malloc指针是安全的。然而上面代码中返回一个malloc且偏移一个int大小的指针，没人保证它的安全！</p>
+</li>
+<li><p>摘要：</p>
+<ul>
+<li>为了检测运用错误。</li>
+<li>为了收集动态分配内存之使用统计信息</li>
+<li>为了增加分配和归还速度</li>
+<li>为了降低缺省内存管理器带来的空间额外开销。</li>
+<li>为了弥补缺省分配器中的非最佳齐位（suboptimal alignment）。</li>
+<li>为了将相关对象成簇集中。</li>
+<li>为了获得非传统的行为。</li>
+</ul>
+</li>
+</ol>
+<h4 id="条款51：编写new和delete时需固守常规"><a href="#条款51：编写new和delete时需固守常规" class="headerlink" title="条款51：编写new和delete时需固守常规"></a>条款51：编写new和delete时需固守常规</h4><ol>
+<li>operator new应该内含一个无穷循环，并在其中尝试分配内存，如果它无法满足内存需求，应该调用new-handler。它也应该有能力处理0 bytes、null指针申请。class专属版本还应该处理”比正确大小更大的（错误）申请“。</li>
+</ol>
+<h4 id="条款52：写了placement-new也要写placement-delete"><a href="#条款52：写了placement-new也要写placement-delete" class="headerlink" title="条款52：写了placement new也要写placement delete"></a>条款52：写了placement new也要写placement delete</h4><ol>
+<li> <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 正常的operator new</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span>)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span>;</span><br><span class="line"><span class="comment">// global作用域中的正常签名式</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *rawMemory)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">// class作用域中典型的签名式</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *rawMemory, <span class="built_in">std</span>::<span class="keyword">size_t</span> size)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p> 如果operator new接受的参数除了一定会有个size_t之外还有其他，这就是所谓的<font color="red">placement new</font>。众多placement new版本中特别有用的一个是”接受一个指针指向对象该被构造之处“：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span>, <span class="keyword">void</span> *pMemory)</span> <span class="title">throw</span><span class="params">()</span></span>;  <span class="comment">// placement new</span></span><br></pre></td></tr></table></figure>
+
+<p> 这个版本在C++ STL中，只要#include &lt;new&gt;就可以用它。<br> 举个例子，现在写一个class专属的operator new，要求接受一个ostream，用来log相关分配信息，同时写一个正常形式的class专属operator delete：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 非正常形式的new</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::size size, <span class="built_in">std</span>::ostream &amp;logStream)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span>;</span><br><span class="line">    <span class="comment">// 正常class专属delete</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *pMemory, <span class="built_in">std</span>::<span class="keyword">size_t</span> size)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 这里有微妙的内存泄漏</span></span><br><span class="line"><span class="comment">// 调用operator new并传递cerr为其ostream实参，这个动作会在构造函数抛出异常时泄露内存</span></span><br><span class="line">Widget *pw = <span class="keyword">new</span> (<span class="built_in">std</span>::<span class="built_in">cerr</span>) Widget;</span><br></pre></td></tr></table></figure>
+
+<p> 对于类似的new placement版本，operator delete如果接受额外参数，称为placement deletes。带有额外参数的operator new应该调用带相同额外参数的对应版本operator delete。  </p>
+</li>
+<li><p>为了消弭代码中的内存泄露，Widget有必要声明一个placement delete，对应于有志记功能（logging）的placement new：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size, <span class="built_in">std</span>::ostream &amp;logStream)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *pMemory)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *pMemory, <span class="built_in">std</span>::ostream &amp;logStream)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 对于placement delete自动调用期间构造函数可能会抛出异常，代码会自动调用placement delete；如果没有抛出异常，则只会调用普通operator delete。<br> 顺带一提，成员函数的名称会掩盖外围作用域中的相同名称，假设有一个base class，其中声明唯一的placement operator new，用户会无法使用正常的new：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 会掩盖正常版本</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size, <span class="built_in">std</span>::ostream &amp;logStream)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line">Base *pb = <span class="keyword">new</span> Base;                <span class="comment">// error</span></span><br><span class="line">Base *pb = <span class="keyword">new</span> (<span class="built_in">std</span>::<span class="built_in">cerr</span>) Base;    <span class="comment">// ok</span></span><br><span class="line">Derived *pb = <span class="keyword">new</span> (<span class="built_in">std</span>::<span class="built_in">clog</span>) Derived;<span class="comment">// error</span></span><br><span class="line">Derived *pb = <span class="keyword">new</span> Derived;          <span class="comment">// ok</span></span><br></pre></td></tr></table></figure>
+
+<p> 需要记住的时，C++在global作用域中提供了以下operator new：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// normal new</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span>)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span>;</span><br><span class="line"><span class="comment">// placement new</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span>, <span class="keyword">void</span> *)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">// nothrow new</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span>, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="keyword">nothrow_t</span> &amp;)</span> <span class="title">throw</span><span class="params">()</span></span>;  <span class="comment">// 49</span></span><br></pre></td></tr></table></figure>
+
+<p> 除非你要阻止class用户使用这些形式，否则确保它们在你生成的定制型operator new之外还可用。对于每个operator new也有对应的operator delete。如果希望这些函数有平常的行为，令你class专属版本调用global版本：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StandardNewDeleteForms</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// normal new/delete</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span></span><br><span class="line"><span class="function">    </span>&#123; <span class="keyword">return</span> ::<span class="keyword">operator</span> <span class="keyword">new</span>(size); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *pMemory)</span> <span class="title">throw</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123; ::<span class="function"><span class="keyword">operator</span> <span class="title">delete</span><span class="params">(pMemory)</span></span>; &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// placement new/delete</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size, <span class="keyword">void</span> *ptr)</span> <span class="title">throw</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123; <span class="keyword">return</span> ::<span class="keyword">operator</span> <span class="keyword">new</span>(size, ptr); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *pMemory, <span class="keyword">void</span> *ptr)</span> <span class="title">throw</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123; <span class="keyword">return</span> ::opeator <span class="keyword">delete</span>(pMemory, ptr); &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// nothrow new/delete</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="keyword">nothrow_t</span> &amp;nt)</span> <span class="keyword">throw</span></span></span><br><span class="line"><span class="function">    </span>&#123; <span class="keyword">return</span> ::<span class="keyword">operator</span> <span class="keyword">new</span>(size, nt); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *pMemory, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="keyword">nothrow_t</span> &amp;)</span> <span class="title">throw</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123; ::<span class="function"><span class="keyword">operator</span> <span class="title">delete</span><span class="params">(pMemory)</span></span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 供想自定义扩充标准形式的用户，利用继承机制或using声明式（33）取得标准形式</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span> :</span> <span class="keyword">public</span> StandardNewDeleteForms</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">using</span> StandardNewDeleteForms::<span class="keyword">operator</span> <span class="keyword">new</span>;</span><br><span class="line">    <span class="keyword">using</span> StandardNewDeleteForms::<span class="keyword">operator</span> <span class="keyword">delete</span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="built_in">std</span>::<span class="keyword">size_t</span> size, <span class="built_in">std</span>::ostream &amp;logStream)</span> <span class="title">throw</span><span class="params">(<span class="built_in">std</span>::bad_alloc)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> oeprator <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *pMemory, <span class="built_in">std</span>::ostream &amp;logStream)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Effecive-C/" rel="tag"># Effecive C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/14/7-模板与泛型编程/" rel="next" title="7 模板与泛型编程">
+                <i class="fa fa-chevron-left"></i> 7 模板与泛型编程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/14/9-杂项讨论/" rel="prev" title="9 杂项讨论">
+                9 杂项讨论 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/MY.jpg" alt="Ichheit">
+            
+              <p class="site-author-name" itemprop="name">Ichheit</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#条款49：了解new-handler的行为"><span class="nav-number">1.</span> <span class="nav-text">条款49：了解new-handler的行为</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款50：了解new和delete的合理替换时机"><span class="nav-number">2.</span> <span class="nav-text">条款50：了解new和delete的合理替换时机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款51：编写new和delete时需固守常规"><span class="nav-number">3.</span> <span class="nav-text">条款51：编写new和delete时需固守常规</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款52：写了placement-new也要写placement-delete"><span class="nav-number">4.</span> <span class="nav-text">条款52：写了placement new也要写placement delete</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ichheit</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

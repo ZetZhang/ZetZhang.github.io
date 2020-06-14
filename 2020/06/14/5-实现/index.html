@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,Effecive C++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="大多数情况下，适当提出classes或class templates定义以及functions和functiontemplates声明，是最花费心力的两件事。太快定义变量可能造成效率上的拖延；过度使用转型可能导致代码变慢又难维护，又找来微妙的理解错误；返回对象内部数据的handle可能会破坏封装并留给客户danglinghandles；未考虑异常带来的冲击则可能导致资源泄露和数据败坏；过度热心地i">
+<meta name="keywords" content="C++,Effecive C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="5 实现">
+<meta property="og:url" content="http://yoursite.com/2020/06/14/5-实现/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="大多数情况下，适当提出classes或class templates定义以及functions和functiontemplates声明，是最花费心力的两件事。太快定义变量可能造成效率上的拖延；过度使用转型可能导致代码变慢又难维护，又找来微妙的理解错误；返回对象内部数据的handle可能会破坏封装并留给客户danglinghandles；未考虑异常带来的冲击则可能导致资源泄露和数据败坏；过度热心地i">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-14T05:45:11.639Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="5 实现">
+<meta name="twitter:description" content="大多数情况下，适当提出classes或class templates定义以及functions和functiontemplates声明，是最花费心力的两件事。太快定义变量可能造成效率上的拖延；过度使用转型可能导致代码变慢又难维护，又找来微妙的理解错误；返回对象内部数据的handle可能会破坏封装并留给客户danglinghandles；未考虑异常带来的冲击则可能导致资源泄露和数据败坏；过度热心地i">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/14/5-实现/">
+
+
+
+
+
+  <title>5 实现 | .27t_lBZ4oZgg_</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">.27t_lBZ4oZgg_</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/5-实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">5 实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T13:44:50+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-01/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.01</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>大多数情况下，适当提出classes或class templates定义以及functions和function<br>templates声明，是最花费心力的两件事。<strong><em>太快定义变量可能造成效率上的拖延；过度使用转型可能导致代码变慢又难维护，又找来微妙的理解错误；返回对象内部数据的handle可能会破坏封装并留给客户dangling<br>handles；未考虑异常带来的冲击则可能导致资源泄露和数据败坏；过度热心地inlining可能引起代码膨胀；过度耦合（coupling）则可能导致让人不满意的冗长build<br>times。</em></strong></p>
+<h4 id="条款26：尽可能延后变量定义式的出现时间"><a href="#条款26：尽可能延后变量定义式的出现时间" class="headerlink" title="条款26：尽可能延后变量定义式的出现时间"></a>条款26：尽可能延后变量定义式的出现时间</h4><ol>
+<li>当定义了一个类型带有构造函数或析构函数，就得付出构造成本和析构成本。如果函数可能抛出异常，最好将未使用的变量尽量延后声明（为何不声明定义分割是因为将函数构造出来再赋值比直接构造时指定初值效率低）。</li>
+<li>对于在循环结构中定义在里头还是外头需要权衡：如果赋值成本比“构造+析构”成本高，那么倒不如在循环结构中定义。</li>
+</ol>
+<h4 id="条款27：尽量少做转型动作"><a href="#条款27：尽量少做转型动作" class="headerlink" title="条款27：尽量少做转型动作"></a>条款27：尽量少做转型动作</h4><ol>
+<li>回顾转型语法：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// old-style casts</span></span><br><span class="line">(T)expression</span><br><span class="line">T(expression)</span><br><span class="line"></span><br><span class="line"><span class="comment">// C++-style casts</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    const_cast通常用来将对象常量行转除（cast away he constness）</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">const_cast</span>&lt;T&gt;(expression)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    dynamic_cast主要用来执行安全向下转型（safe downcasting），用来决定某对象是否归属继承体系中的某个类型，它是唯一无法由旧式语法执行的动作，也很耗费重大运行成本的转型动作</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">dynamic_cast</span>&lt;T&gt;(expression)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    reinterpret_cast意图执行低级转型，它取决于编译器，不可移植。它可以这么用，将pointer to int转型为一个int</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">reinterpret_cast</span>&lt;T&gt;(expression)</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    static_cast用来强迫隐式转换（implicit conversions），它基本什么都能做，就是无法将const转为non-const，这只有const_cast办得到。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">satic_cast&lt;T&gt;(expression)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>有人觉得转型起始什么都没做，其实这是错误的观念：底层转型表述几乎会产生一些代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> &#123;</span> ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base &#123; ... &#125;;</span><br><span class="line">Derived d;</span><br><span class="line">Base *pb = &amp;d;</span><br></pre></td></tr></table></figure>
+
+<p>这里不过是建立一个base class指针指向一个derived class对象，但有时候两个指针值并不相同。这种情况下会有个<font color="red">偏移量</font>（<font color="green">offset</font>）在<strong>运行期</strong>被施行于Derived*指针身上，才取得正确Base*指针值。<br>我们很容易写出似是而非的代码（在其他语言可能是真的）。例如derived classes内的virtual函数代码调用base class对应函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">    这段程序将*this转型为Window，它调用的不是当前对象上的函数，</span></span><br><span class="line"><span class="comment">    而是*this对象的baseclass部分的一个临时副本。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Window</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onResize</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SpecialWindow</span>:</span> <span class="keyword">public</span> Window</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onResize</span><span class="params">()</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">static_cast</span>&lt;Winddow&gt;(*<span class="keyword">this</span>).onResize();</span><br><span class="line">        <span class="comment">// 正确做法是：</span></span><br><span class="line">        Window::onResize();</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="条款28：避免返回handles指向对象内部成分"><a href="#条款28：避免返回handles指向对象内部成分" class="headerlink" title="条款28：避免返回handles指向对象内部成分"></a>条款28：避免返回handles指向对象内部成分</h4><ol>
+<li>一个成员函数返回<font color="red">references</font>、<font color="red">pointers</font>和<font color="red">itertors</font>，这些统统都是所谓的<font color="red"><strong>handles</strong></font>（号码牌，用来取得某个对象）。而一个返回“代表对象内部数据”的handle，随之而来的是降低对象封装性的风险。</li>
+</ol>
+<h4 id="条款29：为”异常安全“努力是值得的"><a href="#条款29：为”异常安全“努力是值得的" class="headerlink" title="条款29：为”异常安全“努力是值得的"></a>条款29：为”异常安全“努力是值得的</h4><ol>
+<li>当异常被抛出时，带有<font oclor="red">异常安全性</font>（<font color="green">Exception safety</font>）的函数一般不泄露任何资源并不允许数据败坏。这样的函数可分为三种保证：基本型、强烈型和不抛出异常型。</li>
+<li>强烈保证以copy-and-swap实现出来，保证一个动作要么全部完成，否则不进行任何变动。</li>
+</ol>
+<h4 id="条款30：透彻了解inlining的里里外外"><a href="#条款30：透彻了解inlining的里里外外" class="headerlink" title="条款30：透彻了解inlining的里里外外"></a>条款30：透彻了解inlining的里里外外</h4><ol>
+<li>用<font color="red">inline</font>内嵌函数可以免除函数的调用成本，编译器最优化机制通常被设计来浓缩不含函数调用的代码。然而过多的inline可能导致增加<font color="red">目标码</font>（<font color="green">object coed</font>）大小。在内存有限 的机器上，过度热衷inlining会使程序体积太大，即使拥有虚内存，造成的代码膨胀会导致额外的<font color="red">换页行为</font>（<font color="green">paging</font>），降低指令<font color="red">高速缓存的命中率</font>（<font color="green">instruction cache hit rate</font>），以及伴随这些问题而来的效率损失。</li>
+<li>Inline函数通常被置于头文件内，因为多数build environments在编译过程中进行inlining，在链接期完成inlining。inlining在多数C++程序中是编译期行为。</li>
+<li>inline是一个向编译器发出的申请，而不是强制命令。大部分编译器拒绝过于复杂（如有循环和递归）的函数inlining。对于virtual函数也会，因为virtual意味着”wait，知道runtime才确定调用哪个函数“。</li>
+</ol>
+<h4 id="条款31：将文件间的编译依存关系降至最低"><a href="#条款31：将文件间的编译依存关系降至最低" class="headerlink" title="条款31：将文件间的编译依存关系降至最低"></a>条款31：将文件间的编译依存关系降至最低</h4><ol>
+<li><code>#include</code>指示符提供的定义式和其含入文件之间形成了一种<font color="red">编译依存关系</font>（<font color="green">compilation dependency</font>）。如果这些头文件中有任何一个被改变，或者这些头文件所依赖的其他头文件有任何改变，那么每个含有class的文件就得重新编译。解决方案是通过<strong>前置声明</strong>配合指针或引用类型声明来减少编译依赖。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Effecive-C/" rel="tag"># Effecive C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/14/4-设计与声明/" rel="next" title="4 设计与声明">
+                <i class="fa fa-chevron-left"></i> 4 设计与声明
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/14/6-继承与面向对象设计/" rel="prev" title="6 继承与面向对象设计">
+                6 继承与面向对象设计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/MY.jpg" alt="Ichheit">
+            
+              <p class="site-author-name" itemprop="name">Ichheit</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#条款26：尽可能延后变量定义式的出现时间"><span class="nav-number">1.</span> <span class="nav-text">条款26：尽可能延后变量定义式的出现时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款27：尽量少做转型动作"><span class="nav-number">2.</span> <span class="nav-text">条款27：尽量少做转型动作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款28：避免返回handles指向对象内部成分"><span class="nav-number">3.</span> <span class="nav-text">条款28：避免返回handles指向对象内部成分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款29：为”异常安全“努力是值得的"><span class="nav-number">4.</span> <span class="nav-text">条款29：为”异常安全“努力是值得的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款30：透彻了解inlining的里里外外"><span class="nav-number">5.</span> <span class="nav-text">条款30：透彻了解inlining的里里外外</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款31：将文件间的编译依存关系降至最低"><span class="nav-number">6.</span> <span class="nav-text">条款31：将文件间的编译依存关系降至最低</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ichheit</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
