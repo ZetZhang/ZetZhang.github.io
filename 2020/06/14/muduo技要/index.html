@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,Linux,muduo,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A | grep range # 查看端口范围  ntptime # 查看ntp时间  ntpq -pn # ntp同步情况，service ntp start启动  nc # netcat $ nc ip p">
+<meta name="keywords" content="C++,Linux,muduo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="muduo技要">
+<meta property="og:url" content="http://yoursite.com/2020/06/14/muduo技要/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A | grep range # 查看端口范围  ntptime # 查看ntp时间  ntpq -pn # ntp同步情况，service ntp start启动  nc # netcat $ nc ip p">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-14T06:10:14.433Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="muduo技要">
+<meta name="twitter:description" content="性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A | grep range # 查看端口范围  ntptime # 查看ntp时间  ntpq -pn # ntp同步情况，service ntp start启动  nc # netcat $ nc ip p">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/06/14/muduo技要/">
+
+
+
+
+
+  <title>muduo技要 | .27t_lBZ4oZgg_</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">.27t_lBZ4oZgg_</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            Commonweal 404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/muduo技要/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">muduo技要</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T14:09:33+08:00">
+                2020-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-03/" itemprop="url" rel="index">
+                    <span itemprop="name">2020.03</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h3><ul>
+<li>带宽MB/s，关心消息量，不管消息数</li>
+<li>吞吐量QPS，TPS</li>
+<li>延迟</li>
+<li>资源使用率</li>
+</ul>
+<h3 id="test"><a href="#test" class="headerlink" title="test"></a>test</h3><ul>
+<li><p><code>sysctl -A | grep tcp.*mem</code> # 查看网络缓冲区</p>
+</li>
+<li><p><code>sysctl -A | grep range</code> # 查看端口范围</p>
+</li>
+<li><p><code>ntptime</code> # 查看ntp时间</p>
+</li>
+<li><p><code>ntpq -pn</code> # ntp同步情况，service ntp start启动</p>
+</li>
+<li><p><code>nc</code> # netcat $ nc ip port | [pipe]</p>
+</li>
+<li><p><code>tcpdump</code>和<code>Wiretshark</code>来性能分析</p>
+</li>
+<li><p><code>tcpcopy</code>可以用来进行压力测试</p>
+</li>
+<li><p><code>strace</code></p>
+</li>
+<li><p><code>prove</code></p>
+</li>
+<li><p><code>perf</code> # 查看程序的性能热点 e.g. perf record bin/memcached footprint ptmalloc 1000000 &amp;&amp; perf report</p>
+</li>
+<li><p><code>netstat -tpna | grep
+:prot</code>列出某服务客户端地址，<code>netstat</code>或<code>lsof</code>找出进程发起的连接</p>
+</li>
+<li><p>nm，查看name mangilng</p>
+</li>
+</ul>
+<h3 id="正确使用TCP"><a href="#正确使用TCP" class="headerlink" title="正确使用TCP"></a>正确使用TCP</h3><ul>
+<li><code>SO_REUSERADDR</code></li>
+<li>ignore <code>SIGPIPE</code></li>
+<li><code>TCP_NODELAY</code></li>
+</ul>
+<h3 id="read"><a href="#read" class="headerlink" title="read"></a>read</h3><ul>
+<li><code>netcat</code></li>
+</ul>
+<h3 id="消息格式"><a href="#消息格式" class="headerlink" title="消息格式"></a>消息格式</h3><ul>
+<li><code>Google Protocol Buffers</code></li>
+</ul>
+<h3 id="网络神话"><a href="#网络神话" class="headerlink" title="网络神话"></a>网络神话</h3><h4 id="Reactor和Proactor"><a href="#Reactor和Proactor" class="headerlink" title="Reactor和Proactor"></a>Reactor和Proactor</h4><ul>
+<li>Reactor模式指“non-blocking IO + IO multiplexing”，Proactor模式是另一个。</li>
+<li>Recator的基本结构是事件循环（event loop）和事件驱动（event-driven）和事件回调实现业务逻辑，提高并发度和吞吐量，适合IO密集型横须</li>
+<li>CPU密集型程序应该使用线程池，即blocking_queue实现的任务队列<h4 id="线程分配"><a href="#线程分配" class="headerlink" title="线程分配"></a>线程分配</h4></li>
+<li>当线程很廉价时，创造多于CPU数目的线程，一线程处理一个TCP连接，通常使用阻塞Blocking IO</li>
+<li>当线程很宝贵时，创造跟CPU数目一样多的线程，一个线程处理多个TCP连接上的IO，即”non-blocking IO + IO multiplexing”</li>
+<li>进程指fork的产物，线程指pthread_create的宝贵的原生NPTL Pthread线程，每个线程由clone产生，对应内核的task_struct</li>
+<li>两种场合必须使用单线程：程序fork和限制程序的CPU占用率。此外，只有单线程能使用fork<h4 id="多线程的性能优势"><a href="#多线程的性能优势" class="headerlink" title="多线程的性能优势"></a>多线程的性能优势</h4></li>
+<li>如果很少CPU负载让IO跑满，或很少IO负载就让CPU跑满，那么多线程没有性能优势</li>
+<li>多线程适用场景：<ul>
+<li>多个CPU可用。</li>
+<li>线程间共享数据，或者也可进程间共享</li>
+<li>可修改的共享数据，或者也可进程间shared memory</li>
+<li>提供非均质服务，如处理优先级事件</li>
+<li>lantency和throughput一样重要，即IO和CPU同样重要</li>
+<li>异步操作</li>
+<li>scale up，能享受到多线程的优势</li>
+<li>可预测性能。超过临界点会性能下降，线程数量不随负载变化</li>
+<li>多线程划分责任和功能</li>
+</ul>
+</li>
+</ul>
+<h3 id="C-编译链接模型精要"><a href="#C-编译链接模型精要" class="headerlink" title="C++编译链接模型精要"></a>C++编译链接模型精要</h3><h4 id="一些记录"><a href="#一些记录" class="headerlink" title="一些记录"></a>一些记录</h4><ul>
+<li><p>C++三大约束：C兼容、零开销（与Rust的零成本抽象区别？）原则和值语义</p>
+</li>
+<li><p>笼统地表示编译过程可分为：preprocessor/compiler/assembler/linker四个步骤，C++没有import或using（C++20可能出现），include头文件将导致当需要使用一个函数时预处理阶段必不可少的导入了一堆不相关的函数</p>
+</li>
+<li><p>一些编译选项：-Wall、-Wextra、-Werror、-Wconversion、-Wshadow</p>
+</li>
+<li><p>使用前向生命可以减少include，CCS规定不能重载&amp;&amp;、||、，三个操作符，Google规定不能重载一元<code>operator&amp;()</code>，这样class就不能前向生命了</p>
+</li>
+<li><p>判断一个C++可执行文件是release还是debug模式可以通过看class template的短函数有没有被inline展开，在nm命令中查看可以发现，开启-O2编译的程序是看不到inline函数的任何信息的</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>;</span>  <span class="comment">// 前向生命</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(Foo &amp;foo)</span> </span>&#123;</span><br><span class="line">    Foo *p = &amp;foo;  <span class="comment">// 取foo地址，重载了意思就变了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>C++的链接模型相比C多了一些内容，name mangling和vague linkage，即一个符号多份互不冲突。C中不允许重复定义</p>
+<h4 id="一些名词"><a href="#一些名词" class="headerlink" title="一些名词"></a>一些名词</h4></li>
+<li><p>一次定义原则（ODR），C是的，C++不是的</p>
+</li>
+</ul>
+<h4 id="C-设计"><a href="#C-设计" class="headerlink" title="C++设计"></a>C++设计</h4><ul>
+<li>POD和非POD</li>
+<li>三/五原则：POD类型需要拷贝赋值非平凡类型时，就需要析构函数，而需要析构函数的类也需要拷贝和赋值操作（需要拷贝操作的类也需要赋值操作），否则使用编译器合成的将导致未定义行为或多重析构的危险</li>
+</ul>
+<h4 id><a href="#" class="headerlink" title></a></h4><ul>
+<li>程序迁移工具：Porting Advisor，从X86（CISC）到arm kunpeng（RISC）</li>
+<li>数据库测试工具：BenchmarkSQL安装ant -&gt; 创建配置文件 -&gt; 配置数据库连接 -&gt; 场景配置 -&gt; 数据准备 -&gt; 执行测试<ul>
+<li>数据库连接：db、driver、conn、user/password</li>
+<li>场景配置：warehouse仓库数量、loadWorkers数据并发数、Terminals并发用户数、runMins测试时间、runTxnsPerTerminal、limitTxns。。。</li>
+</ul>
+</li>
+<li>大数据测试工具套件：HiBench：评估框架速度、吞吐量和系统资源利用率<ul>
+<li>测试类别：micro、ml、sql、websearch、graph、streaming</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/muduo/" rel="tag"># muduo</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/14/VIM下AsyncRun插件的环境变量/" rel="next" title="VIM下AsyncRun插件的环境变量">
+                <i class="fa fa-chevron-left"></i> VIM下AsyncRun插件的环境变量
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/14/CMake语法主要框架/" rel="prev" title="CMake语法主要框架">
+                CMake语法主要框架 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/MY.jpg" alt="Ichheit">
+            
+              <p class="site-author-name" itemprop="name">Ichheit</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#性能指标"><span class="nav-number">1.</span> <span class="nav-text">性能指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test"><span class="nav-number">2.</span> <span class="nav-text">test</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正确使用TCP"><span class="nav-number">3.</span> <span class="nav-text">正确使用TCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#read"><span class="nav-number">4.</span> <span class="nav-text">read</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息格式"><span class="nav-number">5.</span> <span class="nav-text">消息格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络神话"><span class="nav-number">6.</span> <span class="nav-text">网络神话</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Reactor和Proactor"><span class="nav-number">6.1.</span> <span class="nav-text">Reactor和Proactor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程分配"><span class="nav-number">6.2.</span> <span class="nav-text">线程分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多线程的性能优势"><span class="nav-number">6.3.</span> <span class="nav-text">多线程的性能优势</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-编译链接模型精要"><span class="nav-number">7.</span> <span class="nav-text">C++编译链接模型精要</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一些记录"><span class="nav-number">7.1.</span> <span class="nav-text">一些记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一些名词"><span class="nav-number">7.2.</span> <span class="nav-text">一些名词</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-设计"><span class="nav-number">7.3.</span> <span class="nav-text">C++设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">7.4.</span> <span class="nav-text"></span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ichheit</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
