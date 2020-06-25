@@ -83,11 +83,11 @@
 <meta name="keywords" content="Github,hexo,npm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="个人Blog">
-<meta property="og:url" content="http://yoursite.com/2019/06/30/关于个人Blog的基础搭建/index.html">
+<meta property="og:url" content="http://yoursite.com/2019/06/30/个人Blog/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
 <meta property="og:description" content="nvm：node.js版本管理工具安装nvm是可以管理不同版本的node和npm，所以我们通过nvm来安装Node.jsnvm的Github地址[nvm][https://github.com/nvm-sh/nvm] 安装nvm1234# cURL$ curl https://raw.github.com/creationix/nvm/v0.33.11/install.sh | sh# Wget$">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-12T13:12:31.876Z">
+<meta property="og:updated_time" content="2020-06-25T03:55:29.797Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="个人Blog">
 <meta name="twitter:description" content="nvm：node.js版本管理工具安装nvm是可以管理不同版本的node和npm，所以我们通过nvm来安装Node.jsnvm的Github地址[nvm][https://github.com/nvm-sh/nvm] 安装nvm1234# cURL$ curl https://raw.github.com/creationix/nvm/v0.33.11/install.sh | sh# Wget$">
@@ -120,7 +120,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/06/30/关于个人Blog的基础搭建/">
+  <link rel="canonical" href="http://yoursite.com/2019/06/30/个人Blog/">
 
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/30/关于个人Blog的基础搭建/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/30/个人Blog/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ichheit">
@@ -386,9 +386,18 @@
 
 <p><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hoex</a>文档说明</p>
 <p>Reference from <a href="https://www.codesheep.cn/" target="_blank" rel="noopener">codesheep</a></p>
-<h3 id="hexo-console-rename插件安装"><a href="#hexo-console-rename插件安装" class="headerlink" title="hexo-console-rename插件安装"></a>hexo-console-rename插件安装</h3><p><a href="https://github.com/timnew/hexo-console-rename" target="_blank" rel="noopener">hexo-console-rename</a> install using npm</p>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-console-rename@3 --save</span><br></pre></td></tr></table></figure>
+<h3 id="hexo-console-rename插件安装"><a href="#hexo-console-rename插件安装" class="headerlink" title="hexo-console-rename插件安装"></a>hexo-console-rename插件安装</h3><ul>
+<li><p><strong>Install</strong> <a href="https://github.com/timnew/hexo-console-rename" target="_blank" rel="noopener">hexo-console-rename</a></p>
+  <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-console-rename@3 --save</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Install</strong> <a href="https://github.com/CodeFalling/hexo-renderer-or" target="_blank" rel="noopener">org-mode</a></p>
+  <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install https://github.com/CodeFalling/hexo-renderer-org<span class="comment">#emacs --save</span></span><br></pre></td></tr></table></figure>
 
+<p>  <code>_config.yml</code>:</p>
+  <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">org:</span></span><br><span class="line"><span class="attr">    emacs:</span> <span class="string">'/usr/bin/emacs'</span></span><br><span class="line"><span class="attr">common:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    #+OPTIONS: toc:nil num:nil</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># new_post_name = org</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
 
       
     </div>
@@ -514,7 +523,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -536,7 +545,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">35</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
