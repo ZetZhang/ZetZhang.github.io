@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+<meta name="description" content="元对象系统   元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行">
 <meta name="keywords" content="C++,Qt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Qt元对象系统">
 <meta property="og:url" content="http://yoursite.com/2019/07/06/Qt元对象系统/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+<meta property="og:description" content="元对象系统   元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-12-07T08:14:37.395Z">
+<meta property="og:updated_time" content="2020-06-25T07:27:31.907Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qt元对象系统">
-<meta name="twitter:description" content="元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行时类型信息和动态属性系">
+<meta name="twitter:description" content="元对象系统   元对象系统Qt的元对象编译器(Meta-Object Compiler, MOC)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个Q_OBJECT宏，MOC才对类中的信号与槽的代码进行预处理。Qt的元对象系统(Meta-Object System)提供了对象之间通信的信号与槽机制、运行">
 
 
 
@@ -352,7 +352,13 @@
       
 
       
-        <h3 id="元对象系统"><a href="#元对象系统" class="headerlink" title="元对象系统"></a>元对象系统</h3><p>Qt的<font color="green">元对象编译器</font>(<font color="red">Meta-Object Compiler, MOC</font>)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个<code>Q_OBJECT</code>宏，MOC才对类中的信号与槽的代码进行预处理。<br>Qt的<font color="green">元对象系统</font>(<font color="red">Meta-Object System</font>)提供了对象之间通信的<strong>信号与槽机制</strong>、<strong>运行时类型信息</strong>和<strong>动态属性系统</strong>。<br>除了信号与槽机制，元对象还提供如下一些功能：</p>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#元对象系统">元对象系统</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h3 id="元对象系统"><a href="#元对象系统" class="headerlink" title="元对象系统"></a>元对象系统</h3><p>Qt的<font color="green">元对象编译器</font>(<font color="red">Meta-Object Compiler, MOC</font>)是一个预处理器，它用于将Qt特性的程序转换为标准C++兼容的形式，再由标准C++编译器进行编译。例如，在使用信号与槽机制的类里，通过添加一个<code>Q_OBJECT</code>宏，MOC才对类中的信号与槽的代码进行预处理。<br>Qt的<font color="green">元对象系统</font>(<font color="red">Meta-Object System</font>)提供了对象之间通信的<strong>信号与槽机制</strong>、<strong>运行时类型信息</strong>和<strong>动态属性系统</strong>。<br>除了信号与槽机制，元对象还提供如下一些功能：</p>
 <ul>
 <li><p><code>QObject::metaObject()</code>：返回类关联的元对象，元对象类<code>QMetaObject</code>包含了访问元对象的接口函数</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// e.g. 运行时返回类的名称字符串</span></span><br><span class="line">QObject *obj = <span class="keyword">new</span> QPushButton;</span><br><span class="line">obj-&gt;metaObject()-&gt;classNmae;   <span class="comment">// 返回"QPushButton"</span></span><br></pre></td></tr></table></figure>

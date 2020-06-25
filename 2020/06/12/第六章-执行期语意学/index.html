@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="有个简单的式子：   1if (yy == xx.getValue())) ...    其中xx和yy的定义：   12345678910111213141516class Y &amp;#123;public:    Y();    ~Y();    bool oeprator==(const Y&amp;amp;) const;    // ...&amp;#125;;class X &amp;#123;public:">
+<meta name="description" content="6.1 对象的构造和析构（Object Construction and Destruction） 全局对象（Global Objects） 局部静态对象（Local Static Objects） 对象数组（Array of Objects） Default Constructors和数组   6.2 new和delete运算符 针对数组的new语意 Placement Operator">
 <meta name="keywords" content="C++,C++对象模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第六章 执行期语意学">
 <meta property="og:url" content="http://yoursite.com/2020/06/12/第六章-执行期语意学/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="有个简单的式子：   1if (yy == xx.getValue())) ...    其中xx和yy的定义：   12345678910111213141516class Y &amp;#123;public:    Y();    ~Y();    bool oeprator==(const Y&amp;amp;) const;    // ...&amp;#125;;class X &amp;#123;public:">
+<meta property="og:description" content="6.1 对象的构造和析构（Object Construction and Destruction） 全局对象（Global Objects） 局部静态对象（Local Static Objects） 对象数组（Array of Objects） Default Constructors和数组   6.2 new和delete运算符 针对数组的new语意 Placement Operator">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-12T15:03:07.289Z">
+<meta property="og:updated_time" content="2020-06-25T04:40:27.083Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第六章 执行期语意学">
-<meta name="twitter:description" content="有个简单的式子：   1if (yy == xx.getValue())) ...    其中xx和yy的定义：   12345678910111213141516class Y &amp;#123;public:    Y();    ~Y();    bool oeprator==(const Y&amp;amp;) const;    // ...&amp;#125;;class X &amp;#123;public:">
+<meta name="twitter:description" content="6.1 对象的构造和析构（Object Construction and Destruction） 全局对象（Global Objects） 局部静态对象（Local Static Objects） 对象数组（Array of Objects） Default Constructors和数组   6.2 new和delete运算符 针对数组的new语意 Placement Operator">
 
 
 
@@ -352,7 +352,28 @@
       
 
       
-        <ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#6.1-对象的构造和析构（object-construction-and-destruction）">6.1 对象的构造和析构（Object Construction and Destruction）</a><ul>
+<li><a href="#全局对象（global-objects）">全局对象（Global Objects）</a></li>
+<li><a href="#局部静态对象（local-static-objects）">局部静态对象（Local Static Objects）</a></li>
+<li><a href="#对象数组（array-of-objects）">对象数组（Array of Objects）</a></li>
+<li><a href="#default-constructors和数组">Default Constructors和数组</a></li>
+</ul>
+</li>
+<li><a href="#6.2-new和delete运算符">6.2 new和delete运算符</a><ul>
+<li><a href="#针对数组的new语意">针对数组的new语意</a></li>
+<li><a href="#placement-operator-new的语意">Placement Operator new的语意</a></li>
+</ul>
+</li>
+<li><a href="#6.3-临时性对象（temporary-objects）">6.3 临时性对象（Temporary Objects）</a><ul>
+<li><a href="#临时性对象的迷思（神话、传说）">临时性对象的迷思（神话、传说）</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li><p>有个简单的式子：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (yy == xx.getValue())) ...</span><br></pre></td></tr></table></figure>
 

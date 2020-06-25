@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="条款5：对定制的“类型转换函数”保持警觉 C++允许编译器在不同类型之间执行隐式转换（implicit conversions）。它继承C的传统，允许将char转换为int，将short转换为double。然而还有令人害怕的转型，包括将int转换为short，将double转换为char，这些类型转换会遗失信息。所以我们可以使用自己的类型。两种函数允许编译器执行这样的转换：单自变量construc">
+<meta name="description" content="条款5：对定制的“类型转换函数”保持警觉 条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式 条款7：千万不要重载&amp;amp;&amp;amp;，||和，操作符 条款8：了解各种不同意义的new和delete   条款5：对定制的“类型转换函数”保持警觉 C++允许编译器在不同类型之间执行隐式转换（implicit conversions）。它继">
 <meta name="keywords" content="C++,More Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2 操作符">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/2-操作符/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="条款5：对定制的“类型转换函数”保持警觉 C++允许编译器在不同类型之间执行隐式转换（implicit conversions）。它继承C的传统，允许将char转换为int，将short转换为double。然而还有令人害怕的转型，包括将int转换为short，将double转换为char，这些类型转换会遗失信息。所以我们可以使用自己的类型。两种函数允许编译器执行这样的转换：单自变量construc">
+<meta property="og:description" content="条款5：对定制的“类型转换函数”保持警觉 条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式 条款7：千万不要重载&amp;amp;&amp;amp;，||和，操作符 条款8：了解各种不同意义的new和delete   条款5：对定制的“类型转换函数”保持警觉 C++允许编译器在不同类型之间执行隐式转换（implicit conversions）。它继">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:25:45.966Z">
+<meta property="og:updated_time" content="2020-06-25T04:24:07.703Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2 操作符">
-<meta name="twitter:description" content="条款5：对定制的“类型转换函数”保持警觉 C++允许编译器在不同类型之间执行隐式转换（implicit conversions）。它继承C的传统，允许将char转换为int，将short转换为double。然而还有令人害怕的转型，包括将int转换为short，将double转换为char，这些类型转换会遗失信息。所以我们可以使用自己的类型。两种函数允许编译器执行这样的转换：单自变量construc">
+<meta name="twitter:description" content="条款5：对定制的“类型转换函数”保持警觉 条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式 条款7：千万不要重载&amp;amp;&amp;amp;，||和，操作符 条款8：了解各种不同意义的new和delete   条款5：对定制的“类型转换函数”保持警觉 C++允许编译器在不同类型之间执行隐式转换（implicit conversions）。它继">
 
 
 
@@ -352,7 +352,16 @@
       
 
       
-        <h4 id="条款5：对定制的“类型转换函数”保持警觉"><a href="#条款5：对定制的“类型转换函数”保持警觉" class="headerlink" title="条款5：对定制的“类型转换函数”保持警觉"></a>条款5：对定制的“类型转换函数”保持警觉</h4><ol>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款5：对定制的“类型转换函数”保持警觉">条款5：对定制的“类型转换函数”保持警觉</a></li>
+<li><a href="#条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式">条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式</a></li>
+<li><a href="#条款7：千万不要重载&&，||和，操作符">条款7：千万不要重载&amp;&amp;，||和，操作符</a></li>
+<li><a href="#条款8：了解各种不同意义的new和delete">条款8：了解各种不同意义的new和delete</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款5：对定制的“类型转换函数”保持警觉"><a href="#条款5：对定制的“类型转换函数”保持警觉" class="headerlink" title="条款5：对定制的“类型转换函数”保持警觉"></a>条款5：对定制的“类型转换函数”保持警觉</h4><ol>
 <li><p>C++允许编译器在不同类型之间执行<font color="red">隐式转换</font>（<font color="green">implicit conversions</font>）。它继承C的传统，允许将char转换为int，将short转换为double。然而还有令人害怕的转型，包括将int转换为short，将double转换为char，这些类型转换会遗失信息。所以我们可以使用自己的类型。两种函数允许编译器执行这样的转换：<strong>单自变量constructors</strong>和<strong>隐式类型转换操作符</strong>。所谓的单自变量constructor是指能够以单一自变量成功调用的constructors：</p>
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Name</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// string to Name</span></span><br><span class="line">    Name(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;s);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Rational to double</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">double</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 

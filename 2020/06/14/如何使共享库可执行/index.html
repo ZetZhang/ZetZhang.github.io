@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="以shared_hello.c为例子，里面有函数和main入口  让可执行文件可共享123$ gcc -m32 -pie -fpie -rdynamic -o libshared_hello.so shared_hello.c$ gcc -m32 -o shared_hello.noc -L./ -lshared_hello$ LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.">
+<meta name="description" content="让可执行文件可共享 让共享库可执行 这种生成方式的程序没有入口 解决入口问题也是如此 gdb的core dump解析 通过主动链接器跑一下 原理 也可以当共享库使用了 然后那个asm内嵌汇编解决主动链接问题的跑不起来      以shared_hello.c为例子，里面有函数和main入口  让可执行文件可共享123$ gcc -m32 -pie -fpie -rdynamic -o lib">
 <meta name="keywords" content="Linux,Shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何使共享库可执行">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/如何使共享库可执行/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="以shared_hello.c为例子，里面有函数和main入口  让可执行文件可共享123$ gcc -m32 -pie -fpie -rdynamic -o libshared_hello.so shared_hello.c$ gcc -m32 -o shared_hello.noc -L./ -lshared_hello$ LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.">
+<meta property="og:description" content="让可执行文件可共享 让共享库可执行 这种生成方式的程序没有入口 解决入口问题也是如此 gdb的core dump解析 通过主动链接器跑一下 原理 也可以当共享库使用了 然后那个asm内嵌汇编解决主动链接问题的跑不起来      以shared_hello.c为例子，里面有函数和main入口  让可执行文件可共享123$ gcc -m32 -pie -fpie -rdynamic -o lib">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T06:24:37.309Z">
+<meta property="og:updated_time" content="2020-06-25T07:34:27.810Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使共享库可执行">
-<meta name="twitter:description" content="以shared_hello.c为例子，里面有函数和main入口  让可执行文件可共享123$ gcc -m32 -pie -fpie -rdynamic -o libshared_hello.so shared_hello.c$ gcc -m32 -o shared_hello.noc -L./ -lshared_hello$ LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.">
+<meta name="twitter:description" content="让可执行文件可共享 让共享库可执行 这种生成方式的程序没有入口 解决入口问题也是如此 gdb的core dump解析 通过主动链接器跑一下 原理 也可以当共享库使用了 然后那个asm内嵌汇编解决主动链接问题的跑不起来      以shared_hello.c为例子，里面有函数和main入口  让可执行文件可共享123$ gcc -m32 -pie -fpie -rdynamic -o lib">
 
 
 
@@ -330,7 +330,23 @@
       
 
       
-        <blockquote>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#让可执行文件可共享">让可执行文件可共享</a></li>
+<li><a href="#让共享库可执行">让共享库可执行</a><ul>
+<li><a href="#这种生成方式的程序没有入口">这种生成方式的程序没有入口</a></li>
+<li><a href="#解决入口问题也是如此">解决入口问题也是如此</a></li>
+<li><a href="#`gdb`的core-dump解析"><code>gdb</code>的core dump解析</a></li>
+<li><a href="#通过主动链接器跑一下">通过主动链接器跑一下</a></li>
+<li><a href="#原理">原理</a></li>
+<li><a href="#也可以当共享库使用了">也可以当共享库使用了</a></li>
+<li><a href="#然后那个asm内嵌汇编解决主动链接问题的跑不起来">然后那个asm内嵌汇编解决主动链接问题的跑不起来</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<blockquote>
 <p>以<code>shared_hello.c</code>为例子，里面有函数和main入口</p>
 </blockquote>
 <h3 id="让可执行文件可共享"><a href="#让可执行文件可共享" class="headerlink" title="让可执行文件可共享"></a>让可执行文件可共享</h3><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -m32 -pie -fpie -rdynamic -o libshared_hello.so shared_hello.c</span><br><span class="line">$ gcc -m32 -o shared_hello.noc -L./ -lshared_hello</span><br><span class="line">$ LD_LIBRARY_PATH=<span class="variable">$LD_LIBRARY_PATH</span>:./ ./shared_hello.noc</span><br></pre></td></tr></table></figure>
@@ -344,8 +360,14 @@
 
 <h4 id="通过主动链接器跑一下"><a href="#通过主动链接器跑一下" class="headerlink" title="通过主动链接器跑一下"></a>通过主动链接器跑一下</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /lib/ld-linux.so.2 ./libshared_hello.so</span><br></pre></td></tr></table></figure>
 
-<h4 id="通过程序中加入标准退出函数-exit-0-，就能正常执行了"><a href="#通过程序中加入标准退出函数-exit-0-，就能正常执行了" class="headerlink" title="通过程序中加入标准退出函数_exit(0)，就能正常执行了"></a>通过程序中加入标准退出函数<code>_exit(0)</code>，就能正常执行了</h4><hr>
-<h4 id="实际入口函数并非main-，而是-start，再改造，编译时连入口都不用指定了"><a href="#实际入口函数并非main-，而是-start，再改造，编译时连入口都不用指定了" class="headerlink" title="实际入口函数并非main()，而是_start，再改造，编译时连入口都不用指定了"></a>实际入口函数并非<code>main()</code>，而是<code>_start</code>，再改造，编译时连入口都不用指定了</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -m32 -g -shared -fpic -o libshared_hello.so shared_hello.c</span><br><span class="line">$ /lib/ld-linux.so.2 ./libshared_hello.so</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>通过程序中加入标准退出函数<code>_exit(0)</code>，就能正常执行了</p>
+</blockquote>
+<hr>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><blockquote>
+<p>实际入口函数并非<code>main()</code>，而是<code>_start</code>，再改造，编译时连入口都不用指定了</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -m32 -g -shared -fpic -o libshared_hello.so shared_hello.c</span><br><span class="line">$ /lib/ld-linux.so.2 ./libshared_hello.so</span><br></pre></td></tr></table></figure>
 
 <h4 id="也可以当共享库使用了"><a href="#也可以当共享库使用了" class="headerlink" title="也可以当共享库使用了"></a>也可以当共享库使用了</h4><figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -m32 -o shared_hello.noc -L./ -lshared_hello</span><br><span class="line">$ LD_LIBRARY_PATH=<span class="variable">$LD_LIBRARY_PATH</span>:./ ./shared_hello.noc</span><br></pre></td></tr></table></figure>
 
@@ -527,7 +549,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#让可执行文件可共享"><span class="nav-number">1.</span> <span class="nav-text">让可执行文件可共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#让共享库可执行"><span class="nav-number">2.</span> <span class="nav-text">让共享库可执行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#这种生成方式的程序没有入口"><span class="nav-number">2.1.</span> <span class="nav-text">这种生成方式的程序没有入口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决入口问题也是如此"><span class="nav-number">2.2.</span> <span class="nav-text">解决入口问题也是如此</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gdb的core-dump解析"><span class="nav-number">2.3.</span> <span class="nav-text">gdb的core dump解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过主动链接器跑一下"><span class="nav-number">2.4.</span> <span class="nav-text">通过主动链接器跑一下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过程序中加入标准退出函数-exit-0-，就能正常执行了"><span class="nav-number">2.5.</span> <span class="nav-text">通过程序中加入标准退出函数_exit(0)，就能正常执行了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实际入口函数并非main-，而是-start，再改造，编译时连入口都不用指定了"><span class="nav-number">2.6.</span> <span class="nav-text">实际入口函数并非main()，而是_start，再改造，编译时连入口都不用指定了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#也可以当共享库使用了"><span class="nav-number">2.7.</span> <span class="nav-text">也可以当共享库使用了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#然后那个asm内嵌汇编解决主动链接问题的跑不起来"><span class="nav-number">2.8.</span> <span class="nav-text">然后那个asm内嵌汇编解决主动链接问题的跑不起来</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#让可执行文件可共享"><span class="nav-number">1.</span> <span class="nav-text">让可执行文件可共享</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#让共享库可执行"><span class="nav-number">2.</span> <span class="nav-text">让共享库可执行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#这种生成方式的程序没有入口"><span class="nav-number">2.1.</span> <span class="nav-text">这种生成方式的程序没有入口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#解决入口问题也是如此"><span class="nav-number">2.2.</span> <span class="nav-text">解决入口问题也是如此</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gdb的core-dump解析"><span class="nav-number">2.3.</span> <span class="nav-text">gdb的core dump解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过主动链接器跑一下"><span class="nav-number">2.4.</span> <span class="nav-text">通过主动链接器跑一下</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-number">2.5.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#也可以当共享库使用了"><span class="nav-number">2.6.</span> <span class="nav-text">也可以当共享库使用了</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#然后那个asm内嵌汇编解决主动链接问题的跑不起来"><span class="nav-number">2.7.</span> <span class="nav-text">然后那个asm内嵌汇编解决主动链接问题的跑不起来</span></a></li></ol></li></ol></div>
             
 
           </div>

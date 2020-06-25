@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="数据卷 使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作   数据管理主要有两种方式： 数据卷（Data Volumes）：容器数据直接映射到本地主机环境 数据卷容器（Data Volume Containers）：使用特定容器维护数据卷    数据卷12345 # e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/">
+<meta name="description" content="数据卷 数据卷 数据卷容器 使用数据卷容器迁移数据 备份 恢复     端口映射和容器互联 端口映射 容器互联     数据卷 使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作   数据管理主要有两种方式： 数据卷（Data Volumes）：容器数据直接映射到本地主机环境 数据卷容器（Data Volume Containers）：使用特定容器维">
 <meta name="keywords" content="Linux,VM,Docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker数据卷">
 <meta property="og:url" content="http://yoursite.com/2020/06/12/Docker数据卷/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="数据卷 使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作   数据管理主要有两种方式： 数据卷（Data Volumes）：容器数据直接映射到本地主机环境 数据卷容器（Data Volume Containers）：使用特定容器维护数据卷    数据卷12345 # e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/">
+<meta property="og:description" content="数据卷 数据卷 数据卷容器 使用数据卷容器迁移数据 备份 恢复     端口映射和容器互联 端口映射 容器互联     数据卷 使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作   数据管理主要有两种方式： 数据卷（Data Volumes）：容器数据直接映射到本地主机环境 数据卷容器（Data Volume Containers）：使用特定容器维">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:36:54.990Z">
+<meta property="og:updated_time" content="2020-06-25T07:15:50.767Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker数据卷">
-<meta name="twitter:description" content="数据卷 使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作   数据管理主要有两种方式： 数据卷（Data Volumes）：容器数据直接映射到本地主机环境 数据卷容器（Data Volume Containers）：使用特定容器维护数据卷    数据卷12345 # e.g.: training/webapp镜像创建web容器，并创建数据卷挂载到容器的/">
+<meta name="twitter:description" content="数据卷 数据卷 数据卷容器 使用数据卷容器迁移数据 备份 恢复     端口映射和容器互联 端口映射 容器互联     数据卷 使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作   数据管理主要有两种方式： 数据卷（Data Volumes）：容器数据直接映射到本地主机环境 数据卷容器（Data Volume Containers）：使用特定容器维">
 
 
 
@@ -352,7 +352,27 @@
       
 
       
-        <h2 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h2><blockquote>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#数据卷">数据卷</a><ul>
+<li><a href="#数据卷">数据卷</a></li>
+<li><a href="#数据卷容器">数据卷容器</a></li>
+<li><a href="#使用数据卷容器迁移数据">使用数据卷容器迁移数据</a><ul>
+<li><a href="#备份">备份</a></li>
+<li><a href="#恢复">恢复</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#端口映射和容器互联">端口映射和容器互联</a><ul>
+<li><a href="#端口映射">端口映射</a></li>
+<li><a href="#容器互联">容器互联</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<h2 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h2><blockquote>
 <p>使用Docker过程中，需要对数据进行持久化，或在多个容器间共享数据，需要容器的数据管理操作</p>
 </blockquote>
 <ul>

@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="条款1：指针与引用的区别 当你知道你必须指向一个对象并且不想改变其指向时，或者在重载符并为防止不必要的语义误解时，你不应该使用指针。除此之外的情况下，则使用指针。  条款2：尽量使用C++风格的类型转换 将一个pointer-to-const-object转型为一个pointer-to-non-const-object（改变对象常量性，和将一个pointer-to-base-class-objec">
+<meta name="description" content="条款1：指针与引用的区别 条款2：尽量使用C++风格的类型转换 条款3：绝对不要以多态（polymorphically）方式处理数组 条款4：非必要不提供default constructor   条款1：指针与引用的区别 当你知道你必须指向一个对象并且不想改变其指向时，或者在重载符并为防止不必要的语义误解时，你不应该使用指针。除此之外的情况下，则使用指针。  条款2：尽量使用C++风格的类">
 <meta name="keywords" content="C++,More Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="1 基础议题">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/1-基础议题/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="条款1：指针与引用的区别 当你知道你必须指向一个对象并且不想改变其指向时，或者在重载符并为防止不必要的语义误解时，你不应该使用指针。除此之外的情况下，则使用指针。  条款2：尽量使用C++风格的类型转换 将一个pointer-to-const-object转型为一个pointer-to-non-const-object（改变对象常量性，和将一个pointer-to-base-class-objec">
+<meta property="og:description" content="条款1：指针与引用的区别 条款2：尽量使用C++风格的类型转换 条款3：绝对不要以多态（polymorphically）方式处理数组 条款4：非必要不提供default constructor   条款1：指针与引用的区别 当你知道你必须指向一个对象并且不想改变其指向时，或者在重载符并为防止不必要的语义误解时，你不应该使用指针。除此之外的情况下，则使用指针。  条款2：尽量使用C++风格的类">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:24:53.806Z">
+<meta property="og:updated_time" content="2020-06-25T04:16:30.050Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="1 基础议题">
-<meta name="twitter:description" content="条款1：指针与引用的区别 当你知道你必须指向一个对象并且不想改变其指向时，或者在重载符并为防止不必要的语义误解时，你不应该使用指针。除此之外的情况下，则使用指针。  条款2：尽量使用C++风格的类型转换 将一个pointer-to-const-object转型为一个pointer-to-non-const-object（改变对象常量性，和将一个pointer-to-base-class-objec">
+<meta name="twitter:description" content="条款1：指针与引用的区别 条款2：尽量使用C++风格的类型转换 条款3：绝对不要以多态（polymorphically）方式处理数组 条款4：非必要不提供default constructor   条款1：指针与引用的区别 当你知道你必须指向一个对象并且不想改变其指向时，或者在重载符并为防止不必要的语义误解时，你不应该使用指针。除此之外的情况下，则使用指针。  条款2：尽量使用C++风格的类">
 
 
 
@@ -352,13 +352,22 @@
       
 
       
-        <h4 id="条款1：指针与引用的区别"><a href="#条款1：指针与引用的区别" class="headerlink" title="条款1：指针与引用的区别"></a>条款1：指针与引用的区别</h4><ol>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款1：指针与引用的区别">条款1：指针与引用的区别</a></li>
+<li><a href="#条款2：尽量使用c++风格的类型转换">条款2：尽量使用C++风格的类型转换</a></li>
+<li><a href="#条款3：绝对不要以多态（polymorphically）方式处理数组">条款3：绝对不要以多态（polymorphically）方式处理数组</a></li>
+<li><a href="#条款4：非必要不提供default-constructor">条款4：非必要不提供default constructor</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款1：指针与引用的区别"><a href="#条款1：指针与引用的区别" class="headerlink" title="条款1：指针与引用的区别"></a>条款1：指针与引用的区别</h4><ol>
 <li>当你知道你必须指向一个对象并且不想改变其指向时，或者在重载符并为防止不必要的语义误解时，你不应该使用指针。除此之外的情况下，则使用指针。</li>
 </ol>
 <h4 id="条款2：尽量使用C-风格的类型转换"><a href="#条款2：尽量使用C-风格的类型转换" class="headerlink" title="条款2：尽量使用C++风格的类型转换"></a>条款2：尽量使用C++风格的类型转换</h4><ol>
 <li>将一个pointer-to-const-object转型为一个pointer-to-non-const-object（改变对象常量性，和将一个pointer-to-base-class-object转型为一个pointer-to-derived-class-object（改变对象类型）有很大差异。而传统C转型动作并无区分，不过旧式的C转型动作并非唯一选择，C式转型式为C设计的，不是为了C++。C++导入4个新的<font color="red">转型操作符</font>（<font color="green">cast operators</font>）：<code>static_cast</code>、<code>const_cast</code>、<code>dynamic_cast</code>和<code>reinterpret_cast</code>。</li>
 <li><font color="red">static_cast</font>具有与C旧式转型相同的威力与意义，以及相同的限制。static_cast不能移除表达式的常量性（constness），因为有const_cast。</li>
-<li>其他新式C++转型操作符适用于更集种（范围更狭窄）的目的。<font color="red">const_cast用来改变表达式中的常量性（constness）或变易性（volatileness）。常见的用途在于将某个对象的常量性去掉。</font></li>
+<li>其他新式C++转型操作符适用于更集种（范围更狭窄）的目的。<font color="red">const_cast</font>用来改变表达式中的常量性（constness）或变易性（volatileness）。常见的用途在于将某个对象的常量性去掉。</li>
 <li><font color="red">dynamic_cast</font>用来执行继承体系中“<strong>安全的向下转型或跨转型动作</strong>”。它不能应用在缺乏虚函数的类型身上。</li>
 <li><font color="red">reinterpret_cast</font>这个于编译平台有关，基本不具移植性。它的常用用途是转换“函数指针”类型： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*FuncPtr)</span><span class="params">()</span></span>;</span><br><span class="line">FuncPtr funcPtrArray[<span class="number">10</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">doSomething</span><span class="params">()</span></span>;</span><br><span class="line">funcPtrArray[<span class="number">0</span>] = &amp;doSomething; <span class="comment">// error</span></span><br><span class="line">funcPtrArray[<span class="number">0</span>] = <span class="keyword">reinterpret_cast</span>&lt;FuncPtr&gt;(&amp;doSomething);  <span class="comment">//ok</span></span><br></pre></td></tr></table></figure>
 

@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。  2.1 Default Constructor的构造操作“带有Default Constructor”的Member Class Object 如果class没有constructor，但有一个member object，而且这个objec">
+<meta name="description" content="2.1 Default Constructor的构造操作 “带有Default Constructor”的Member Class Object “带有Default Constructor”的Base Class “带有一个Virtual Function”的Class “带有一个Virtual Base Class”的Class   2.2 Copy Constructor的构造操作 D">
 <meta name="keywords" content="C++,C++对象模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第二章 构造函数语义学">
 <meta property="og:url" content="http://yoursite.com/2020/06/12/第二章-构造函数语义学/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。  2.1 Default Constructor的构造操作“带有Default Constructor”的Member Class Object 如果class没有constructor，但有一个member object，而且这个objec">
+<meta property="og:description" content="2.1 Default Constructor的构造操作 “带有Default Constructor”的Member Class Object “带有Default Constructor”的Base Class “带有一个Virtual Function”的Class “带有一个Virtual Base Class”的Class   2.2 Copy Constructor的构造操作 D">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:33:31.706Z">
+<meta property="og:updated_time" content="2020-06-25T04:36:45.773Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第二章 构造函数语义学">
-<meta name="twitter:description" content="关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。  2.1 Default Constructor的构造操作“带有Default Constructor”的Member Class Object 如果class没有constructor，但有一个member object，而且这个objec">
+<meta name="twitter:description" content="2.1 Default Constructor的构造操作 “带有Default Constructor”的Member Class Object “带有Default Constructor”的Base Class “带有一个Virtual Function”的Class “带有一个Virtual Base Class”的Class   2.2 Copy Constructor的构造操作 D">
 
 
 
@@ -352,7 +352,37 @@
       
 
       
-        <ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#2.1-default-constructor的构造操作">2.1 Default Constructor的构造操作</a><ul>
+<li><a href="#“带有default-constructor”的member-class-object">“带有Default Constructor”的Member Class Object</a></li>
+<li><a href="#“带有default-constructor”的base-class">“带有Default Constructor”的Base Class</a></li>
+<li><a href="#“带有一个virtual-function”的class">“带有一个Virtual Function”的Class</a></li>
+<li><a href="#“带有一个virtual-base-class”的class">“带有一个Virtual Base Class”的Class</a></li>
+</ul>
+</li>
+<li><a href="#2.2-copy-constructor的构造操作">2.2 Copy Constructor的构造操作</a><ul>
+<li><a href="#default-memberwise-initialization">Default Memberwise Initialization</a></li>
+<li><a href="#bitwise-copy-semantics(位逐次拷贝）">Bitwise Copy Semantics(位逐次拷贝）</a></li>
+<li><a href="#不要bitwise-copy-semantics!">不要Bitwise Copy Semantics!</a></li>
+<li><a href="#重新设定virtual-table的指针">重新设定Virtual Table的指针</a></li>
+<li><a href="#处理virtual-base-class-subobject">处理Virtual Base Class Subobject</a></li>
+</ul>
+</li>
+<li><a href="#2.3-程序转化语义学（program-transformation-semantics）">2.3 程序转化语义学（Program Transformation Semantics）</a><ul>
+<li><a href="#显式的初始化操作（explicit-initialization）">显式的初始化操作（Explicit Initialization）</a></li>
+<li><a href="#参数的初始化（argument-initialization）">参数的初始化（Argument Initialization）</a></li>
+<li><a href="#返回值的初始化（return-value-initialization）">返回值的初始化（Return Value Initialization）</a></li>
+<li><a href="#在使用者层面做优化（optimization-at-the-user-level）">在使用者层面做优化（Optimization at the User Level）</a></li>
+<li><a href="#在编译器层面做优化（optimization-at-the-compiler-level）">在编译器层面做优化（Optimization at the Compiler Level）</a></li>
+<li><a href="#copy-constructor：要还是不要？">Copy Constructor：要还是不要？</a></li>
+</ul>
+</li>
+<li><a href="#2.4-成员们的初始化队伍（member-initialization-list）">2.4 成员们的初始化队伍（Member Initialization List）</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li>关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。</li>
 </ul>
 <h4 id="2-1-Default-Constructor的构造操作"><a href="#2-1-Default-Constructor的构造操作" class="headerlink" title="2.1 Default Constructor的构造操作"></a>2.1 Default Constructor的构造操作</h4><h5 id="“带有Default-Constructor”的Member-Class-Object"><a href="#“带有Default-Constructor”的Member-Class-Object" class="headerlink" title="“带有Default Constructor”的Member Class Object"></a>“带有Default Constructor”的Member Class Object</h5><ul>

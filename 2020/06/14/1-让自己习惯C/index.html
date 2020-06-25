@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="条款01: 视C++为一个语言联邦 C++是一个多重范式编程语言（multiparadigm programming language），它是一个支持过程形式（procedural）、面向对象形式（object-oriented）、函数形式（functional）、泛型形式（generic）、元编程形式（metaprogramming）的语言。 为了理解C++可以从四个方面入手： C。区块（blo">
+<meta name="description" content="条款01：视C++为一个语言联邦 条款02：尽量以const，enum，inline替换#define 条款03：尽可能使用const 条款04：确定对象被使用前已先被初始化   条款01：视C++为一个语言联邦 C++是一个多重范式编程语言（multiparadigm programming language），它是一个支持过程形式（procedural）、面向对象形式（object-or">
 <meta name="keywords" content="C++,Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="1 让自己习惯C++">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/1-让自己习惯C/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="条款01: 视C++为一个语言联邦 C++是一个多重范式编程语言（multiparadigm programming language），它是一个支持过程形式（procedural）、面向对象形式（object-oriented）、函数形式（functional）、泛型形式（generic）、元编程形式（metaprogramming）的语言。 为了理解C++可以从四个方面入手： C。区块（blo">
+<meta property="og:description" content="条款01：视C++为一个语言联邦 条款02：尽量以const，enum，inline替换#define 条款03：尽可能使用const 条款04：确定对象被使用前已先被初始化   条款01：视C++为一个语言联邦 C++是一个多重范式编程语言（multiparadigm programming language），它是一个支持过程形式（procedural）、面向对象形式（object-or">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:25:07.416Z">
+<meta property="og:updated_time" content="2020-06-25T04:23:48.750Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="1 让自己习惯C++">
-<meta name="twitter:description" content="条款01: 视C++为一个语言联邦 C++是一个多重范式编程语言（multiparadigm programming language），它是一个支持过程形式（procedural）、面向对象形式（object-oriented）、函数形式（functional）、泛型形式（generic）、元编程形式（metaprogramming）的语言。 为了理解C++可以从四个方面入手： C。区块（blo">
+<meta name="twitter:description" content="条款01：视C++为一个语言联邦 条款02：尽量以const，enum，inline替换#define 条款03：尽可能使用const 条款04：确定对象被使用前已先被初始化   条款01：视C++为一个语言联邦 C++是一个多重范式编程语言（multiparadigm programming language），它是一个支持过程形式（procedural）、面向对象形式（object-or">
 
 
 
@@ -352,7 +352,16 @@
       
 
       
-        <h4 id="条款01-视C-为一个语言联邦"><a href="#条款01-视C-为一个语言联邦" class="headerlink" title="条款01: 视C++为一个语言联邦"></a>条款01: 视C++为一个语言联邦</h4><ol>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款01：视c++为一个语言联邦">条款01：视C++为一个语言联邦</a></li>
+<li><a href="#条款02：尽量以const，enum，inline替换#define">条款02：尽量以const，enum，inline替换#define</a></li>
+<li><a href="#条款03：尽可能使用const">条款03：尽可能使用const</a></li>
+<li><a href="#条款04：确定对象被使用前已先被初始化">条款04：确定对象被使用前已先被初始化</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款01：视C-为一个语言联邦"><a href="#条款01：视C-为一个语言联邦" class="headerlink" title="条款01：视C++为一个语言联邦"></a>条款01：视C++为一个语言联邦</h4><ol>
 <li>C++是一个<font color="red">多重范式编程语言</font>（<font color="green">multiparadigm programming language</font>），它是一个支持<font color="red">过程形式</font>（<font color="green">procedural</font>）、<font color="red">面向对象形式</font>（<font color="green">object-oriented</font>）、<font color="red">函数形式</font>（<font color="green">functional</font>）、<font color="red">泛型形式</font>（<font color="green">generic</font>）、<font color="red">元编程形式</font>（<font color="green">metaprogramming</font>）的语言。</li>
 <li>为了理解C++可以从四个方面入手：<ul>
 <li>C。区块（blocks）、语句（statements）、预处理器（preprocessor）、内置数据类型（built-in data types）、数组（arrays）、指针（pointers）。</li>
@@ -362,7 +371,7 @@
 </ul>
 </li>
 </ol>
-<h4 id="条款02：-尽量以const，enum，inline替换-define"><a href="#条款02：-尽量以const，enum，inline替换-define" class="headerlink" title="条款02： 尽量以const，enum，inline替换#define"></a>条款02： 尽量以const，enum，inline替换#define</h4><ol>
+<h4 id="条款02：尽量以const，enum，inline替换-define"><a href="#条款02：尽量以const，enum，inline替换-define" class="headerlink" title="条款02：尽量以const，enum，inline替换#define"></a>条款02：尽量以const，enum，inline替换#define</h4><ol>
 <li><code>#define</code>记号也许在编译器开始处理源码前就被预处理器移走了。于是可能记号没有进入<font color="red">记号表</font>（<font color="green">symbol table</font>）内。</li>
 <li>当我们以常量替换<code>#define</code>，如果要在头文件内定义一个常量<code>char*</code>-based字符串，必须写const两次（顶层const和底层const）：<code>const char* const authorName = &quot;Scott Meyers&quot;;</code>但通常用string对象更合宜；如果是class专属常量，为了确保常量至多只有一份，必须称为一个static成员。  </li>
 <li>如果不想别人获得一个pointer或reference指向整数常量，enum可以帮助实现这个约束。</li>
@@ -567,7 +576,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#条款01-视C-为一个语言联邦"><span class="nav-number">1.</span> <span class="nav-text">条款01: 视C++为一个语言联邦</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款02：-尽量以const，enum，inline替换-define"><span class="nav-number">2.</span> <span class="nav-text">条款02： 尽量以const，enum，inline替换#define</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款03：尽可能使用const"><span class="nav-number">3.</span> <span class="nav-text">条款03：尽可能使用const</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款04：确定对象被使用前已先被初始化"><span class="nav-number">4.</span> <span class="nav-text">条款04：确定对象被使用前已先被初始化</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#条款01：视C-为一个语言联邦"><span class="nav-number">1.</span> <span class="nav-text">条款01：视C++为一个语言联邦</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款02：尽量以const，enum，inline替换-define"><span class="nav-number">2.</span> <span class="nav-text">条款02：尽量以const，enum，inline替换#define</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款03：尽可能使用const"><span class="nav-number">3.</span> <span class="nav-text">条款03：尽可能使用const</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条款04：确定对象被使用前已先被初始化"><span class="nav-number">4.</span> <span class="nav-text">条款04：确定对象被使用前已先被初始化</span></a></li></ol></div>
             
 
           </div>

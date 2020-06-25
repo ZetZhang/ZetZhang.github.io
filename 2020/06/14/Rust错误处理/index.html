@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="消除失败 常用六个Assert assert!：断言布尔表达式运行时一定返回true assert_eq!：断言两个表达式是否相等（使用PartialEq） assert_ne!：断言两个表达式是否不相等 debug_assert!：等价于assert!，用于调试模式 debug_assert_eq! debug_assert_ne!    分层处理错误 Option：处理有和无的情况，包含Som">
+<meta name="description" content="消除失败 分层处理错误 unwrap系列方法 map系列方法 错误处理Result&amp;lt;T, E&amp;gt;   恐慌（Panic） 扩展   消除失败 常用六个Assert assert!：断言布尔表达式运行时一定返回true assert_eq!：断言两个表达式是否相等（使用PartialEq） assert_ne!：断言两个表达式是否不相等 debug_assert!：等价于assert">
 <meta name="keywords" content="Rust">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rust错误处理">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/Rust错误处理/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="消除失败 常用六个Assert assert!：断言布尔表达式运行时一定返回true assert_eq!：断言两个表达式是否相等（使用PartialEq） assert_ne!：断言两个表达式是否不相等 debug_assert!：等价于assert!，用于调试模式 debug_assert_eq! debug_assert_ne!    分层处理错误 Option：处理有和无的情况，包含Som">
+<meta property="og:description" content="消除失败 分层处理错误 unwrap系列方法 map系列方法 错误处理Result&amp;lt;T, E&amp;gt;   恐慌（Panic） 扩展   消除失败 常用六个Assert assert!：断言布尔表达式运行时一定返回true assert_eq!：断言两个表达式是否相等（使用PartialEq） assert_ne!：断言两个表达式是否不相等 debug_assert!：等价于assert">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:16:59.010Z">
+<meta property="og:updated_time" content="2020-06-25T07:37:42.367Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rust错误处理">
-<meta name="twitter:description" content="消除失败 常用六个Assert assert!：断言布尔表达式运行时一定返回true assert_eq!：断言两个表达式是否相等（使用PartialEq） assert_ne!：断言两个表达式是否不相等 debug_assert!：等价于assert!，用于调试模式 debug_assert_eq! debug_assert_ne!    分层处理错误 Option：处理有和无的情况，包含Som">
+<meta name="twitter:description" content="消除失败 分层处理错误 unwrap系列方法 map系列方法 错误处理Result&amp;lt;T, E&amp;gt;   恐慌（Panic） 扩展   消除失败 常用六个Assert assert!：断言布尔表达式运行时一定返回true assert_eq!：断言两个表达式是否相等（使用PartialEq） assert_ne!：断言两个表达式是否不相等 debug_assert!：等价于assert">
 
 
 
@@ -352,7 +352,21 @@
       
 
       
-        <h2 id="消除失败"><a href="#消除失败" class="headerlink" title="消除失败"></a>消除失败</h2><ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#消除失败">消除失败</a></li>
+<li><a href="#分层处理错误">分层处理错误</a><ul>
+<li><a href="#unwrap系列方法">unwrap系列方法</a></li>
+<li><a href="#map系列方法">map系列方法</a></li>
+<li><a href="#错误处理result<t,-e>">错误处理Result&lt;T, E&gt;</a></li>
+</ul>
+</li>
+<li><a href="#恐慌（panic）">恐慌（Panic）</a></li>
+<li><a href="#扩展">扩展</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h2 id="消除失败"><a href="#消除失败" class="headerlink" title="消除失败"></a>消除失败</h2><ul>
 <li>常用六个Assert<ul>
 <li>assert!：断言布尔表达式运行时一定返回true</li>
 <li>assert_eq!：断言两个表达式是否相等（使用PartialEq）</li>
@@ -374,7 +388,10 @@
 <li>unwrap_or方法是对match匹配包装的语法糖，该方法可以指定处理None时返回的值</li>
 <li>unwrap_or_else方法和unwrap_or类似，只不过参数是FnOnce()-&gt;T闭包</li>
 </ul>
-<h3 id="map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"><a href="#map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况" class="headerlink" title="map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"></a>map系列方法：把Option<t>中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况</t></h3><ul>
+<h3 id="map系列方法"><a href="#map系列方法" class="headerlink" title="map系列方法"></a>map系列方法</h3><blockquote>
+<p>把Option<t>中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况</t></p>
+</blockquote>
+<ul>
 <li>map方法是泛型方法，内部是match匹配，对于Some和None分别做了相应处理，参数为FnOnce(T)-&gt;U闭包，在无需取Option<t>的情况下在Option<t>内部计算，这种map叫组合子</t></t></li>
 <li>map_or方法</li>
 <li>map_orelse方法</li>
@@ -566,7 +583,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#消除失败"><span class="nav-number">1.</span> <span class="nav-text">消除失败</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分层处理错误"><span class="nav-number">2.</span> <span class="nav-text">分层处理错误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#unwrap系列方法"><span class="nav-number">2.1.</span> <span class="nav-text">unwrap系列方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况"><span class="nav-number">2.2.</span> <span class="nav-text">map系列方法：把Option中值通过unwrap取出来再参与计算，会多出很多校验代码，显得冗余，map系列方法可以改善这种情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#错误处理Result-lt-T-E-gt"><span class="nav-number">2.3.</span> <span class="nav-text">错误处理Result&lt;T, E&gt;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#恐慌（Panic）"><span class="nav-number">3.</span> <span class="nav-text">恐慌（Panic）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#消除失败"><span class="nav-number">1.</span> <span class="nav-text">消除失败</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分层处理错误"><span class="nav-number">2.</span> <span class="nav-text">分层处理错误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#unwrap系列方法"><span class="nav-number">2.1.</span> <span class="nav-text">unwrap系列方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map系列方法"><span class="nav-number">2.2.</span> <span class="nav-text">map系列方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#错误处理Result-lt-T-E-gt"><span class="nav-number">2.3.</span> <span class="nav-text">错误处理Result&lt;T, E&gt;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#恐慌（Panic）"><span class="nav-number">3.</span> <span class="nav-text">恐慌（Panic）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a></li></ol></div>
             
 
           </div>

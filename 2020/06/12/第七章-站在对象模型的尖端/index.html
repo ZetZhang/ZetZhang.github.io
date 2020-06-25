@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是template、exception handing（EH）和runtime type identification（RTTI）（RTTI可以想象成EH的一个副作用）。  7.1 Template template原本被视为是对container classes的支持，但现在成为STL的基础。它也被用于属性混合（如内存分配机制）或互斥">
+<meta name="description" content="7.1 Template Template的“实例化”行为（Template Instantiation） Template的错误报告（Error Reporting within a Template） Template中的名称决议法（Name Resolution within a Template） Member Function的实例化行为（Member Function Insta">
 <meta name="keywords" content="C++,C++对象模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第七章 站在对象模型的尖端">
 <meta property="og:url" content="http://yoursite.com/2020/06/12/第七章-站在对象模型的尖端/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是template、exception handing（EH）和runtime type identification（RTTI）（RTTI可以想象成EH的一个副作用）。  7.1 Template template原本被视为是对container classes的支持，但现在成为STL的基础。它也被用于属性混合（如内存分配机制）或互斥">
+<meta property="og:description" content="7.1 Template Template的“实例化”行为（Template Instantiation） Template的错误报告（Error Reporting within a Template） Template中的名称决议法（Name Resolution within a Template） Member Function的实例化行为（Member Function Insta">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-12T15:23:13.665Z">
+<meta property="og:updated_time" content="2020-06-25T04:35:55.360Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第七章 站在对象模型的尖端">
-<meta name="twitter:description" content="有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是template、exception handing（EH）和runtime type identification（RTTI）（RTTI可以想象成EH的一个副作用）。  7.1 Template template原本被视为是对container classes的支持，但现在成为STL的基础。它也被用于属性混合（如内存分配机制）或互斥">
+<meta name="twitter:description" content="7.1 Template Template的“实例化”行为（Template Instantiation） Template的错误报告（Error Reporting within a Template） Template中的名称决议法（Name Resolution within a Template） Member Function的实例化行为（Member Function Insta">
 
 
 
@@ -352,7 +352,39 @@
       
 
       
-        <ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#7.1-template">7.1 Template</a><ul>
+<li><a href="#template的“实例化”行为（template-instantiation）">Template的“实例化”行为（Template Instantiation）</a></li>
+<li><a href="#template的错误报告（error-reporting-within-a-template）">Template的错误报告（Error Reporting within a Template）</a></li>
+<li><a href="#template中的名称决议法（name-resolution-within-a-template）">Template中的名称决议法（Name Resolution within a Template）</a></li>
+<li><a href="#member-function的实例化行为（member-function-instantiation）">Member Function的实例化行为（Member Function Instantiation）</a></li>
+</ul>
+</li>
+<li><a href="#7.2-异常处理（exception-handing）">7.2 异常处理（Exception Handing）</a><ul>
+<li><a href="#exception-handing快速检阅">Exception Handing快速检阅</a></li>
+<li><a href="#对exception-handing的支持">对Exception Handing的支持</a></li>
+<li><a href="#决定throw是否发生在一个try区段中">决定throw是否发生在一个try区段中</a></li>
+<li><a href="#将exception的类型和每一个catch子句的类型做比较">将exception的类型和每一个catch子句的类型做比较</a></li>
+<li><a href="#当一个实际对象在程序执行时被抛出，会发生什么事？">当一个实际对象在程序执行时被抛出，会发生什么事？</a></li>
+</ul>
+</li>
+<li><a href="#7.3-执行期类型识别（runtime-type-identification，rtti）">7.3 执行期类型识别（Runtime Type Identification，RTTI）</a><ul>
+<li><a href="#type-safe-downcast（保证安全的向下转换操作）">Type-Safe Downcast（保证安全的向下转换操作）</a></li>
+<li><a href="#type-safe-dynamic-cast（保证安全的动态转换）">Type-Safe Dynamic Cast（保证安全的动态转换）</a></li>
+<li><a href="#reference并不是pointers">Reference并不是Pointers</a></li>
+<li><a href="#typeid运算符">Typeid运算符</a></li>
+</ul>
+</li>
+<li><a href="#7.4-效率有了，弹性呢？">7.4 效率有了，弹性呢？</a><ul>
+<li><a href="#动态共享函数库（dynamic-shared-libraries）">动态共享函数库（Dynamic Shared Libraries）</a></li>
+<li><a href="#共享内存（shared-memory）">共享内存（Shared Memory）</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li>有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是<font color="red">template</font>、<font color="red">exception handing（<strong>EH</strong>）</font>和<font color="red">runtime type identification（<strong>RTTI</strong>）</font>（RTTI可以想象成EH的一个副作用）。</li>
 </ul>
 <h4 id="7-1-Template"><a href="#7-1-Template" class="headerlink" title="7.1 Template"></a>7.1 Template</h4><ul>

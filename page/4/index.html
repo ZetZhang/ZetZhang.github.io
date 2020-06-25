@@ -352,7 +352,17 @@
       
         
           
-            <h4 id="条款13：以对象管理资源"><a href="#条款13：以对象管理资源" class="headerlink" title="条款13：以对象管理资源"></a>条款13：以对象管理资源</h4><ol>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款13：以对象管理资源">条款13：以对象管理资源</a></li>
+<li><a href="#条款14：在资源管理类中小心copying行为？？？">条款14：在资源管理类中小心copying行为？？？</a></li>
+<li><a href="#条款15：在资源管理类中提供对原始资源的访问">条款15：在资源管理类中提供对原始资源的访问</a></li>
+<li><a href="#条款16：成对使用new和delete时要采取相同形式">条款16：成对使用new和delete时要采取相同形式</a></li>
+<li><a href="#条款17：以独立语句将newed对象置入智能指针">条款17：以独立语句将newed对象置入智能指针</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款13：以对象管理资源"><a href="#条款13：以对象管理资源" class="headerlink" title="条款13：以对象管理资源"></a>条款13：以对象管理资源</h4><ol>
 <li>以对象管理资源的观念常被称为“<font color="red">资源取得时机便是初始化实际</font>”（<font color="green">Resource Acquisition Is Initialization; </font><font color="red">RAII</font>）。在获得的同时立刻被放进管理对象中。<code>auto_ptrs</code>有个不寻常的性质：若通过copy构造函数或copy assignment操作符复制，它们就会变成null，而复制所得的指针将取得资源的唯一拥有权，并在析构函数中释放资源。</li>
 <li><code>auto_ptr</code>的替代方案是“<font color="red">引用计数型智能指针</font>”（<font color="green">reference-counting smart pointer；</font><font color="red">RCSP</font>）。它提供的行为类似<font color="red">垃圾回收</font>（<font color="green">garbage collection</font>）。</li>
 </ol>
@@ -517,7 +527,20 @@
       
         
           
-            <h4 id="条款05：了解C-默默编写并调用哪些函数"><a href="#条款05：了解C-默默编写并调用哪些函数" class="headerlink" title="条款05：了解C++默默编写并调用哪些函数"></a>条款05：了解C++默默编写并调用哪些函数</h4><ol>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款05：了解c++默默编写并调用哪些函数">条款05：了解C++默默编写并调用哪些函数</a></li>
+<li><a href="#条款06：若不想使用编译器自动生成的函数，就该明确拒绝">条款06：若不想使用编译器自动生成的函数，就该明确拒绝</a></li>
+<li><a href="#条款07：为多态基类声明virtual析构函数">条款07：为多态基类声明virtual析构函数</a></li>
+<li><a href="#条款08：别让异常逃离析构函数">条款08：别让异常逃离析构函数</a></li>
+<li><a href="#条款09：绝不在构造和析构过程中调用virtual函数">条款09：绝不在构造和析构过程中调用virtual函数</a></li>
+<li><a href="#条款10：令operator=返回一个reference-to-*this">条款10：令operator=返回一个reference to *this</a></li>
+<li><a href="#条款11：在operator=中处理“自我赋值”">条款11：在operator=中处理“自我赋值”</a></li>
+<li><a href="#条款12：赋值对象时勿忘其每一个成分">条款12：赋值对象时勿忘其每一个成分</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款05：了解C-默默编写并调用哪些函数"><a href="#条款05：了解C-默默编写并调用哪些函数" class="headerlink" title="条款05：了解C++默默编写并调用哪些函数"></a>条款05：了解C++默默编写并调用哪些函数</h4><ol>
 <li>如果自己没声明，编译器会自动声明（编译器版本）的<font color="red">copy构造函数</font>、<font color="red">copy assignment操作符</font>和<font color="red">析构函数</font>。如果没有声明构造函数，编译器也会声明一个<font color="red">default构造函数</font>。</li>
 <li>如果某个base classes将copy assignment操作符声明为private，编译器将拒绝为其derived classes生成一个copy assignment操作符。</li>
 <li>如果一个类中有reference或pointer类型的数据。那么对于copy assignment操作符需要自己定义，而不是使用编译器生成版本。</li>
@@ -691,7 +714,16 @@
       
         
           
-            <h4 id="条款01-视C-为一个语言联邦"><a href="#条款01-视C-为一个语言联邦" class="headerlink" title="条款01: 视C++为一个语言联邦"></a>条款01: 视C++为一个语言联邦</h4><ol>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款01：视c++为一个语言联邦">条款01：视C++为一个语言联邦</a></li>
+<li><a href="#条款02：尽量以const，enum，inline替换#define">条款02：尽量以const，enum，inline替换#define</a></li>
+<li><a href="#条款03：尽可能使用const">条款03：尽可能使用const</a></li>
+<li><a href="#条款04：确定对象被使用前已先被初始化">条款04：确定对象被使用前已先被初始化</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款01：视C-为一个语言联邦"><a href="#条款01：视C-为一个语言联邦" class="headerlink" title="条款01：视C++为一个语言联邦"></a>条款01：视C++为一个语言联邦</h4><ol>
 <li>C++是一个<font color="red">多重范式编程语言</font>（<font color="green">multiparadigm programming language</font>），它是一个支持<font color="red">过程形式</font>（<font color="green">procedural</font>）、<font color="red">面向对象形式</font>（<font color="green">object-oriented</font>）、<font color="red">函数形式</font>（<font color="green">functional</font>）、<font color="red">泛型形式</font>（<font color="green">generic</font>）、<font color="red">元编程形式</font>（<font color="green">metaprogramming</font>）的语言。</li>
 <li>为了理解C++可以从四个方面入手：<ul>
 <li>C。区块（blocks）、语句（statements）、预处理器（preprocessor）、内置数据类型（built-in data types）、数组（arrays）、指针（pointers）。</li>
@@ -701,7 +733,7 @@
 </ul>
 </li>
 </ol>
-<h4 id="条款02：-尽量以const，enum，inline替换-define"><a href="#条款02：-尽量以const，enum，inline替换-define" class="headerlink" title="条款02： 尽量以const，enum，inline替换#define"></a>条款02： 尽量以const，enum，inline替换#define</h4><ol>
+<h4 id="条款02：尽量以const，enum，inline替换-define"><a href="#条款02：尽量以const，enum，inline替换-define" class="headerlink" title="条款02：尽量以const，enum，inline替换#define"></a>条款02：尽量以const，enum，inline替换#define</h4><ol>
 <li><code>#define</code>记号也许在编译器开始处理源码前就被预处理器移走了。于是可能记号没有进入<font color="red">记号表</font>（<font color="green">symbol table</font>）内。</li>
 <li>当我们以常量替换<code>#define</code>，如果要在头文件内定义一个常量<code>char*</code>-based字符串，必须写const两次（顶层const和底层const）：<code>const char* const authorName = &quot;Scott Meyers&quot;;</code>但通常用string对象更合宜；如果是class专属常量，为了确保常量至多只有一份，必须称为一个static成员。  </li>
 <li>如果不想别人获得一个pointer或reference指向整数常量，enum可以帮助实现这个约束。</li>
@@ -1394,7 +1426,39 @@
       
         
           
-            <ul>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#7.1-template">7.1 Template</a><ul>
+<li><a href="#template的“实例化”行为（template-instantiation）">Template的“实例化”行为（Template Instantiation）</a></li>
+<li><a href="#template的错误报告（error-reporting-within-a-template）">Template的错误报告（Error Reporting within a Template）</a></li>
+<li><a href="#template中的名称决议法（name-resolution-within-a-template）">Template中的名称决议法（Name Resolution within a Template）</a></li>
+<li><a href="#member-function的实例化行为（member-function-instantiation）">Member Function的实例化行为（Member Function Instantiation）</a></li>
+</ul>
+</li>
+<li><a href="#7.2-异常处理（exception-handing）">7.2 异常处理（Exception Handing）</a><ul>
+<li><a href="#exception-handing快速检阅">Exception Handing快速检阅</a></li>
+<li><a href="#对exception-handing的支持">对Exception Handing的支持</a></li>
+<li><a href="#决定throw是否发生在一个try区段中">决定throw是否发生在一个try区段中</a></li>
+<li><a href="#将exception的类型和每一个catch子句的类型做比较">将exception的类型和每一个catch子句的类型做比较</a></li>
+<li><a href="#当一个实际对象在程序执行时被抛出，会发生什么事？">当一个实际对象在程序执行时被抛出，会发生什么事？</a></li>
+</ul>
+</li>
+<li><a href="#7.3-执行期类型识别（runtime-type-identification，rtti）">7.3 执行期类型识别（Runtime Type Identification，RTTI）</a><ul>
+<li><a href="#type-safe-downcast（保证安全的向下转换操作）">Type-Safe Downcast（保证安全的向下转换操作）</a></li>
+<li><a href="#type-safe-dynamic-cast（保证安全的动态转换）">Type-Safe Dynamic Cast（保证安全的动态转换）</a></li>
+<li><a href="#reference并不是pointers">Reference并不是Pointers</a></li>
+<li><a href="#typeid运算符">Typeid运算符</a></li>
+</ul>
+</li>
+<li><a href="#7.4-效率有了，弹性呢？">7.4 效率有了，弹性呢？</a><ul>
+<li><a href="#动态共享函数库（dynamic-shared-libraries）">动态共享函数库（Dynamic Shared Libraries）</a></li>
+<li><a href="#共享内存（shared-memory）">共享内存（Shared Memory）</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li>有三个著名的C++语言扩充性质，它们都会影响C++对象。分别是<font color="red">template</font>、<font color="red">exception handing（<strong>EH</strong>）</font>和<font color="red">runtime type identification（<strong>RTTI</strong>）</font>（RTTI可以想象成EH的一个副作用）。</li>
 </ul>
 <h4 id="7-1-Template"><a href="#7-1-Template" class="headerlink" title="7.1 Template"></a>7.1 Template</h4><ul>
@@ -1613,7 +1677,28 @@
       
         
           
-            <ul>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#6.1-对象的构造和析构（object-construction-and-destruction）">6.1 对象的构造和析构（Object Construction and Destruction）</a><ul>
+<li><a href="#全局对象（global-objects）">全局对象（Global Objects）</a></li>
+<li><a href="#局部静态对象（local-static-objects）">局部静态对象（Local Static Objects）</a></li>
+<li><a href="#对象数组（array-of-objects）">对象数组（Array of Objects）</a></li>
+<li><a href="#default-constructors和数组">Default Constructors和数组</a></li>
+</ul>
+</li>
+<li><a href="#6.2-new和delete运算符">6.2 new和delete运算符</a><ul>
+<li><a href="#针对数组的new语意">针对数组的new语意</a></li>
+<li><a href="#placement-operator-new的语意">Placement Operator new的语意</a></li>
+</ul>
+</li>
+<li><a href="#6.3-临时性对象（temporary-objects）">6.3 临时性对象（Temporary Objects）</a><ul>
+<li><a href="#临时性对象的迷思（神话、传说）">临时性对象的迷思（神话、传说）</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li><p>有个简单的式子：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (yy == xx.getValue())) ...</span><br></pre></td></tr></table></figure>
 
@@ -1941,7 +2026,30 @@
       
         
           
-            <h5 id="纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）"><a href="#纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）" class="headerlink" title="纯虚函数的存在（Presence of a Pure Virtal Function）"></a>纯虚函数的存在（Presence of a Pure Virtal Function）</h5><ul>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#纯虚函数的存在（presence-of-a-pure-virtal-function）">纯虚函数的存在（Presence of a Pure Virtal Function）</a></li>
+<li><a href="#纯虚函数的存在(presence-of-a-pure-virtual-function)">纯虚函数的存在(Presence of a Pure Virtual Function)</a></li>
+<li><a href="#虚拟规格的存在（presence-of-a-virtual-specification）">虚拟规格的存在（Presence of a Virtual Specification）</a></li>
+<li><a href="#虚拟规格中const的存在">虚拟规格中const的存在</a></li>
+<li><a href="#重新考虑class的声明">重新考虑class的声明</a></li>
+<li><a href="#5.1-”无继承”情况下的对象构造">5.1 ”无继承”情况下的对象构造</a><ul>
+<li><a href="#抽象数据类型（abstract-data-type）">抽象数据类型（Abstract Data Type）</a></li>
+<li><a href="#为继承做准备">为继承做准备</a></li>
+</ul>
+</li>
+<li><a href="#5.2-继承体系下的对象构造">5.2 继承体系下的对象构造</a><ul>
+<li><a href="#虚拟继承（virtual-inheritance）">虚拟继承（Virtual Inheritance）</a></li>
+<li><a href="#vptr初始化语意学（the-semantics-of-the-vptr-initialization）">vptr初始化语意学（The Semantics of the vptr Initialization）</a></li>
+</ul>
+</li>
+<li><a href="#5.3-对象复制语意学（object-copy-semantics）">5.3 对象复制语意学（Object Copy Semantics）</a></li>
+<li><a href="#5.4-对象的效能（object-efficiency）">5.4 对象的效能（Object Efficiency）</a></li>
+<li><a href="#5.5-析构语意学（semantics-of-destruction）">5.5 析构语意学（Semantics of Destruction）</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h5 id="纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）"><a href="#纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）" class="headerlink" title="纯虚函数的存在（Presence of a Pure Virtal Function）"></a>纯虚函数的存在（Presence of a Pure Virtal Function）</h5><ul>
 <li><p>考虑abstract base class声明:</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Abstract_base</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~Abstract_base() = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">interface</span><span class="params">()</span> <span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">mumble</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> _mumble; &#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">char</span> *_mumble;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
@@ -2045,7 +2153,7 @@
 <p>  。。。。。。。。</p>
 </li>
 </ul>
-<h5 id="虚拟继承-Virtual-Inheritance"><a href="#虚拟继承-Virtual-Inheritance" class="headerlink" title="虚拟继承(Virtual Inheritance)"></a>虚拟继承(Virtual Inheritance)</h5><ul>
+<h5 id="虚拟继承（Virtual-Inheritance）"><a href="#虚拟继承（Virtual-Inheritance）" class="headerlink" title="虚拟继承（Virtual Inheritance）"></a>虚拟继承（Virtual Inheritance）</h5><ul>
 <li><p>考虑下面虚拟继承，继承自Point：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> Point &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Point3d(<span class="keyword">float</span> x = <span class="number">0.0</span>, <span class="keyword">float</span> y = <span class="number">0.0</span>, <span class="keyword">float</span> z = <span class="number">0.0</span>) : Point(x, y), _z(z) &#123;&#125;</span><br><span class="line">    Point3d(<span class="keyword">const</span> Point3d &amp;rhs) : Point(rhs), _z(rhs._z) &#123;&#125;</span><br><span class="line">    ~Point3();</span><br><span class="line">    Point3d&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Point3d&amp;);</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">float</span> <span class="title">z</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> _z; &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
@@ -2095,7 +2203,7 @@
 </ol>
 </li>
 </ul>
-<h4 id="5-3-对象复制语意学-Object-Copy-Semantics"><a href="#5-3-对象复制语意学-Object-Copy-Semantics" class="headerlink" title="5.3 对象复制语意学(Object Copy Semantics)"></a>5.3 对象复制语意学(Object Copy Semantics)</h4><ul>
+<h4 id="5-3-对象复制语意学（Object-Copy-Semantics）"><a href="#5-3-对象复制语意学（Object-Copy-Semantics）" class="headerlink" title="5.3 对象复制语意学（Object Copy Semantics）"></a>5.3 对象复制语意学（Object Copy Semantics）</h4><ul>
 <li><p>当我们设计一个class，并以一个class object指定给另一个class object时，我们有三种<font color="red">选择</font>：</p>
 <ol>
 <li><p><strong>什么都不做，施行默认行为</strong>。</p>
@@ -2127,10 +2235,10 @@
 <p>  它不能够省略subobjects的多重拷贝，但可以保证语意。建议尽可能不要允许一个virtual base class的拷贝操作，甚至一个比较奇怪的建议：不要在任何virtual base class中声明数据。</p>
 </li>
 </ul>
-<h4 id="5-4-对象的效能-Object-Efficiency"><a href="#5-4-对象的效能-Object-Efficiency" class="headerlink" title="5.4 对象的效能(Object Efficiency)"></a>5.4 对象的效能(Object Efficiency)</h4><ul>
+<h4 id="5-4-对象的效能（Object-Efficiency）"><a href="#5-4-对象的效能（Object-Efficiency）" class="headerlink" title="5.4 对象的效能（Object Efficiency）"></a>5.4 对象的效能（Object Efficiency）</h4><ul>
 <li>测试。</li>
 </ul>
-<h4 id="5-5-析构语意学-Semantics-of-Destruction"><a href="#5-5-析构语意学-Semantics-of-Destruction" class="headerlink" title="5.5 析构语意学(Semantics of Destruction)"></a>5.5 析构语意学(Semantics of Destruction)</h4><ul>
+<h4 id="5-5-析构语意学（Semantics-of-Destruction）"><a href="#5-5-析构语意学（Semantics-of-Destruction）" class="headerlink" title="5.5 析构语意学（Semantics of Destruction）"></a>5.5 析构语意学（Semantics of Destruction）</h4><ul>
 <li><p>如果class没有定义destructor，那么只有在class内含的member object（抑或是class的base class）拥有destructor的情况下，编译器才会自动合成一个来。当从父类派生子类（即使是一种虚拟派生关系）时，如果没有声明一个estructor，编译器就没有必要合成一个destructor。没有任何理由说在delete一个对象之前得先讲内容清除干净。在一个对象的生命之前，没有任何class使用层面的程序操作是必要的，因此也就不需要要给destructor。  </p>
 </li>
 <li><p>一个由程序员定义的<font color="red"><strong>destructor被扩展的方式类似constructors被扩展的方式</strong></font>，但顺序相反：</p>
@@ -2292,7 +2400,38 @@
       
         
           
-            <ul>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#4.1-member的各种调用方式">4.1 Member的各种调用方式</a><ul>
+<li><a href="#nonstatic-member-functions（非静态成员函数）">Nonstatic Member Functions（非静态成员函数）</a><ul>
+<li><a href="#名称的特殊处理（name-mangling）">名称的特殊处理（Name Mangling）</a></li>
+</ul>
+</li>
+<li><a href="#virtual-member-functions（虚拟成员函数）">Virtual Member Functions（虚拟成员函数）</a></li>
+<li><a href="#static-member-functions（静态成员函数）">Static Member Functions（静态成员函数）</a></li>
+</ul>
+</li>
+<li><a href="#4.2-virtuar-member-functions（虚拟成员函数）">4.2 Virtuar Member Functions（虚拟成员函数）</a><ul>
+<li><a href="#多重继承下的virtual-functions">多重继承下的Virtual Functions</a></li>
+<li><a href="#虚拟继承下的virtual-functinos">虚拟继承下的Virtual Functinos</a></li>
+</ul>
+</li>
+<li><a href="#4.3-函数的效能">4.3 函数的效能</a></li>
+<li><a href="#4.4-指向member-function的指针（pointer-tomember-functions）">4.4 指向Member Function的指针（Pointer-toMember Functions）</a><ul>
+<li><a href="#支持“指向virtual-member-functions”的指针">支持“指向Virtual Member Functions”的指针</a></li>
+<li><a href="#在多重继承之下，指向member-functions的指针">在多重继承之下，指向Member Functions的指针</a></li>
+<li><a href="#”指向member-functions之指针的效率">”指向Member Functions之指针的效率</a></li>
+</ul>
+</li>
+<li><a href="#4.5-inline-functions">4.5 Inline Functions</a><ul>
+<li><a href="#形式参数（formal-arguments）">形式参数（Formal Arguments）</a></li>
+<li><a href="#局部变量（local-variables）">局部变量（Local Variables）</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li><p>看以下代码,会发生什么:</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Point3d obj;</span><br><span class="line">POint3d *ptr = &amp;obj;</span><br><span class="line">obj.normalize();</span><br><span class="line">ptr-&gt;normalize();</span><br><span class="line"></span><br><span class="line"><span class="comment">// declaretion</span></span><br><span class="line">Point3d Point3d::normalie() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">register</span> <span class="keyword">float</span> mag = magnitude();</span><br><span class="line">    Point3d normal;</span><br><span class="line">    normal._x = _x/mag;</span><br><span class="line">    normal._y = _y/mag;</span><br><span class="line">    normal._z = _z/mag;</span><br><span class="line">    <span class="keyword">return</span> normal;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">float</span> Point3d::magnitude() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sqrt</span>(_x * _x + _y * _y + _z * _z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -2744,7 +2883,31 @@
       
         
           
-            <ul>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#3.1-data-member的绑定（the-binding-of-a-data-member）">3.1 Data Member的绑定（The Binding of a Data Member）</a></li>
+<li><a href="#3.2-data-member的布局（data-member-layout）">3.2 Data Member的布局（Data Member Layout）</a></li>
+<li><a href="#3.3-data-member的存取">3.3 Data Member的存取</a><ul>
+<li><a href="#static-data-members">Static Data Members</a></li>
+<li><a href="#nonstatic-data-members">Nonstatic Data Members</a></li>
+</ul>
+</li>
+<li><a href="#3.4-“继承”于data-member">3.4 “继承”于Data Member</a><ul>
+<li><a href="#只要继承不要多态（inheritance-without-polymorphism）">只要继承不要多态（Inheritance without Polymorphism）</a></li>
+<li><a href="#加上多态（adding-polymorphism）">加上多态（Adding Polymorphism）</a></li>
+<li><a href="#多重继承（multiple-inheritance）">多重继承（Multiple Inheritance）</a></li>
+<li><a href="#虚拟继承（virtual-inheritance）">虚拟继承（Virtual Inheritance）</a></li>
+</ul>
+</li>
+<li><a href="#3.5-对象成员的效率（object-member-efficiency）">3.5 对象成员的效率（Object Member Efficiency）</a></li>
+<li><a href="#3.6-指向data-members的指针（poniter-to-data-members）">3.6 指向Data Members的指针（Poniter to Data Members）</a><ul>
+<li><a href="#“指向members的指针”的效率问题">“指向Members的指针”的效率问题</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li><p>一个空的class如：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sizeof X == 1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> &#123;</span> &#125;;                    <span class="comment">// sizeof X == 1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Y</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> X &#123;&#125;;  <span class="comment">// sizeof X == 8</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Z</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> X &#123;&#125;;  <span class="comment">// sizeof X == 8</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> :</span> <span class="keyword">public</span> Y, <span class="keyword">public</span> Z &#123;&#125;;<span class="comment">// sizeof X == 12</span></span><br></pre></td></tr></table></figure>
 
@@ -3326,7 +3489,37 @@
       
         
           
-            <ul>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#2.1-default-constructor的构造操作">2.1 Default Constructor的构造操作</a><ul>
+<li><a href="#“带有default-constructor”的member-class-object">“带有Default Constructor”的Member Class Object</a></li>
+<li><a href="#“带有default-constructor”的base-class">“带有Default Constructor”的Base Class</a></li>
+<li><a href="#“带有一个virtual-function”的class">“带有一个Virtual Function”的Class</a></li>
+<li><a href="#“带有一个virtual-base-class”的class">“带有一个Virtual Base Class”的Class</a></li>
+</ul>
+</li>
+<li><a href="#2.2-copy-constructor的构造操作">2.2 Copy Constructor的构造操作</a><ul>
+<li><a href="#default-memberwise-initialization">Default Memberwise Initialization</a></li>
+<li><a href="#bitwise-copy-semantics(位逐次拷贝）">Bitwise Copy Semantics(位逐次拷贝）</a></li>
+<li><a href="#不要bitwise-copy-semantics!">不要Bitwise Copy Semantics!</a></li>
+<li><a href="#重新设定virtual-table的指针">重新设定Virtual Table的指针</a></li>
+<li><a href="#处理virtual-base-class-subobject">处理Virtual Base Class Subobject</a></li>
+</ul>
+</li>
+<li><a href="#2.3-程序转化语义学（program-transformation-semantics）">2.3 程序转化语义学（Program Transformation Semantics）</a><ul>
+<li><a href="#显式的初始化操作（explicit-initialization）">显式的初始化操作（Explicit Initialization）</a></li>
+<li><a href="#参数的初始化（argument-initialization）">参数的初始化（Argument Initialization）</a></li>
+<li><a href="#返回值的初始化（return-value-initialization）">返回值的初始化（Return Value Initialization）</a></li>
+<li><a href="#在使用者层面做优化（optimization-at-the-user-level）">在使用者层面做优化（Optimization at the User Level）</a></li>
+<li><a href="#在编译器层面做优化（optimization-at-the-compiler-level）">在编译器层面做优化（Optimization at the Compiler Level）</a></li>
+<li><a href="#copy-constructor：要还是不要？">Copy Constructor：要还是不要？</a></li>
+</ul>
+</li>
+<li><a href="#2.4-成员们的初始化队伍（member-initialization-list）">2.4 成员们的初始化队伍（Member Initialization List）</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li>关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。</li>
 </ul>
 <h4 id="2-1-Default-Constructor的构造操作"><a href="#2-1-Default-Constructor的构造操作" class="headerlink" title="2.1 Default Constructor的构造操作"></a>2.1 Default Constructor的构造操作</h4><h5 id="“带有Default-Constructor”的Member-Class-Object"><a href="#“带有Default-Constructor”的Member-Class-Object" class="headerlink" title="“带有Default Constructor”的Member Class Object"></a>“带有Default Constructor”的Member Class Object</h5><ul>

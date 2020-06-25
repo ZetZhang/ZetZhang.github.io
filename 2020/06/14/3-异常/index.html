@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="C++增加了exceptions性质后，可能令人不舒服的改变了很多事情。原始指针的使用如今称为高风险行为，资源泄露的机会大增，撰写符合期望的constructors和destructors的难度也大增。程序员特别小心，放置程序在执行时突然中止。可执行文件和程序库变得更大、速度更慢。为什么使用exceptions？答案很简单：exceptions无法被忽视。如果一个函数利用设定状态变量的方式或是利用">
+<meta name="description" content="条款9：利用destuctors避免资源泄露 条款10：在constructors内阻止资源泄露（resource leak） 条款11：禁止异常（exceptions）流出destructors之外 条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异 条款13：以by reference方式捕捉exceptions 条款14：明智运用excepti">
 <meta name="keywords" content="C++,More Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="3 异常">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/3-异常/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="C++增加了exceptions性质后，可能令人不舒服的改变了很多事情。原始指针的使用如今称为高风险行为，资源泄露的机会大增，撰写符合期望的constructors和destructors的难度也大增。程序员特别小心，放置程序在执行时突然中止。可执行文件和程序库变得更大、速度更慢。为什么使用exceptions？答案很简单：exceptions无法被忽视。如果一个函数利用设定状态变量的方式或是利用">
+<meta property="og:description" content="条款9：利用destuctors避免资源泄露 条款10：在constructors内阻止资源泄露（resource leak） 条款11：禁止异常（exceptions）流出destructors之外 条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异 条款13：以by reference方式捕捉exceptions 条款14：明智运用excepti">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T05:54:36.483Z">
+<meta property="og:updated_time" content="2020-06-25T04:24:50.983Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="3 异常">
-<meta name="twitter:description" content="C++增加了exceptions性质后，可能令人不舒服的改变了很多事情。原始指针的使用如今称为高风险行为，资源泄露的机会大增，撰写符合期望的constructors和destructors的难度也大增。程序员特别小心，放置程序在执行时突然中止。可执行文件和程序库变得更大、速度更慢。为什么使用exceptions？答案很简单：exceptions无法被忽视。如果一个函数利用设定状态变量的方式或是利用">
+<meta name="twitter:description" content="条款9：利用destuctors避免资源泄露 条款10：在constructors内阻止资源泄露（resource leak） 条款11：禁止异常（exceptions）流出destructors之外 条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异 条款13：以by reference方式捕捉exceptions 条款14：明智运用excepti">
 
 
 
@@ -352,7 +352,19 @@
       
 
       
-        <p>C++增加了exceptions性质后，可能令人不舒服的改变了很多事情。原始指针的使用如今称为高风险行为，资源泄露的机会大增，撰写符合期望的constructors和destructors的难度也大增。程序员特别小心，放置程序在执行时突然中止。可执行文件和程序库变得更大、速度更慢。<br>为什么使用exceptions？答案很简单：exceptions无法被忽视。如果一个函数利用<strong>设定状态变量</strong>的方式或是利用<strong>返回错误码</strong>的方式发出一个异常，无法保证此函数的调用者会检查那个变量或检验那个错误码。于是程序不断执行，远离错误发生地点。但如果函数以抛出exception的方式发出异常信号，而该exception未被捕捉，程序的执行立刻中止。<br>C只有<font color="red"><code>setjmp</code></font>和<font color="red"><code>longjmp</code></font>才能近似这样的行为。但longjmp在C++中有缺陷：当它调整栈（stack）的时候，无法调用局部（local）对象的destructors。C++很依赖destructors被调用。</p>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款9：利用destuctors避免资源泄露">条款9：利用destuctors避免资源泄露</a></li>
+<li><a href="#条款10：在constructors内阻止资源泄露（resource-leak）">条款10：在constructors内阻止资源泄露（resource leak）</a></li>
+<li><a href="#条款11：禁止异常（exceptions）流出destructors之外">条款11：禁止异常（exceptions）流出destructors之外</a></li>
+<li><a href="#条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异">条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异</a></li>
+<li><a href="#条款13：以by-reference方式捕捉exceptions">条款13：以by reference方式捕捉exceptions</a></li>
+<li><a href="#条款14：明智运用exception-specifications">条款14：明智运用exception specifications</a></li>
+<li><a href="#条款15：了解异常处理（exception-handing）的成本">条款15：了解异常处理（exception handing）的成本</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>C++增加了exceptions性质后，可能令人不舒服的改变了很多事情。原始指针的使用如今称为高风险行为，资源泄露的机会大增，撰写符合期望的constructors和destructors的难度也大增。程序员特别小心，放置程序在执行时突然中止。可执行文件和程序库变得更大、速度更慢。<br>为什么使用exceptions？答案很简单：exceptions无法被忽视。如果一个函数利用<strong>设定状态变量</strong>的方式或是利用<strong>返回错误码</strong>的方式发出一个异常，无法保证此函数的调用者会检查那个变量或检验那个错误码。于是程序不断执行，远离错误发生地点。但如果函数以抛出exception的方式发出异常信号，而该exception未被捕捉，程序的执行立刻中止。<br>C只有<font color="red"><code>setjmp</code></font>和<font color="red"><code>longjmp</code></font>才能近似这样的行为。但longjmp在C++中有缺陷：当它调整栈（stack）的时候，无法调用局部（local）对象的destructors。C++很依赖destructors被调用。</p>
 <h4 id="条款9：利用destuctors避免资源泄露"><a href="#条款9：利用destuctors避免资源泄露" class="headerlink" title="条款9：利用destuctors避免资源泄露"></a>条款9：利用destuctors避免资源泄露</h4><ol>
 <li><p>有个例子，加入你现在要写一个软件。收养中心每天会产生一个文件，其中有它所安排的当天收养个案，你的工作是写程序读文件，然后为每个个案做适当处理：</p>
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ALA: abstract base class</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ALA</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">processAdoption</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Puppy</span> :</span> <span class="keyword">public</span> ALA</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">processAdoption</span><span class="params">()</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kitten</span> :</span> <span class="keyword">public</span> ALA</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">processAdoption</span><span class="params">()</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">ALA* <span class="title">readALA</span><span class="params">(istream &amp;s)</span></span>;</span><br><span class="line"><span class="comment">// 程序核心大致</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">processAdoptions</span><span class="params">(istream &amp;dataSource)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 如果还有数据</span></span><br><span class="line">    <span class="keyword">while</span> (dataSource)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 取出下一只动物</span></span><br><span class="line">        ALA *pa = readALA(dataSource);</span><br><span class="line">        <span class="comment">// 处理收养事宜</span></span><br><span class="line">        pa-&gt;processAdoption();</span><br><span class="line">        <span class="comment">// 删除readALA返回的对象</span></span><br><span class="line">        <span class="keyword">delete</span> pa;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

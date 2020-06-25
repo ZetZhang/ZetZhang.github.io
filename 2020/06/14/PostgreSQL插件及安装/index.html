@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="PostgreSQL源码目录简介contrib目录下的第三方插件 adminpack：一些管理函数 auth_delay：认证失败后延迟报异常，防止暴力破解 auto_explain：将超过指定执行时间的SQL执行计划输出到日志 btree_gin：gin索引方法的btree操作符扩展（某些情况下“多列gin组合索引”比“锁哥btree单列索引”的bitmap anding更高效 chkpass：">
+<meta name="description" content="PostgreSQL源码目录简介 contrib目录下的第三方插件 PostgreSQL数据库结构介绍 PostgreSQL第三方插件安装     PostgreSQL源码目录简介contrib目录下的第三方插件 adminpack：一些管理函数 auth_delay：认证失败后延迟报异常，防止暴力破解 auto_explain：将超过指定执行时间的SQL执行计划输出到日志 btree_gi">
 <meta name="keywords" content="Config,PostgreSQL,Database">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PostgreSQL插件及安装">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/PostgreSQL插件及安装/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="PostgreSQL源码目录简介contrib目录下的第三方插件 adminpack：一些管理函数 auth_delay：认证失败后延迟报异常，防止暴力破解 auto_explain：将超过指定执行时间的SQL执行计划输出到日志 btree_gin：gin索引方法的btree操作符扩展（某些情况下“多列gin组合索引”比“锁哥btree单列索引”的bitmap anding更高效 chkpass：">
+<meta property="og:description" content="PostgreSQL源码目录简介 contrib目录下的第三方插件 PostgreSQL数据库结构介绍 PostgreSQL第三方插件安装     PostgreSQL源码目录简介contrib目录下的第三方插件 adminpack：一些管理函数 auth_delay：认证失败后延迟报异常，防止暴力破解 auto_explain：将超过指定执行时间的SQL执行计划输出到日志 btree_gi">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:10:09.903Z">
+<meta property="og:updated_time" content="2020-06-25T07:22:02.374Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PostgreSQL插件及安装">
-<meta name="twitter:description" content="PostgreSQL源码目录简介contrib目录下的第三方插件 adminpack：一些管理函数 auth_delay：认证失败后延迟报异常，防止暴力破解 auto_explain：将超过指定执行时间的SQL执行计划输出到日志 btree_gin：gin索引方法的btree操作符扩展（某些情况下“多列gin组合索引”比“锁哥btree单列索引”的bitmap anding更高效 chkpass：">
+<meta name="twitter:description" content="PostgreSQL源码目录简介 contrib目录下的第三方插件 PostgreSQL数据库结构介绍 PostgreSQL第三方插件安装     PostgreSQL源码目录简介contrib目录下的第三方插件 adminpack：一些管理函数 auth_delay：认证失败后延迟报异常，防止暴力破解 auto_explain：将超过指定执行时间的SQL执行计划输出到日志 btree_gi">
 
 
 
@@ -352,7 +352,18 @@
       
 
       
-        <h3 id="PostgreSQL源码目录简介"><a href="#PostgreSQL源码目录简介" class="headerlink" title="PostgreSQL源码目录简介"></a>PostgreSQL源码目录简介</h3><h4 id="contrib目录下的第三方插件"><a href="#contrib目录下的第三方插件" class="headerlink" title="contrib目录下的第三方插件"></a>contrib目录下的第三方插件</h4><ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#postgresql源码目录简介">PostgreSQL源码目录简介</a><ul>
+<li><a href="#contrib目录下的第三方插件">contrib目录下的第三方插件</a></li>
+<li><a href="#postgresql数据库结构介绍">PostgreSQL数据库结构介绍</a></li>
+<li><a href="#postgresql第三方插件安装">PostgreSQL第三方插件安装</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<h3 id="PostgreSQL源码目录简介"><a href="#PostgreSQL源码目录简介" class="headerlink" title="PostgreSQL源码目录简介"></a>PostgreSQL源码目录简介</h3><h4 id="contrib目录下的第三方插件"><a href="#contrib目录下的第三方插件" class="headerlink" title="contrib目录下的第三方插件"></a>contrib目录下的第三方插件</h4><ul>
 <li>adminpack：一些管理函数</li>
 <li>auth_delay：认证失败后延迟报异常，防止暴力破解</li>
 <li>auto_explain：将超过指定执行时间的SQL执行计划输出到日志</li>

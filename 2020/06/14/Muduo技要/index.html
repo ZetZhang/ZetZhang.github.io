@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A | grep range # 查看端口范围  ntptime # 查看ntp时间  ntpq -pn # ntp同步情况，service ntp start启动  nc # netcat $ nc ip p">
+<meta name="description" content="性能指标 test 正确使用TCP read 消息格式 网络神话 Reactor和Proactor 线程分配 多线程的性能优势   C++编译链接模型精要 一些记录 一些名词 C++设计      性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A |">
 <meta name="keywords" content="C++,Linux,Muduo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Muduo技要">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/Muduo技要/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A | grep range # 查看端口范围  ntptime # 查看ntp时间  ntpq -pn # ntp同步情况，service ntp start启动  nc # netcat $ nc ip p">
+<meta property="og:description" content="性能指标 test 正确使用TCP read 消息格式 网络神话 Reactor和Proactor 线程分配 多线程的性能优势   C++编译链接模型精要 一些记录 一些名词 C++设计      性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A |">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T07:54:16.776Z">
+<meta property="og:updated_time" content="2020-06-25T07:20:28.940Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Muduo技要">
-<meta name="twitter:description" content="性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A | grep range # 查看端口范围  ntptime # 查看ntp时间  ntpq -pn # ntp同步情况，service ntp start启动  nc # netcat $ nc ip p">
+<meta name="twitter:description" content="性能指标 test 正确使用TCP read 消息格式 网络神话 Reactor和Proactor 线程分配 多线程的性能优势   C++编译链接模型精要 一些记录 一些名词 C++设计      性能指标 带宽MB/s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率  test sysctl -A | grep tcp.*mem # 查看网络缓冲区  sysctl -A |">
 
 
 
@@ -352,7 +352,30 @@
       
 
       
-        <h3 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h3><ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#性能指标">性能指标</a></li>
+<li><a href="#test">test</a></li>
+<li><a href="#正确使用tcp">正确使用TCP</a></li>
+<li><a href="#read">read</a></li>
+<li><a href="#消息格式">消息格式</a></li>
+<li><a href="#网络神话">网络神话</a><ul>
+<li><a href="#reactor和proactor">Reactor和Proactor</a></li>
+<li><a href="#线程分配">线程分配</a></li>
+<li><a href="#多线程的性能优势">多线程的性能优势</a></li>
+</ul>
+</li>
+<li><a href="#c++编译链接模型精要">C++编译链接模型精要</a><ul>
+<li><a href="#一些记录">一些记录</a></li>
+<li><a href="#一些名词">一些名词</a></li>
+<li><a href="#c++设计">C++设计</a></li>
+<li><a href="#"></a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<h3 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h3><ul>
 <li>带宽MB/s，关心消息量，不管消息数</li>
 <li>吞吐量QPS，TPS</li>
 <li>延迟</li>

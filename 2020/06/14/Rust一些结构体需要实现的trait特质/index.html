@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="deriving限制一些特定trait Clone Copy Debug Default Eq Hash Ord PartialEq PartialOrd  其他一些实现trait 检查相等问题需要实现core::cmp::PartialEq的trait 构造和析构可以实现new方法和Drop trait的drop方法 调用函数可以重载trait系统，有三个，分别是Fn、FnMut和FnOnce">
+<meta name="description" content="deriving限制一些特定trait 其他一些实现trait macro_rules片段分类符句法含义： 对于原变量后面的记号有额外的规则： 宏系统完全不处理解析模糊 #[macro_use]、#[macro_export]、#[no_link]       deriving限制一些特定trait Clone Copy Debug Default Eq Hash Ord PartialEq">
 <meta name="keywords" content="Rust">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rust一些结构体需要实现的trait特质">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/Rust一些结构体需要实现的trait特质/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="deriving限制一些特定trait Clone Copy Debug Default Eq Hash Ord PartialEq PartialOrd  其他一些实现trait 检查相等问题需要实现core::cmp::PartialEq的trait 构造和析构可以实现new方法和Drop trait的drop方法 调用函数可以重载trait系统，有三个，分别是Fn、FnMut和FnOnce">
+<meta property="og:description" content="deriving限制一些特定trait 其他一些实现trait macro_rules片段分类符句法含义： 对于原变量后面的记号有额外的规则： 宏系统完全不处理解析模糊 #[macro_use]、#[macro_export]、#[no_link]       deriving限制一些特定trait Clone Copy Debug Default Eq Hash Ord PartialEq">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:17:51.323Z">
+<meta property="og:updated_time" content="2020-06-25T07:30:20.197Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rust一些结构体需要实现的trait特质">
-<meta name="twitter:description" content="deriving限制一些特定trait Clone Copy Debug Default Eq Hash Ord PartialEq PartialOrd  其他一些实现trait 检查相等问题需要实现core::cmp::PartialEq的trait 构造和析构可以实现new方法和Drop trait的drop方法 调用函数可以重载trait系统，有三个，分别是Fn、FnMut和FnOnce">
+<meta name="twitter:description" content="deriving限制一些特定trait 其他一些实现trait macro_rules片段分类符句法含义： 对于原变量后面的记号有额外的规则： 宏系统完全不处理解析模糊 #[macro_use]、#[macro_export]、#[no_link]       deriving限制一些特定trait Clone Copy Debug Default Eq Hash Ord PartialEq">
 
 
 
@@ -352,7 +352,22 @@
       
 
       
-        <h3 id="deriving限制一些特定trait"><a href="#deriving限制一些特定trait" class="headerlink" title="deriving限制一些特定trait"></a>deriving限制一些特定trait</h3><ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#deriving限制一些特定trait">deriving限制一些特定trait</a></li>
+<li><a href="#其他一些实现trait">其他一些实现trait</a></li>
+<li><a href="#macro_rules片段分类符句法含义：">macro_rules片段分类符句法含义：</a><ul>
+<li><a href="#对于原变量后面的记号有额外的规则：">对于原变量后面的记号有额外的规则：</a></li>
+<li><a href="#宏系统完全不处理解析模糊">宏系统完全不处理解析模糊</a></li>
+<li><a href="##[macro_use]、#[macro_export]、#[no_link]">#[macro_use]、#[macro_export]、#[no_link]</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+
+<!-- vim-markdown-toc -->
+<h3 id="deriving限制一些特定trait"><a href="#deriving限制一些特定trait" class="headerlink" title="deriving限制一些特定trait"></a>deriving限制一些特定trait</h3><ul>
 <li><code>Clone</code></li>
 <li><code>Copy</code></li>
 <li><code>Debug</code></li>
@@ -395,7 +410,10 @@
 <li>pat变量必须后跟任意一个：=&gt; , = | if in</li>
 <li>其他变量可以跟任何记号</li>
 </ul>
-<h4 id="宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：-I-i-ident-E-e-expr"><a href="#宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：-I-i-ident-E-e-expr" class="headerlink" title="宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：$(I $i:ident)* E $e:expr"></a>宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：$(I $i:ident)* E $e:expr</h4><h4 id="macro-use-、-macro-export-、-no-link"><a href="#macro-use-、-macro-export-、-no-link" class="headerlink" title="#[macro_use]、#[macro_export]、#[no_link]"></a>#[macro_use]、#[macro_export]、#[no_link]</h4>
+<h4 id="宏系统完全不处理解析模糊"><a href="#宏系统完全不处理解析模糊" class="headerlink" title="宏系统完全不处理解析模糊"></a>宏系统完全不处理解析模糊</h4><ul>
+<li>通过在某些记号前面加上记号可以解决问题，如：<code>$(I $i:ident)* E $e:expr</code></li>
+</ul>
+<h4 id="macro-use-、-macro-export-、-no-link"><a href="#macro-use-、-macro-export-、-no-link" class="headerlink" title="#[macro_use]、#[macro_export]、#[no_link]"></a>#[macro_use]、#[macro_export]、#[no_link]</h4>
       
     </div>
     
@@ -571,7 +589,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#deriving限制一些特定trait"><span class="nav-number">1.</span> <span class="nav-text">deriving限制一些特定trait</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他一些实现trait"><span class="nav-number">2.</span> <span class="nav-text">其他一些实现trait</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#macro-rules片段分类符句法含义："><span class="nav-number">3.</span> <span class="nav-text">macro_rules片段分类符句法含义：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对于原变量后面的记号有额外的规则："><span class="nav-number">3.1.</span> <span class="nav-text">对于原变量后面的记号有额外的规则：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：-I-i-ident-E-e-expr"><span class="nav-number">3.2.</span> <span class="nav-text">宏系统完全不处理解析模糊。通过在某些记号前面加上记号可以解决问题，如：$(I $i:ident)* E $e:expr</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#macro-use-、-macro-export-、-no-link"><span class="nav-number">3.3.</span> <span class="nav-text">#[macro_use]、#[macro_export]、#[no_link]</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#deriving限制一些特定trait"><span class="nav-number">1.</span> <span class="nav-text">deriving限制一些特定trait</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他一些实现trait"><span class="nav-number">2.</span> <span class="nav-text">其他一些实现trait</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#macro-rules片段分类符句法含义："><span class="nav-number">3.</span> <span class="nav-text">macro_rules片段分类符句法含义：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对于原变量后面的记号有额外的规则："><span class="nav-number">3.1.</span> <span class="nav-text">对于原变量后面的记号有额外的规则：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#宏系统完全不处理解析模糊"><span class="nav-number">3.2.</span> <span class="nav-text">宏系统完全不处理解析模糊</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#macro-use-、-macro-export-、-no-link"><span class="nav-number">3.3.</span> <span class="nav-text">#[macro_use]、#[macro_export]、#[no_link]</span></a></li></ol></li></ol></div>
             
 
           </div>

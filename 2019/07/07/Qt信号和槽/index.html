@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是对象间通信的机制，由Qt的元对象系统的支持才能实现。信号(Signal)会在某种特定情况或动作下被触发。就是特殊情况下被发射的事件，而GUI程序设计的主要内容就是对界面上各组件信号的响应。槽(Slot)则等同于接收并处理信号的函数。它跟一般的C++">
+<meta name="description" content="1.connect函数的不同参数形式 2.使用sender获得信号发送者 3.自定义信号及其使用 4.关于信号和槽的使用上的规则   信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是对象间通信的机制，由Qt的元对象系统的支持才能实现。信号(Signal)会在某种特定情况或动作下被触发。就是">
 <meta name="keywords" content="C++,Qt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Qt信号和槽">
 <meta property="og:url" content="http://yoursite.com/2019/07/07/Qt信号和槽/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是对象间通信的机制，由Qt的元对象系统的支持才能实现。信号(Signal)会在某种特定情况或动作下被触发。就是特殊情况下被发射的事件，而GUI程序设计的主要内容就是对界面上各组件信号的响应。槽(Slot)则等同于接收并处理信号的函数。它跟一般的C++">
+<meta property="og:description" content="1.connect函数的不同参数形式 2.使用sender获得信号发送者 3.自定义信号及其使用 4.关于信号和槽的使用上的规则   信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是对象间通信的机制，由Qt的元对象系统的支持才能实现。信号(Signal)会在某种特定情况或动作下被触发。就是">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-12-07T08:14:28.282Z">
+<meta property="og:updated_time" content="2020-06-25T07:27:12.834Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qt信号和槽">
-<meta name="twitter:description" content="信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是对象间通信的机制，由Qt的元对象系统的支持才能实现。信号(Signal)会在某种特定情况或动作下被触发。就是特殊情况下被发射的事件，而GUI程序设计的主要内容就是对界面上各组件信号的响应。槽(Slot)则等同于接收并处理信号的函数。它跟一般的C++">
+<meta name="twitter:description" content="1.connect函数的不同参数形式 2.使用sender获得信号发送者 3.自定义信号及其使用 4.关于信号和槽的使用上的规则   信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是对象间通信的机制，由Qt的元对象系统的支持才能实现。信号(Signal)会在某种特定情况或动作下被触发。就是">
 
 
 
@@ -352,9 +352,18 @@
       
 
       
-        <p>信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是<font color="blue">对象间通信</font>的机制，由Qt的元对象系统的支持才能实现。<br><font color="red">信号(Signal)</font>会在某种特定情况或动作下被触发。就是特殊情况下被发射的事件，而GUI程序设计的主要内容就是对界面上各组件信号的响应。<br><font color="red">槽(Slot)</font>则等同于接收并处理信号的函数。它跟一般的C++函数是一样的，可以直接被调用。但槽函数与普通函数不同的是，槽函数与一个信号关联，当信号被发射时，关联的槽函数会自动执行。<br>对于这种对象间通信，Qt隐藏了复杂的底层实现。Qt的信号与槽机制类似于“事件——响应”，但更灵活。  </p>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#1.`connect`函数的不同参数形式">1.<code>connect</code>函数的不同参数形式</a></li>
+<li><a href="#2.使用`sender`获得信号发送者">2.使用<code>sender</code>获得信号发送者</a></li>
+<li><a href="#3.自定义信号及其使用">3.自定义信号及其使用</a></li>
+<li><a href="#4.关于信号和槽的使用上的规则">4.关于信号和槽的使用上的规则</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是<font color="blue">对象间通信</font>的机制，由Qt的元对象系统的支持才能实现。<br><font color="red">信号(Signal)</font>会在某种特定情况或动作下被触发。就是特殊情况下被发射的事件，而GUI程序设计的主要内容就是对界面上各组件信号的响应。<br><font color="red">槽(Slot)</font>则等同于接收并处理信号的函数。它跟一般的C++函数是一样的，可以直接被调用。但槽函数与普通函数不同的是，槽函数与一个信号关联，当信号被发射时，关联的槽函数会自动执行。<br>对于这种对象间通信，Qt隐藏了复杂的底层实现。Qt的信号与槽机制类似于“事件——响应”，但更灵活。  </p>
 <hr>
-<h2 id="1-connect-函数的不同参数形式"><a href="#1-connect-函数的不同参数形式" class="headerlink" title="1.connect()函数的不同参数形式"></a>1.connect()函数的不同参数形式</h2><ul>
+<h2 id="1-connect函数的不同参数形式"><a href="#1-connect函数的不同参数形式" class="headerlink" title="1.connect函数的不同参数形式"></a>1.<code>connect</code>函数的不同参数形式</h2><ul>
 <li><code>QObject::connect()</code>函数多重函数形式，一种参数原型是：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/×</span><br><span class="line">sender是发送信号的对象名称</span><br><span class="line">signal()是信号名称，根据SIGNAL宏展开成相应字符串</span><br><span class="line">receiver是接受信号的对象名称</span><br><span class="line">slot()是槽函数名称，根据SLOT宏展开成字符串</span><br><span class="line">×/</span><br><span class="line">QMetaObject::Connection QObject::connect(<span class="keyword">const</span> QObject *sender, <span class="keyword">const</span> <span class="keyword">char</span> *signal, <span class="keyword">const</span> QObject *receiver, <span class="keyword">const</span> <span class="keyword">char</span> *method, Qt::ConnectionType type = Qt::AutoConnection)</span><br></pre></td></tr></table></figure>
 
 </li>
@@ -385,7 +394,7 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 缺省值，在信号触发时自动确定关联方式。如果发射者和接受者在同一线程，使用Qt::DirectConnection；否则使用Qt::QueuedConnection</span></span><br><span class="line">Qt::AutoConnection type;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 信号被发射时槽函数立刻执行</span></span><br><span class="line">Qt::DirectConnection type;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件循环回到接受者线程后执行槽函数</span></span><br><span class="line">Qt::QueuedConnection type;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 与Qt::QueuedConnection相似，但信号线程会阻塞到槽函数执行完毕。</span></span><br><span class="line"><span class="comment">// 注意在同一线程时不用这种方式，会死锁</span></span><br><span class="line">Qt::BlockingQueuedConnection type;</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h2 id="2-使用sender-获得信号发送者"><a href="#2-使用sender-获得信号发送者" class="headerlink" title="2.使用sender()获得信号发送者"></a>2.使用sender()获得信号发送者</h2><p>在槽函数里，使用QObject::sender()可以获取信号发送者的指针，知道发射者的类型就可以将它类型转换成确定的类型。  </p>
+<h2 id="2-使用sender获得信号发送者"><a href="#2-使用sender获得信号发送者" class="headerlink" title="2.使用sender获得信号发送者"></a>2.使用<code>sender</code>获得信号发送者</h2><p>在槽函数里，使用QObject::sender()可以获取信号发送者的指针，知道发射者的类型就可以将它类型转换成确定的类型。  </p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// QSpinBox的valueChanged(int)信号里可以通过sender()和qobject_cast去的发射者指针然后对发射者进行操作：</span></span><br><span class="line">QSpinBox *spinBox = qobject_cast&lt;QSpinBox *&gt;(sender());</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过sender返回并打印Button的text值</span></span><br><span class="line">QObject::connect(button1, &amp;QPushButton::clicked, [<span class="keyword">this</span>]&#123;</span><br><span class="line">    QPushButton *button = qobject_cast&lt;QPushButton *&gt;(sender());</span><br><span class="line">    qDebug() &lt;&lt; button-&gt;text();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
@@ -583,7 +592,7 @@ type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::Connect
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-connect-函数的不同参数形式"><span class="nav-number">1.</span> <span class="nav-text">1.connect()函数的不同参数形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-使用sender-获得信号发送者"><span class="nav-number">2.</span> <span class="nav-text">2.使用sender()获得信号发送者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-自定义信号及其使用"><span class="nav-number">3.</span> <span class="nav-text">3.自定义信号及其使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-关于信号和槽的使用上的规则"><span class="nav-number">4.</span> <span class="nav-text">4.关于信号和槽的使用上的规则</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-connect函数的不同参数形式"><span class="nav-number">1.</span> <span class="nav-text">1.connect函数的不同参数形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-使用sender获得信号发送者"><span class="nav-number">2.</span> <span class="nav-text">2.使用sender获得信号发送者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-自定义信号及其使用"><span class="nav-number">3.</span> <span class="nav-text">3.自定义信号及其使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-关于信号和槽的使用上的规则"><span class="nav-number">4.</span> <span class="nav-text">4.关于信号和槽的使用上的规则</span></a></li></ol></div>
             
 
           </div>

@@ -352,7 +352,21 @@
       
         
           
-            <h4 id="条例16：谨记80-20原则"><a href="#条例16：谨记80-20原则" class="headerlink" title="条例16：谨记80-20原则"></a>条例16：谨记80-20原则</h4><ol>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条例16：谨记80-20原则">条例16：谨记80-20原则</a></li>
+<li><a href="#条款17：考虑使用lazy-evaluation（缓式评估）">条款17：考虑使用lazy evaluation（缓式评估）</a></li>
+<li><a href="#条款18：分期摊还预期的计算成本">条款18：分期摊还预期的计算成本</a></li>
+<li><a href="#条款19：了解临时对象的来源">条款19：了解临时对象的来源</a></li>
+<li><a href="#条款20：协助完成“返回值优化（rvo）“">条款20：协助完成“返回值优化（RVO）“</a></li>
+<li><a href="#条款21：利用重载技术（overload）避免隐式类型转换（implicit-type-conversions）">条款21：利用重载技术（overload）避免隐式类型转换（implicit type conversions）</a></li>
+<li><a href="#条款22：考虑以操作符符合形式（op==）取代其独身形式（op）">条款22：考虑以操作符符合形式（op==）取代其独身形式（op）</a></li>
+<li><a href="#条款23：考虑使用其他程序库">条款23：考虑使用其他程序库</a></li>
+<li><a href="#条款24：了解virtual-functions、multiple-inheritance、virtual-base-classes、runtime-type-identification的成本">条款24：了解virtual functions、multiple inheritance、virtual base classes、runtime type identification的成本</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条例16：谨记80-20原则"><a href="#条例16：谨记80-20原则" class="headerlink" title="条例16：谨记80-20原则"></a>条例16：谨记80-20原则</h4><ol>
 <li>80-20原则说：一个程序80%的资源用于20%的代码身上。因此根据观察或实验来识别出造成你心痛那20%代码，辨别之道就是使用某个程序分析器（program profiler）。</li>
 </ol>
 <h4 id="条款17：考虑使用lazy-evaluation（缓式评估）"><a href="#条款17：考虑使用lazy-evaluation（缓式评估）" class="headerlink" title="条款17：考虑使用lazy evaluation（缓式评估）"></a>条款17：考虑使用lazy evaluation（缓式评估）</h4><ol>
@@ -631,7 +645,19 @@
       
         
           
-            <p>C++增加了exceptions性质后，可能令人不舒服的改变了很多事情。原始指针的使用如今称为高风险行为，资源泄露的机会大增，撰写符合期望的constructors和destructors的难度也大增。程序员特别小心，放置程序在执行时突然中止。可执行文件和程序库变得更大、速度更慢。<br>为什么使用exceptions？答案很简单：exceptions无法被忽视。如果一个函数利用<strong>设定状态变量</strong>的方式或是利用<strong>返回错误码</strong>的方式发出一个异常，无法保证此函数的调用者会检查那个变量或检验那个错误码。于是程序不断执行，远离错误发生地点。但如果函数以抛出exception的方式发出异常信号，而该exception未被捕捉，程序的执行立刻中止。<br>C只有<font color="red"><code>setjmp</code></font>和<font color="red"><code>longjmp</code></font>才能近似这样的行为。但longjmp在C++中有缺陷：当它调整栈（stack）的时候，无法调用局部（local）对象的destructors。C++很依赖destructors被调用。</p>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款9：利用destuctors避免资源泄露">条款9：利用destuctors避免资源泄露</a></li>
+<li><a href="#条款10：在constructors内阻止资源泄露（resource-leak）">条款10：在constructors内阻止资源泄露（resource leak）</a></li>
+<li><a href="#条款11：禁止异常（exceptions）流出destructors之外">条款11：禁止异常（exceptions）流出destructors之外</a></li>
+<li><a href="#条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异">条款12：了解”抛出一个exception“与”传递一个参数“或”调用一个虚函数“之间的差异</a></li>
+<li><a href="#条款13：以by-reference方式捕捉exceptions">条款13：以by reference方式捕捉exceptions</a></li>
+<li><a href="#条款14：明智运用exception-specifications">条款14：明智运用exception specifications</a></li>
+<li><a href="#条款15：了解异常处理（exception-handing）的成本">条款15：了解异常处理（exception handing）的成本</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>C++增加了exceptions性质后，可能令人不舒服的改变了很多事情。原始指针的使用如今称为高风险行为，资源泄露的机会大增，撰写符合期望的constructors和destructors的难度也大增。程序员特别小心，放置程序在执行时突然中止。可执行文件和程序库变得更大、速度更慢。<br>为什么使用exceptions？答案很简单：exceptions无法被忽视。如果一个函数利用<strong>设定状态变量</strong>的方式或是利用<strong>返回错误码</strong>的方式发出一个异常，无法保证此函数的调用者会检查那个变量或检验那个错误码。于是程序不断执行，远离错误发生地点。但如果函数以抛出exception的方式发出异常信号，而该exception未被捕捉，程序的执行立刻中止。<br>C只有<font color="red"><code>setjmp</code></font>和<font color="red"><code>longjmp</code></font>才能近似这样的行为。但longjmp在C++中有缺陷：当它调整栈（stack）的时候，无法调用局部（local）对象的destructors。C++很依赖destructors被调用。</p>
 <h4 id="条款9：利用destuctors避免资源泄露"><a href="#条款9：利用destuctors避免资源泄露" class="headerlink" title="条款9：利用destuctors避免资源泄露"></a>条款9：利用destuctors避免资源泄露</h4><ol>
 <li><p>有个例子，加入你现在要写一个软件。收养中心每天会产生一个文件，其中有它所安排的当天收养个案，你的工作是写程序读文件，然后为每个个案做适当处理：</p>
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ALA: abstract base class</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ALA</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">processAdoption</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Puppy</span> :</span> <span class="keyword">public</span> ALA</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">processAdoption</span><span class="params">()</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kitten</span> :</span> <span class="keyword">public</span> ALA</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">processAdoption</span><span class="params">()</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">ALA* <span class="title">readALA</span><span class="params">(istream &amp;s)</span></span>;</span><br><span class="line"><span class="comment">// 程序核心大致</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">processAdoptions</span><span class="params">(istream &amp;dataSource)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 如果还有数据</span></span><br><span class="line">    <span class="keyword">while</span> (dataSource)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 取出下一只动物</span></span><br><span class="line">        ALA *pa = readALA(dataSource);</span><br><span class="line">        <span class="comment">// 处理收养事宜</span></span><br><span class="line">        pa-&gt;processAdoption();</span><br><span class="line">        <span class="comment">// 删除readALA返回的对象</span></span><br><span class="line">        <span class="keyword">delete</span> pa;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -836,7 +862,16 @@
       
         
           
-            <h4 id="条款5：对定制的“类型转换函数”保持警觉"><a href="#条款5：对定制的“类型转换函数”保持警觉" class="headerlink" title="条款5：对定制的“类型转换函数”保持警觉"></a>条款5：对定制的“类型转换函数”保持警觉</h4><ol>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款5：对定制的“类型转换函数”保持警觉">条款5：对定制的“类型转换函数”保持警觉</a></li>
+<li><a href="#条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式">条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式</a></li>
+<li><a href="#条款7：千万不要重载&&，||和，操作符">条款7：千万不要重载&amp;&amp;，||和，操作符</a></li>
+<li><a href="#条款8：了解各种不同意义的new和delete">条款8：了解各种不同意义的new和delete</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款5：对定制的“类型转换函数”保持警觉"><a href="#条款5：对定制的“类型转换函数”保持警觉" class="headerlink" title="条款5：对定制的“类型转换函数”保持警觉"></a>条款5：对定制的“类型转换函数”保持警觉</h4><ol>
 <li><p>C++允许编译器在不同类型之间执行<font color="red">隐式转换</font>（<font color="green">implicit conversions</font>）。它继承C的传统，允许将char转换为int，将short转换为double。然而还有令人害怕的转型，包括将int转换为short，将double转换为char，这些类型转换会遗失信息。所以我们可以使用自己的类型。两种函数允许编译器执行这样的转换：<strong>单自变量constructors</strong>和<strong>隐式类型转换操作符</strong>。所谓的单自变量constructor是指能够以单一自变量成功调用的constructors：</p>
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Name</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// string to Name</span></span><br><span class="line">    Name(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span> &amp;s);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Rational to double</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">double</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1050,13 +1085,22 @@
       
         
           
-            <h4 id="条款1：指针与引用的区别"><a href="#条款1：指针与引用的区别" class="headerlink" title="条款1：指针与引用的区别"></a>条款1：指针与引用的区别</h4><ol>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款1：指针与引用的区别">条款1：指针与引用的区别</a></li>
+<li><a href="#条款2：尽量使用c++风格的类型转换">条款2：尽量使用C++风格的类型转换</a></li>
+<li><a href="#条款3：绝对不要以多态（polymorphically）方式处理数组">条款3：绝对不要以多态（polymorphically）方式处理数组</a></li>
+<li><a href="#条款4：非必要不提供default-constructor">条款4：非必要不提供default constructor</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款1：指针与引用的区别"><a href="#条款1：指针与引用的区别" class="headerlink" title="条款1：指针与引用的区别"></a>条款1：指针与引用的区别</h4><ol>
 <li>当你知道你必须指向一个对象并且不想改变其指向时，或者在重载符并为防止不必要的语义误解时，你不应该使用指针。除此之外的情况下，则使用指针。</li>
 </ol>
 <h4 id="条款2：尽量使用C-风格的类型转换"><a href="#条款2：尽量使用C-风格的类型转换" class="headerlink" title="条款2：尽量使用C++风格的类型转换"></a>条款2：尽量使用C++风格的类型转换</h4><ol>
 <li>将一个pointer-to-const-object转型为一个pointer-to-non-const-object（改变对象常量性，和将一个pointer-to-base-class-object转型为一个pointer-to-derived-class-object（改变对象类型）有很大差异。而传统C转型动作并无区分，不过旧式的C转型动作并非唯一选择，C式转型式为C设计的，不是为了C++。C++导入4个新的<font color="red">转型操作符</font>（<font color="green">cast operators</font>）：<code>static_cast</code>、<code>const_cast</code>、<code>dynamic_cast</code>和<code>reinterpret_cast</code>。</li>
 <li><font color="red">static_cast</font>具有与C旧式转型相同的威力与意义，以及相同的限制。static_cast不能移除表达式的常量性（constness），因为有const_cast。</li>
-<li>其他新式C++转型操作符适用于更集种（范围更狭窄）的目的。<font color="red">const_cast用来改变表达式中的常量性（constness）或变易性（volatileness）。常见的用途在于将某个对象的常量性去掉。</font></li>
+<li>其他新式C++转型操作符适用于更集种（范围更狭窄）的目的。<font color="red">const_cast</font>用来改变表达式中的常量性（constness）或变易性（volatileness）。常见的用途在于将某个对象的常量性去掉。</li>
 <li><font color="red">dynamic_cast</font>用来执行继承体系中“<strong>安全的向下转型或跨转型动作</strong>”。它不能应用在缺乏虚函数的类型身上。</li>
 <li><font color="red">reinterpret_cast</font>这个于编译平台有关，基本不具移植性。它的常用用途是转换“函数指针”类型： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*FuncPtr)</span><span class="params">()</span></span>;</span><br><span class="line">FuncPtr funcPtrArray[<span class="number">10</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">doSomething</span><span class="params">()</span></span>;</span><br><span class="line">funcPtrArray[<span class="number">0</span>] = &amp;doSomething; <span class="comment">// error</span></span><br><span class="line">funcPtrArray[<span class="number">0</span>] = <span class="keyword">reinterpret_cast</span>&lt;FuncPtr&gt;(&amp;doSomething);  <span class="comment">//ok</span></span><br></pre></td></tr></table></figure>
 
@@ -1237,7 +1281,15 @@
       
         
           
-            <p>这里有3个条款。第一个条款<strong>强调不可轻忽编译器警告信息</strong>。第二个条件<strong>总览C++<br>Standard，主要是TR1</strong>。最后条款<strong>总览Boost</strong>。很多机能都被在C++之后新特性中不断引入把。</p>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款53：不要轻忽编译器的警告">条款53：不要轻忽编译器的警告</a></li>
+<li><a href="#条款54：让自己熟悉包括tr1在内的标准程序库">条款54：让自己熟悉包括TR1在内的标准程序库</a></li>
+<li><a href="#条款55：让自己熟悉boost">条款55：让自己熟悉Boost</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>这里有3个条款。第一个条款<strong>强调不可轻忽编译器警告信息</strong>。第二个条件<strong>总览C++<br>Standard，主要是TR1</strong>。最后条款<strong>总览Boost</strong>。很多机能都被在C++之后新特性中不断引入把。</p>
 <h4 id="条款53：不要轻忽编译器的警告"><a href="#条款53：不要轻忽编译器的警告" class="headerlink" title="条款53：不要轻忽编译器的警告"></a>条款53：不要轻忽编译器的警告</h4><ol>
 <li>严肃对待编译器发出的警告信息。</li>
 <li>不要过度依赖编译器的报警能力，不同的编译器对待事情的态度并不相同。一旦移植到另一个编译器上，原本依赖的警告信息有可能消失。</li>
@@ -1422,7 +1474,16 @@
       
         
           
-            <p>以下operator new和operator delete的规则同样适用于operator new[]和operator<br>delete[]</p>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款49：了解new-handler的行为">条款49：了解new-handler的行为</a></li>
+<li><a href="#条款50：了解new和delete的合理替换时机">条款50：了解new和delete的合理替换时机</a></li>
+<li><a href="#条款51：编写new和delete时需固守常规">条款51：编写new和delete时需固守常规</a></li>
+<li><a href="#条款52：写了placement-new也要写placement-delete">条款52：写了placement new也要写placement delete</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>以下operator new和operator delete的规则同样适用于operator new[]和operator<br>delete[]</p>
 <h4 id="条款49：了解new-handler的行为"><a href="#条款49：了解new-handler的行为" class="headerlink" title="条款49：了解new-handler的行为"></a>条款49：了解new-handler的行为</h4><ol>
 <li><p>当operator new无法满足某一内存分配需求时，就会抛出异常。在它抛出异常前，会先调用一个用户指定的错误处理函数，一个所谓的<code>new-handler</code>，为了指定这个函数，用户需要调用<code>set_new_handler</code>，那是声明于<new>的一个标准程序库函数：</new></p>
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="built_in">std</span> &#123;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*new_handler)</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">new_handler <span class="title">set_new_handler</span><span class="params">(new_handler p)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用时</span></span><br><span class="line"><span class="built_in">std</span>::set_new_handler(outOfMem);</span><br></pre></td></tr></table></figure>
@@ -1638,7 +1699,20 @@
       
         
           
-            <p>C++<br>templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。<font color="red">泛型编程</font>（<font color="green">generic<br>programming</font>）——<em>写出的代码和其所处理的对象类型彼此独立</em>（for_each、find、merge等）。最终人们发现C++<br>template机制自身是完整的<font color="red">图灵机</font>（<font color="green">Turing-complete</font>）。于是导出<font color="red">模板元编程</font>（<font color="green">template<br>metaprogramming</font>），创造出在C++编译器内执行并于编译完成时停止执行的程序。</p>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款41：了解隐式接口和编译期多态">条款41：了解隐式接口和编译期多态</a></li>
+<li><a href="#条款42：了解typename的双重意义">条款42：了解typename的双重意义</a></li>
+<li><a href="#条款43：学习处理模板化基类内的名称">条款43：学习处理模板化基类内的名称</a></li>
+<li><a href="#条款44：将与参数无关的代码抽离templates">条款44：将与参数无关的代码抽离templates</a></li>
+<li><a href="#条款45：运用成员函数模板接受所有兼容类型">条款45：运用成员函数模板接受所有兼容类型</a></li>
+<li><a href="#条款46：需要类型转换时请为模板定义非成员函数">条款46：需要类型转换时请为模板定义非成员函数</a></li>
+<li><a href="#条款47：请使用traits-classes表现类型信息">条款47：请使用traits classes表现类型信息</a></li>
+<li><a href="#条款48：认适template元编程">条款48：认适template元编程</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>C++<br>templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。<font color="red">泛型编程</font>（<font color="green">generic<br>programming</font>）——<em>写出的代码和其所处理的对象类型彼此独立</em>（for_each、find、merge等）。最终人们发现C++<br>template机制自身是完整的<font color="red">图灵机</font>（<font color="green">Turing-complete</font>）。于是导出<font color="red">模板元编程</font>（<font color="green">template<br>metaprogramming</font>），创造出在C++编译器内执行并于编译完成时停止执行的程序。</p>
 <h4 id="条款41：了解隐式接口和编译期多态"><a href="#条款41：了解隐式接口和编译期多态" class="headerlink" title="条款41：了解隐式接口和编译期多态"></a>条款41：了解隐式接口和编译期多态</h4><ol>
 <li><p>面向对象编程世界总是以<font color="red">显示接口</font>（<font color="green">explicit interfaces</font>）和<font color="red">运行期多态</font>（<font color="green">runtime polymorphism</font>）解决问题。</p>
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Widget();</span><br><span class="line">    <span class="keyword">virtual</span> ~Widget();</span><br><span class="line">    virutal <span class="built_in">std</span>::<span class="keyword">size_t</span> size() <span class="keyword">const</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">normalize</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(Widget &amp;other)</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doProcessing</span><span class="params">(Widget &amp;w)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (w.size() &gt; <span class="number">10</span> &amp;&amp; w != someNastyWidget)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">Widget <span class="title">temp</span><span class="params">(w)</span></span>;</span><br><span class="line">        temp.normalize();</span><br><span class="line">        temp.swap(w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -1895,7 +1969,16 @@
       
         
           
-            <h4 id="条款32：确定你的public继承塑模出is-a关系"><a href="#条款32：确定你的public继承塑模出is-a关系" class="headerlink" title="条款32：确定你的public继承塑模出is-a关系"></a>条款32：确定你的public继承塑模出is-a关系</h4><ol>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款32：确定你的public继承塑模出is-a关系">条款32：确定你的public继承塑模出is-a关系</a></li>
+<li><a href="#条款33：避免遮掩继承而来的名称">条款33：避免遮掩继承而来的名称</a></li>
+<li><a href="#条款34：区分接口继承和实现继承">条款34：区分接口继承和实现继承</a></li>
+<li><a href="#条款35：考虑virtual函数以外的其他选择">条款35：考虑virtual函数以外的其他选择</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款32：确定你的public继承塑模出is-a关系"><a href="#条款32：确定你的public继承塑模出is-a关系" class="headerlink" title="条款32：确定你的public继承塑模出is-a关系"></a>条款32：确定你的public继承塑模出is-a关系</h4><ol>
 <li><strong>public inheritance（公开继承）意味”<font color="red">is-a</font>“（是一种）的关系。</strong></li>
 <li>令class D（”Derived”）以public形式继承class B（“Base”），意味着每个类型为D的对象同时也是一个类型为B的对象，反之不成立。B比D概念上更一般化，D比B更特殊化。</li>
 <li>对于现实世界，我们可能对已有事物进行概念上的内涵和外延来抽象不同的状态和动作。企鹅是一种鸟，然而它不会飞，对于鸟会飞的先入为主的观念，可能会使实际偏颇。“企鹅不会飞”这一限制可由编译期强制实施，但若违反“企鹅尝试飞行，是一种错误”这一条规则，只有运行期才能检测出来。</li>
@@ -2065,7 +2148,18 @@
       
         
           
-            <p>大多数情况下，适当提出classes或class templates定义以及functions和function<br>templates声明，是最花费心力的两件事。<strong><em>太快定义变量可能造成效率上的拖延；过度使用转型可能导致代码变慢又难维护，又找来微妙的理解错误；返回对象内部数据的handle可能会破坏封装并留给客户dangling<br>handles；未考虑异常带来的冲击则可能导致资源泄露和数据败坏；过度热心地inlining可能引起代码膨胀；过度耦合（coupling）则可能导致让人不满意的冗长build<br>times。</em></strong></p>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款26：尽可能延后变量定义式的出现时间">条款26：尽可能延后变量定义式的出现时间</a></li>
+<li><a href="#条款27：尽量少做转型动作">条款27：尽量少做转型动作</a></li>
+<li><a href="#条款28：避免返回handles指向对象内部成分">条款28：避免返回handles指向对象内部成分</a></li>
+<li><a href="#条款29：为”异常安全“努力是值得的">条款29：为”异常安全“努力是值得的</a></li>
+<li><a href="#条款30：透彻了解inlining的里里外外">条款30：透彻了解inlining的里里外外</a></li>
+<li><a href="#条款31：将文件间的编译依存关系降至最低">条款31：将文件间的编译依存关系降至最低</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>大多数情况下，适当提出classes或class templates定义以及functions和function<br>templates声明，是最花费心力的两件事。<strong><em>太快定义变量可能造成效率上的拖延；过度使用转型可能导致代码变慢又难维护，又找来微妙的理解错误；返回对象内部数据的handle可能会破坏封装并留给客户dangling<br>handles；未考虑异常带来的冲击则可能导致资源泄露和数据败坏；过度热心地inlining可能引起代码膨胀；过度耦合（coupling）则可能导致让人不满意的冗长build<br>times。</em></strong></p>
 <h4 id="条款26：尽可能延后变量定义式的出现时间"><a href="#条款26：尽可能延后变量定义式的出现时间" class="headerlink" title="条款26：尽可能延后变量定义式的出现时间"></a>条款26：尽可能延后变量定义式的出现时间</h4><ol>
 <li>当定义了一个类型带有构造函数或析构函数，就得付出构造成本和析构成本。如果函数可能抛出异常，最好将未使用的变量尽量延后声明（为何不声明定义分割是因为将函数构造出来再赋值比直接构造时指定初值效率低）。</li>
 <li>对于在循环结构中定义在里头还是外头需要权衡：如果赋值成本比“构造+析构”成本高，那么倒不如在循环结构中定义。</li>
@@ -2237,7 +2331,20 @@
       
         
           
-            <h4 id="条款18：让接口容易被正确使用，不易被误用"><a href="#条款18：让接口容易被正确使用，不易被误用" class="headerlink" title="条款18：让接口容易被正确使用，不易被误用"></a>条款18：让接口容易被正确使用，不易被误用</h4><ol>
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款18：让接口容易被正确使用，不易被误用">条款18：让接口容易被正确使用，不易被误用</a></li>
+<li><a href="#条款19：设计class犹如设计type">条款19：设计class犹如设计type</a></li>
+<li><a href="#条款20：宁以pass-by-reference-to-const替换pass-by-value">条款20：宁以pass-by-reference-to-const替换pass-by-value</a></li>
+<li><a href="#条款21：必须返回对象时，别妄想返回其reference">条款21：必须返回对象时，别妄想返回其reference</a></li>
+<li><a href="#条款22：将成员变量声明未private">条款22：将成员变量声明未private</a></li>
+<li><a href="#条款23：宁以non-member、non-friend替换member函数">条款23：宁以non-member、non-friend替换member函数</a></li>
+<li><a href="#条款24：若所有参数皆需类型转换，请为此采用non-member函数">条款24：若所有参数皆需类型转换，请为此采用non-member函数</a></li>
+<li><a href="#条款25：考虑写出一个不抛出异常的swap函数">条款25：考虑写出一个不抛出异常的swap函数</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款18：让接口容易被正确使用，不易被误用"><a href="#条款18：让接口容易被正确使用，不易被误用" class="headerlink" title="条款18：让接口容易被正确使用，不易被误用"></a>条款18：让接口容易被正确使用，不易被误用</h4><ol>
 <li>除非有好理由，否则应该尽量令你的types的行为与内置types一致。“促进正确使用”的办法包括接口的一致性，以及与内置类型的行为兼容。</li>
 <li>“阻止误用”的办法包括建立新类型、限制类型上的操作，束缚对象值，以及消除用户的资源管理责任。</li>
 <li>std::shared_ptr支持定制型删除其（custom deleter）。这可防范DLL问题（在这个dll创建对象，在另一边dll删除），可被用来自动解除互斥锁等等。</li>

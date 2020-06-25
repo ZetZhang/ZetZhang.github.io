@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="条例16：谨记80-20原则 80-20原则说：一个程序80%的资源用于20%的代码身上。因此根据观察或实验来识别出造成你心痛那20%代码，辨别之道就是使用某个程序分析器（program profiler）。  条款17：考虑使用lazy evaluation（缓式评估） lazy evaluation（缓式评估）就是以某种方式撰写你的classes，使它们延缓运算，直到那些运算结果刻不容缓地迫切">
+<meta name="description" content="条例16：谨记80-20原则 条款17：考虑使用lazy evaluation（缓式评估） 条款18：分期摊还预期的计算成本 条款19：了解临时对象的来源 条款20：协助完成“返回值优化（RVO）“ 条款21：利用重载技术（overload）避免隐式类型转换（implicit type conversions） 条款22：考虑以操作符符合形式（op==）取代其独身形式（op） 条款23：考虑">
 <meta name="keywords" content="C++,More Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="4 效率">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/4-效率/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="条例16：谨记80-20原则 80-20原则说：一个程序80%的资源用于20%的代码身上。因此根据观察或实验来识别出造成你心痛那20%代码，辨别之道就是使用某个程序分析器（program profiler）。  条款17：考虑使用lazy evaluation（缓式评估） lazy evaluation（缓式评估）就是以某种方式撰写你的classes，使它们延缓运算，直到那些运算结果刻不容缓地迫切">
+<meta property="og:description" content="条例16：谨记80-20原则 条款17：考虑使用lazy evaluation（缓式评估） 条款18：分期摊还预期的计算成本 条款19：了解临时对象的来源 条款20：协助完成“返回值优化（RVO）“ 条款21：利用重载技术（overload）避免隐式类型转换（implicit type conversions） 条款22：考虑以操作符符合形式（op==）取代其独身形式（op） 条款23：考虑">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:30:22.466Z">
+<meta property="og:updated_time" content="2020-06-25T04:25:36.210Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="4 效率">
-<meta name="twitter:description" content="条例16：谨记80-20原则 80-20原则说：一个程序80%的资源用于20%的代码身上。因此根据观察或实验来识别出造成你心痛那20%代码，辨别之道就是使用某个程序分析器（program profiler）。  条款17：考虑使用lazy evaluation（缓式评估） lazy evaluation（缓式评估）就是以某种方式撰写你的classes，使它们延缓运算，直到那些运算结果刻不容缓地迫切">
+<meta name="twitter:description" content="条例16：谨记80-20原则 条款17：考虑使用lazy evaluation（缓式评估） 条款18：分期摊还预期的计算成本 条款19：了解临时对象的来源 条款20：协助完成“返回值优化（RVO）“ 条款21：利用重载技术（overload）避免隐式类型转换（implicit type conversions） 条款22：考虑以操作符符合形式（op==）取代其独身形式（op） 条款23：考虑">
 
 
 
@@ -352,7 +352,21 @@
       
 
       
-        <h4 id="条例16：谨记80-20原则"><a href="#条例16：谨记80-20原则" class="headerlink" title="条例16：谨记80-20原则"></a>条例16：谨记80-20原则</h4><ol>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条例16：谨记80-20原则">条例16：谨记80-20原则</a></li>
+<li><a href="#条款17：考虑使用lazy-evaluation（缓式评估）">条款17：考虑使用lazy evaluation（缓式评估）</a></li>
+<li><a href="#条款18：分期摊还预期的计算成本">条款18：分期摊还预期的计算成本</a></li>
+<li><a href="#条款19：了解临时对象的来源">条款19：了解临时对象的来源</a></li>
+<li><a href="#条款20：协助完成“返回值优化（rvo）“">条款20：协助完成“返回值优化（RVO）“</a></li>
+<li><a href="#条款21：利用重载技术（overload）避免隐式类型转换（implicit-type-conversions）">条款21：利用重载技术（overload）避免隐式类型转换（implicit type conversions）</a></li>
+<li><a href="#条款22：考虑以操作符符合形式（op==）取代其独身形式（op）">条款22：考虑以操作符符合形式（op==）取代其独身形式（op）</a></li>
+<li><a href="#条款23：考虑使用其他程序库">条款23：考虑使用其他程序库</a></li>
+<li><a href="#条款24：了解virtual-functions、multiple-inheritance、virtual-base-classes、runtime-type-identification的成本">条款24：了解virtual functions、multiple inheritance、virtual base classes、runtime type identification的成本</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条例16：谨记80-20原则"><a href="#条例16：谨记80-20原则" class="headerlink" title="条例16：谨记80-20原则"></a>条例16：谨记80-20原则</h4><ol>
 <li>80-20原则说：一个程序80%的资源用于20%的代码身上。因此根据观察或实验来识别出造成你心痛那20%代码，辨别之道就是使用某个程序分析器（program profiler）。</li>
 </ol>
 <h4 id="条款17：考虑使用lazy-evaluation（缓式评估）"><a href="#条款17：考虑使用lazy-evaluation（缓式评估）" class="headerlink" title="条款17：考虑使用lazy evaluation（缓式评估）"></a>条款17：考虑使用lazy evaluation（缓式评估）</h4><ol>

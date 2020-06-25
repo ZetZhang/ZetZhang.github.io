@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="类型系统与多态性 Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型 现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态 参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言 Rust没有GC，内存由编译器分配，Rust代码被">
+<meta name="description" content="类型系统与多态性   类型系统与多态性 Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型 现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态 参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言 Rust没有GC，内存">
 <meta name="keywords" content="Rust">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rust的一些概念">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/Rust的一些概念/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="类型系统与多态性 Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型 现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态 参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言 Rust没有GC，内存由编译器分配，Rust代码被">
+<meta property="og:description" content="类型系统与多态性   类型系统与多态性 Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型 现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态 参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言 Rust没有GC，内存">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T07:25:38.396Z">
+<meta property="og:updated_time" content="2020-06-25T07:30:48.114Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rust的一些概念">
-<meta name="twitter:description" content="类型系统与多态性 Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型 现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态 参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言 Rust没有GC，内存由编译器分配，Rust代码被">
+<meta name="twitter:description" content="类型系统与多态性   类型系统与多态性 Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型 现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态 参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言 Rust没有GC，内存">
 
 
 
@@ -352,7 +352,13 @@
       
 
       
-        <h2 id="类型系统与多态性"><a href="#类型系统与多态性" class="headerlink" title="类型系统与多态性"></a>类型系统与多态性</h2><ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#类型系统与多态性">类型系统与多态性</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h2 id="类型系统与多态性"><a href="#类型系统与多态性" class="headerlink" title="类型系统与多态性"></a>类型系统与多态性</h2><ul>
 <li>Rust一切皆表达式，表达式皆有值，值皆有类型，Rust中一切皆类型</li>
 <li>现代编程语言包含三种多态形式：参数化多态、Ad-hoc多态和子类型多态：参数化多态和Ad-hoc是静多态，子类型多态是动多态</li>
 <li>参数化多态指泛型，Ad-hoc多态叫特定多态：Haskell中是Typeclass，Rust中是trait；子类型多态出自面向对象语言</li>

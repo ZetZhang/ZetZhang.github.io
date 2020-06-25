@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="条款32：确定你的public继承塑模出is-a关系 public inheritance（公开继承）意味”is-a“（是一种）的关系。 令class D（”Derived”）以public形式继承class B（“Base”），意味着每个类型为D的对象同时也是一个类型为B的对象，反之不成立。B比D概念上更一般化，D比B更特殊化。 对于现实世界，我们可能对已有事物进行概念上的内涵和外延来抽象不同的">
+<meta name="description" content="条款32：确定你的public继承塑模出is-a关系 条款33：避免遮掩继承而来的名称 条款34：区分接口继承和实现继承 条款35：考虑virtual函数以外的其他选择   条款32：确定你的public继承塑模出is-a关系 public inheritance（公开继承）意味”is-a“（是一种）的关系。 令class D（”Derived”）以public形式继承class B（“Ba">
 <meta name="keywords" content="C++,Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="6 继承与面向对象设计">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/6-继承与面向对象设计/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="条款32：确定你的public继承塑模出is-a关系 public inheritance（公开继承）意味”is-a“（是一种）的关系。 令class D（”Derived”）以public形式继承class B（“Base”），意味着每个类型为D的对象同时也是一个类型为B的对象，反之不成立。B比D概念上更一般化，D比B更特殊化。 对于现实世界，我们可能对已有事物进行概念上的内涵和外延来抽象不同的">
+<meta property="og:description" content="条款32：确定你的public继承塑模出is-a关系 条款33：避免遮掩继承而来的名称 条款34：区分接口继承和实现继承 条款35：考虑virtual函数以外的其他选择   条款32：确定你的public继承塑模出is-a关系 public inheritance（公开继承）意味”is-a“（是一种）的关系。 令class D（”Derived”）以public形式继承class B（“Ba">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:30:52.643Z">
+<meta property="og:updated_time" content="2020-06-25T07:12:01.284Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="6 继承与面向对象设计">
-<meta name="twitter:description" content="条款32：确定你的public继承塑模出is-a关系 public inheritance（公开继承）意味”is-a“（是一种）的关系。 令class D（”Derived”）以public形式继承class B（“Base”），意味着每个类型为D的对象同时也是一个类型为B的对象，反之不成立。B比D概念上更一般化，D比B更特殊化。 对于现实世界，我们可能对已有事物进行概念上的内涵和外延来抽象不同的">
+<meta name="twitter:description" content="条款32：确定你的public继承塑模出is-a关系 条款33：避免遮掩继承而来的名称 条款34：区分接口继承和实现继承 条款35：考虑virtual函数以外的其他选择   条款32：确定你的public继承塑模出is-a关系 public inheritance（公开继承）意味”is-a“（是一种）的关系。 令class D（”Derived”）以public形式继承class B（“Ba">
 
 
 
@@ -352,7 +352,16 @@
       
 
       
-        <h4 id="条款32：确定你的public继承塑模出is-a关系"><a href="#条款32：确定你的public继承塑模出is-a关系" class="headerlink" title="条款32：确定你的public继承塑模出is-a关系"></a>条款32：确定你的public继承塑模出is-a关系</h4><ol>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款32：确定你的public继承塑模出is-a关系">条款32：确定你的public继承塑模出is-a关系</a></li>
+<li><a href="#条款33：避免遮掩继承而来的名称">条款33：避免遮掩继承而来的名称</a></li>
+<li><a href="#条款34：区分接口继承和实现继承">条款34：区分接口继承和实现继承</a></li>
+<li><a href="#条款35：考虑virtual函数以外的其他选择">条款35：考虑virtual函数以外的其他选择</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款32：确定你的public继承塑模出is-a关系"><a href="#条款32：确定你的public继承塑模出is-a关系" class="headerlink" title="条款32：确定你的public继承塑模出is-a关系"></a>条款32：确定你的public继承塑模出is-a关系</h4><ol>
 <li><strong>public inheritance（公开继承）意味”<font color="red">is-a</font>“（是一种）的关系。</strong></li>
 <li>令class D（”Derived”）以public形式继承class B（“Base”），意味着每个类型为D的对象同时也是一个类型为B的对象，反之不成立。B比D概念上更一般化，D比B更特殊化。</li>
 <li>对于现实世界，我们可能对已有事物进行概念上的内涵和外延来抽象不同的状态和动作。企鹅是一种鸟，然而它不会飞，对于鸟会飞的先入为主的观念，可能会使实际偏颇。“企鹅不会飞”这一限制可由编译期强制实施，但若违反“企鹅尝试飞行，是一种错误”这一条规则，只有运行期才能检测出来。</li>

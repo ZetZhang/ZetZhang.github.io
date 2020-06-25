@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="修改镜像源 （manjaro）只需要添加配置文件/etc/docker/daemon.json  123&amp;#123;    &quot;registry-mirrors&quot;: [&quot;https://docker.mirrors.ustc.edu.cn&quot;]&amp;#125;  或者使用–registry-mirror选项 修改:/etc/default/docker 添加:DOCKER_OPTS=”–registry-">
+<meta name="description" content="修改镜像源 或者使用–registry-mirror选项   一些Docker基础命令 容器操作 run: 通过运行镜像输出hello 启动交互式容器 带名字的运行镜像 守护形式运行容器 可直接启动后台   设置容器的端口映射 create: 创建容器 start: 启动容器 ps: 查看容器 rm: 删除容器 attach: 继续运行后台守护容器 logs: 查看容器日志 exec: 在已">
 <meta name="keywords" content="Linux,VM,Docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker基本使用">
 <meta property="og:url" content="http://yoursite.com/2020/06/12/Docker基本使用/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="修改镜像源 （manjaro）只需要添加配置文件/etc/docker/daemon.json  123&amp;#123;    &quot;registry-mirrors&quot;: [&quot;https://docker.mirrors.ustc.edu.cn&quot;]&amp;#125;  或者使用–registry-mirror选项 修改:/etc/default/docker 添加:DOCKER_OPTS=”–registry-">
+<meta property="og:description" content="修改镜像源 或者使用–registry-mirror选项   一些Docker基础命令 容器操作 run: 通过运行镜像输出hello 启动交互式容器 带名字的运行镜像 守护形式运行容器 可直接启动后台   设置容器的端口映射 create: 创建容器 start: 启动容器 ps: 查看容器 rm: 删除容器 attach: 继续运行后台守护容器 logs: 查看容器日志 exec: 在已">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:38:02.837Z">
+<meta property="og:updated_time" content="2020-06-25T07:14:27.217Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker基本使用">
-<meta name="twitter:description" content="修改镜像源 （manjaro）只需要添加配置文件/etc/docker/daemon.json  123&amp;#123;    &quot;registry-mirrors&quot;: [&quot;https://docker.mirrors.ustc.edu.cn&quot;]&amp;#125;  或者使用–registry-mirror选项 修改:/etc/default/docker 添加:DOCKER_OPTS=”–registry-">
+<meta name="twitter:description" content="修改镜像源 或者使用–registry-mirror选项   一些Docker基础命令 容器操作 run: 通过运行镜像输出hello 启动交互式容器 带名字的运行镜像 守护形式运行容器 可直接启动后台   设置容器的端口映射 create: 创建容器 start: 启动容器 ps: 查看容器 rm: 删除容器 attach: 继续运行后台守护容器 logs: 查看容器日志 exec: 在已">
 
 
 
@@ -352,7 +352,79 @@
       
 
       
-        <h2 id="修改镜像源"><a href="#修改镜像源" class="headerlink" title="修改镜像源"></a>修改镜像源</h2><blockquote>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#修改镜像源">修改镜像源</a><ul>
+<li><a href="#或者使用--registry-mirror选项">或者使用–registry-mirror选项</a></li>
+</ul>
+</li>
+<li><a href="#一些docker基础命令">一些Docker基础命令</a></li>
+<li><a href="#_容器操作_"><em>容器操作</em></a><ul>
+<li><a href="#<font-color=" red">run:-通过运行镜像输出hello"><font color="red">run</font>: 通过运行镜像输出hello</a></li>
+<li><a href="#启动交互式容器">启动交互式容器</a></li>
+<li><a href="#带名字的运行镜像">带名字的运行镜像</a></li>
+<li><a href="#守护形式运行容器">守护形式运行容器</a><ul>
+<li><a href="#可直接启动后台">可直接启动后台</a></li>
+</ul>
+</li>
+<li><a href="#设置容器的端口映射">设置容器的端口映射</a></li>
+<li><a href="#<font-color=" red">create:-创建容器"><font color="red">create</font>: 创建容器</a></li>
+<li><a href="#<font-color=" red">start:-启动容器"><font color="red">start</font>: 启动容器</a></li>
+<li><a href="#<font-color=" red">ps:-查看容器"><font color="red">ps</font>: 查看容器</a></li>
+<li><a href="#<font-color=" red">rm:-删除容器"><font color="red">rm</font>: 删除容器</a></li>
+<li><a href="#<font-color=" red">attach:-继续运行后台守护容器"><font color="red">attach</font>: 继续运行后台守护容器</a></li>
+<li><a href="#<font-color=" red">logs:-查看容器日志"><font color="red">logs</font>: 查看容器日志</a></li>
+<li><a href="#<font-color=" red">exec:-在已运行的容器中启动新进程"><font color="red">exec</font>: 在已运行的容器中启动新进程</a></li>
+<li><a href="#<font-color=" red">stop/kill:-停止容器"><font color="red">stop/kill</font>: 停止容器</a></li>
+</ul>
+</li>
+<li><a href="#_镜像操作_"><em>镜像操作</em></a><ul>
+<li><a href="#<font-color=" red">images/inspect:-查看镜像"><font color="red">images/inspect</font>: 查看镜像</a></li>
+<li><a href="#<font-color=" red">search:-查找镜像"><font color="red">search</font>: 查找镜像</a></li>
+<li><a href="#<font-color=" red">pull:-拉取镜像"><font color="red">pull</font>: 拉取镜像</a></li>
+<li><a href="#构建镜像">构建镜像</a><ul>
+<li><a href="#<font-color=" red">commit:-通过容器"><font color="red">commit</font>: 通过容器</a></li>
+<li><a href="#<font-color=" red">import:-通过本地模板导入"><font color="red">import</font>: 通过本地模板导入</a></li>
+<li><a href="#<font-color=" red">build:-通过dockerfile文件"><font color="red">build</font>: 通过Dockerfile文件</a></li>
+<li><a href="#通过dockerfile">通过Dockerfile</a><ul>
+<li><a href="#dockerfile格式：">Dockerfile格式：</a></li>
+<li><a href="#dockerfile构建过程">Dockerfile构建过程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#<font-color=" red">save:-存入镜像"><font color="red">save</font>: 存入镜像</a></li>
+<li><a href="#<font-color=" red">load:-载入镜像"><font color="red">load</font>: 载入镜像</a></li>
+<li><a href="#<font-color=" red">push:-上传镜像"><font color="red">push</font>: 上传镜像</a></li>
+<li><a href="#<font-color=" red">rmi:-删除镜像"><font color="red">rmi</font>: 删除镜像</a></li>
+<li><a href="#docker的c/s模式：remote-api">Docker的C/S模式：Remote API</a><ul>
+<li><a href="#连接方式">连接方式</a></li>
+<li><a href="#docker的远程访问">Docker的远程访问</a></li>
+</ul>
+</li>
+<li><a href="#docker容器互联">Docker容器互联</a></li>
+<li><a href="#docker容器的数据卷">Docker容器的数据卷</a><ul>
+<li><a href="#为容器添加数据卷">为容器添加数据卷</a></li>
+<li><a href="#在dockerfile中使用column下指定数据卷容器">在Dockerfile中使用COLUMN下指定数据卷容器</a></li>
+</ul>
+</li>
+<li><a href="#docker数据卷的备份和还原">Docker数据卷的备份和还原</a></li>
+<li><a href="#docker容器的跨主机连接">Docker容器的跨主机连接</a><ul>
+<li><a href="#网桥实现">网桥实现</a></li>
+<li><a href="#open-vswitch实现">Open vSwitch实现</a><ul>
+<li><a href="#环境准备">环境准备</a></li>
+<li><a href="#操作">操作</a></li>
+</ul>
+</li>
+<li><a href="#weave实现">weave实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<h2 id="修改镜像源"><a href="#修改镜像源" class="headerlink" title="修改镜像源"></a>修改镜像源</h2><blockquote>
 <p>（manjaro）只需要添加配置文件/etc/docker/daemon.json</p>
 </blockquote>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"registry-mirrors"</span>: [<span class="string">"https://docker.mirrors.ustc.edu.cn"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

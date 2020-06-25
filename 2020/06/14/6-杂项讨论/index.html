@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="条款32：在未来时态下发展程序 请避免”demand-apged“式的虚函数，那会使你习惯于”不让任何函数成为virtual，除非有人需要“。应该有自己的判断，决定函数的意义，而不要只为了图某人的方便就改变其定义。请确定所做的改变对于整个class的上下关系乃至它所表现的抽象性是合理的。 请为每个class处理assignment和copy construction动作，即使没有人使用那个动作。如">
+<meta name="description" content="条款32：在未来时态下发展程序 条款33：将非尾端类（non-leaf classes）设计为抽象类 （abstract classes） 条款34：如何在同一个程序中结合C++和C Name Mangling（名字重整） Statics的初始化 动态内存分配 数据结构的兼容性   条款35：让自己习惯于标准C++语言 Standard Template Library（STL）     条">
 <meta name="keywords" content="C++,More Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="6 杂项讨论">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/6-杂项讨论/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="条款32：在未来时态下发展程序 请避免”demand-apged“式的虚函数，那会使你习惯于”不让任何函数成为virtual，除非有人需要“。应该有自己的判断，决定函数的意义，而不要只为了图某人的方便就改变其定义。请确定所做的改变对于整个class的上下关系乃至它所表现的抽象性是合理的。 请为每个class处理assignment和copy construction动作，即使没有人使用那个动作。如">
+<meta property="og:description" content="条款32：在未来时态下发展程序 条款33：将非尾端类（non-leaf classes）设计为抽象类 （abstract classes） 条款34：如何在同一个程序中结合C++和C Name Mangling（名字重整） Statics的初始化 动态内存分配 数据结构的兼容性   条款35：让自己习惯于标准C++语言 Standard Template Library（STL）     条">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:21:35.866Z">
+<meta property="og:updated_time" content="2020-06-25T07:11:43.034Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="6 杂项讨论">
-<meta name="twitter:description" content="条款32：在未来时态下发展程序 请避免”demand-apged“式的虚函数，那会使你习惯于”不让任何函数成为virtual，除非有人需要“。应该有自己的判断，决定函数的意义，而不要只为了图某人的方便就改变其定义。请确定所做的改变对于整个class的上下关系乃至它所表现的抽象性是合理的。 请为每个class处理assignment和copy construction动作，即使没有人使用那个动作。如">
+<meta name="twitter:description" content="条款32：在未来时态下发展程序 条款33：将非尾端类（non-leaf classes）设计为抽象类 （abstract classes） 条款34：如何在同一个程序中结合C++和C Name Mangling（名字重整） Statics的初始化 动态内存分配 数据结构的兼容性   条款35：让自己习惯于标准C++语言 Standard Template Library（STL）     条">
 
 
 
@@ -352,7 +352,25 @@
       
 
       
-        <h4 id="条款32：在未来时态下发展程序"><a href="#条款32：在未来时态下发展程序" class="headerlink" title="条款32：在未来时态下发展程序"></a>条款32：在未来时态下发展程序</h4><ol>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款32：在未来时态下发展程序">条款32：在未来时态下发展程序</a></li>
+<li><a href="#条款33：将非尾端类（non-leaf-classes）设计为抽象类-（abstract-classes）">条款33：将非尾端类（non-leaf classes）设计为抽象类 （abstract classes）</a></li>
+<li><a href="#条款34：如何在同一个程序中结合c++和c">条款34：如何在同一个程序中结合C++和C</a><ul>
+<li><a href="#name-mangling（名字重整）">Name Mangling（名字重整）</a></li>
+<li><a href="#statics的初始化">Statics的初始化</a></li>
+<li><a href="#动态内存分配">动态内存分配</a></li>
+<li><a href="#数据结构的兼容性">数据结构的兼容性</a></li>
+</ul>
+</li>
+<li><a href="#条款35：让自己习惯于标准c++语言">条款35：让自己习惯于标准C++语言</a><ul>
+<li><a href="#standard-template-library（stl）">Standard Template Library（STL）</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款32：在未来时态下发展程序"><a href="#条款32：在未来时态下发展程序" class="headerlink" title="条款32：在未来时态下发展程序"></a>条款32：在未来时态下发展程序</h4><ol>
 <li><strong>请避免”demand-apged“式的虚函数，那会使你习惯于”不让任何函数成为virtual，除非有人需要“</strong>。应该有自己的判断，决定函数的意义，而不要只为了图某人的方便就改变其定义。请确定所做的改变对于整个class的上下关系乃至它所表现的抽象性是合理的。</li>
 <li><strong>请为每个class处理assignment和copy construction动作，即使没有人使用那个动作</strong>。如果不易完成，请声明为private，那就不会有人因为不经意调用编译器自动产生却行为错误的版本。</li>
 <li>不要做出令人大吃一惊的怪异行为：努力让classes的操作符和函数拥有自然的语法和直观的语义。<strong>请和内置类型的行为保持一致</strong>。请让你的classes容易被正确地使用，不容易被误用。</li>

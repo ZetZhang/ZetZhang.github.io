@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="条款18：让接口容易被正确使用，不易被误用 除非有好理由，否则应该尽量令你的types的行为与内置types一致。“促进正确使用”的办法包括接口的一致性，以及与内置类型的行为兼容。 “阻止误用”的办法包括建立新类型、限制类型上的操作，束缚对象值，以及消除用户的资源管理责任。 std::shared_ptr支持定制型删除其（custom deleter）。这可防范DLL问题（在这个dll创建对象，在">
+<meta name="description" content="条款18：让接口容易被正确使用，不易被误用 条款19：设计class犹如设计type 条款20：宁以pass-by-reference-to-const替换pass-by-value 条款21：必须返回对象时，别妄想返回其reference 条款22：将成员变量声明未private 条款23：宁以non-member、non-friend替换member函数 条款24：若所有参数皆需类型转换">
 <meta name="keywords" content="C++,Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="4 设计与声明">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/4-设计与声明/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="条款18：让接口容易被正确使用，不易被误用 除非有好理由，否则应该尽量令你的types的行为与内置types一致。“促进正确使用”的办法包括接口的一致性，以及与内置类型的行为兼容。 “阻止误用”的办法包括建立新类型、限制类型上的操作，束缚对象值，以及消除用户的资源管理责任。 std::shared_ptr支持定制型删除其（custom deleter）。这可防范DLL问题（在这个dll创建对象，在">
+<meta property="og:description" content="条款18：让接口容易被正确使用，不易被误用 条款19：设计class犹如设计type 条款20：宁以pass-by-reference-to-const替换pass-by-value 条款21：必须返回对象时，别妄想返回其reference 条款22：将成员变量声明未private 条款23：宁以non-member、non-friend替换member函数 条款24：若所有参数皆需类型转换">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:26:44.920Z">
+<meta property="og:updated_time" content="2020-06-25T04:25:50.067Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="4 设计与声明">
-<meta name="twitter:description" content="条款18：让接口容易被正确使用，不易被误用 除非有好理由，否则应该尽量令你的types的行为与内置types一致。“促进正确使用”的办法包括接口的一致性，以及与内置类型的行为兼容。 “阻止误用”的办法包括建立新类型、限制类型上的操作，束缚对象值，以及消除用户的资源管理责任。 std::shared_ptr支持定制型删除其（custom deleter）。这可防范DLL问题（在这个dll创建对象，在">
+<meta name="twitter:description" content="条款18：让接口容易被正确使用，不易被误用 条款19：设计class犹如设计type 条款20：宁以pass-by-reference-to-const替换pass-by-value 条款21：必须返回对象时，别妄想返回其reference 条款22：将成员变量声明未private 条款23：宁以non-member、non-friend替换member函数 条款24：若所有参数皆需类型转换">
 
 
 
@@ -352,7 +352,20 @@
       
 
       
-        <h4 id="条款18：让接口容易被正确使用，不易被误用"><a href="#条款18：让接口容易被正确使用，不易被误用" class="headerlink" title="条款18：让接口容易被正确使用，不易被误用"></a>条款18：让接口容易被正确使用，不易被误用</h4><ol>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款18：让接口容易被正确使用，不易被误用">条款18：让接口容易被正确使用，不易被误用</a></li>
+<li><a href="#条款19：设计class犹如设计type">条款19：设计class犹如设计type</a></li>
+<li><a href="#条款20：宁以pass-by-reference-to-const替换pass-by-value">条款20：宁以pass-by-reference-to-const替换pass-by-value</a></li>
+<li><a href="#条款21：必须返回对象时，别妄想返回其reference">条款21：必须返回对象时，别妄想返回其reference</a></li>
+<li><a href="#条款22：将成员变量声明未private">条款22：将成员变量声明未private</a></li>
+<li><a href="#条款23：宁以non-member、non-friend替换member函数">条款23：宁以non-member、non-friend替换member函数</a></li>
+<li><a href="#条款24：若所有参数皆需类型转换，请为此采用non-member函数">条款24：若所有参数皆需类型转换，请为此采用non-member函数</a></li>
+<li><a href="#条款25：考虑写出一个不抛出异常的swap函数">条款25：考虑写出一个不抛出异常的swap函数</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款18：让接口容易被正确使用，不易被误用"><a href="#条款18：让接口容易被正确使用，不易被误用" class="headerlink" title="条款18：让接口容易被正确使用，不易被误用"></a>条款18：让接口容易被正确使用，不易被误用</h4><ol>
 <li>除非有好理由，否则应该尽量令你的types的行为与内置types一致。“促进正确使用”的办法包括接口的一致性，以及与内置类型的行为兼容。</li>
 <li>“阻止误用”的办法包括建立新类型、限制类型上的操作，束缚对象值，以及消除用户的资源管理责任。</li>
 <li>std::shared_ptr支持定制型删除其（custom deleter）。这可防范DLL问题（在这个dll创建对象，在另一边dll删除），可被用来自动解除互斥锁等等。</li>

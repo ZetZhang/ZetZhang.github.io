@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="条款05：了解C++默默编写并调用哪些函数 如果自己没声明，编译器会自动声明（编译器版本）的copy构造函数、copy assignment操作符和析构函数。如果没有声明构造函数，编译器也会声明一个default构造函数。 如果某个base classes将copy assignment操作符声明为private，编译器将拒绝为其derived classes生成一个copy assignment">
+<meta name="description" content="条款05：了解C++默默编写并调用哪些函数 条款06：若不想使用编译器自动生成的函数，就该明确拒绝 条款07：为多态基类声明virtual析构函数 条款08：别让异常逃离析构函数 条款09：绝不在构造和析构过程中调用virtual函数 条款10：令operator=返回一个reference to *this 条款11：在operator=中处理“自我赋值” 条款12：赋值对象时勿忘其每一个">
 <meta name="keywords" content="C++,Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2 构造、析构、赋值运算">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/2-构造、析构、赋值运算/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="条款05：了解C++默默编写并调用哪些函数 如果自己没声明，编译器会自动声明（编译器版本）的copy构造函数、copy assignment操作符和析构函数。如果没有声明构造函数，编译器也会声明一个default构造函数。 如果某个base classes将copy assignment操作符声明为private，编译器将拒绝为其derived classes生成一个copy assignment">
+<meta property="og:description" content="条款05：了解C++默默编写并调用哪些函数 条款06：若不想使用编译器自动生成的函数，就该明确拒绝 条款07：为多态基类声明virtual析构函数 条款08：别让异常逃离析构函数 条款09：绝不在构造和析构过程中调用virtual函数 条款10：令operator=返回一个reference to *this 条款11：在operator=中处理“自我赋值” 条款12：赋值对象时勿忘其每一个">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:26:00.570Z">
+<meta property="og:updated_time" content="2020-06-25T04:24:29.263Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2 构造、析构、赋值运算">
-<meta name="twitter:description" content="条款05：了解C++默默编写并调用哪些函数 如果自己没声明，编译器会自动声明（编译器版本）的copy构造函数、copy assignment操作符和析构函数。如果没有声明构造函数，编译器也会声明一个default构造函数。 如果某个base classes将copy assignment操作符声明为private，编译器将拒绝为其derived classes生成一个copy assignment">
+<meta name="twitter:description" content="条款05：了解C++默默编写并调用哪些函数 条款06：若不想使用编译器自动生成的函数，就该明确拒绝 条款07：为多态基类声明virtual析构函数 条款08：别让异常逃离析构函数 条款09：绝不在构造和析构过程中调用virtual函数 条款10：令operator=返回一个reference to *this 条款11：在operator=中处理“自我赋值” 条款12：赋值对象时勿忘其每一个">
 
 
 
@@ -352,7 +352,20 @@
       
 
       
-        <h4 id="条款05：了解C-默默编写并调用哪些函数"><a href="#条款05：了解C-默默编写并调用哪些函数" class="headerlink" title="条款05：了解C++默默编写并调用哪些函数"></a>条款05：了解C++默默编写并调用哪些函数</h4><ol>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款05：了解c++默默编写并调用哪些函数">条款05：了解C++默默编写并调用哪些函数</a></li>
+<li><a href="#条款06：若不想使用编译器自动生成的函数，就该明确拒绝">条款06：若不想使用编译器自动生成的函数，就该明确拒绝</a></li>
+<li><a href="#条款07：为多态基类声明virtual析构函数">条款07：为多态基类声明virtual析构函数</a></li>
+<li><a href="#条款08：别让异常逃离析构函数">条款08：别让异常逃离析构函数</a></li>
+<li><a href="#条款09：绝不在构造和析构过程中调用virtual函数">条款09：绝不在构造和析构过程中调用virtual函数</a></li>
+<li><a href="#条款10：令operator=返回一个reference-to-*this">条款10：令operator=返回一个reference to *this</a></li>
+<li><a href="#条款11：在operator=中处理“自我赋值”">条款11：在operator=中处理“自我赋值”</a></li>
+<li><a href="#条款12：赋值对象时勿忘其每一个成分">条款12：赋值对象时勿忘其每一个成分</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款05：了解C-默默编写并调用哪些函数"><a href="#条款05：了解C-默默编写并调用哪些函数" class="headerlink" title="条款05：了解C++默默编写并调用哪些函数"></a>条款05：了解C++默默编写并调用哪些函数</h4><ol>
 <li>如果自己没声明，编译器会自动声明（编译器版本）的<font color="red">copy构造函数</font>、<font color="red">copy assignment操作符</font>和<font color="red">析构函数</font>。如果没有声明构造函数，编译器也会声明一个<font color="red">default构造函数</font>。</li>
 <li>如果某个base classes将copy assignment操作符声明为private，编译器将拒绝为其derived classes生成一个copy assignment操作符。</li>
 <li>如果一个类中有reference或pointer类型的数据。那么对于copy assignment操作符需要自己定义，而不是使用编译器生成版本。</li>

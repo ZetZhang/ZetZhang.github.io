@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="C++templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。泛型编程（genericprogramming）——写出的代码和其所处理的对象类型彼此独立（for_each、find、merge等）。最终人们发现C++template机制自身是完整的图灵机（Turing-complete）">
+<meta name="description" content="条款41：了解隐式接口和编译期多态 条款42：了解typename的双重意义 条款43：学习处理模板化基类内的名称 条款44：将与参数无关的代码抽离templates 条款45：运用成员函数模板接受所有兼容类型 条款46：需要类型转换时请为模板定义非成员函数 条款47：请使用traits classes表现类型信息 条款48：认适template元编程   C++templates的最初发展">
 <meta name="keywords" content="C++,Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="7 模板与泛型编程">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/7-模板与泛型编程/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="C++templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。泛型编程（genericprogramming）——写出的代码和其所处理的对象类型彼此独立（for_each、find、merge等）。最终人们发现C++template机制自身是完整的图灵机（Turing-complete）">
+<meta property="og:description" content="条款41：了解隐式接口和编译期多态 条款42：了解typename的双重意义 条款43：学习处理模板化基类内的名称 条款44：将与参数无关的代码抽离templates 条款45：运用成员函数模板接受所有兼容类型 条款46：需要类型转换时请为模板定义非成员函数 条款47：请使用traits classes表现类型信息 条款48：认适template元编程   C++templates的最初发展">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T05:46:15.946Z">
+<meta property="og:updated_time" content="2020-06-25T07:12:17.490Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="7 模板与泛型编程">
-<meta name="twitter:description" content="C++templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。泛型编程（genericprogramming）——写出的代码和其所处理的对象类型彼此独立（for_each、find、merge等）。最终人们发现C++template机制自身是完整的图灵机（Turing-complete）">
+<meta name="twitter:description" content="条款41：了解隐式接口和编译期多态 条款42：了解typename的双重意义 条款43：学习处理模板化基类内的名称 条款44：将与参数无关的代码抽离templates 条款45：运用成员函数模板接受所有兼容类型 条款46：需要类型转换时请为模板定义非成员函数 条款47：请使用traits classes表现类型信息 条款48：认适template元编程   C++templates的最初发展">
 
 
 
@@ -352,7 +352,20 @@
       
 
       
-        <p>C++<br>templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。<font color="red">泛型编程</font>（<font color="green">generic<br>programming</font>）——<em>写出的代码和其所处理的对象类型彼此独立</em>（for_each、find、merge等）。最终人们发现C++<br>template机制自身是完整的<font color="red">图灵机</font>（<font color="green">Turing-complete</font>）。于是导出<font color="red">模板元编程</font>（<font color="green">template<br>metaprogramming</font>），创造出在C++编译器内执行并于编译完成时停止执行的程序。</p>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款41：了解隐式接口和编译期多态">条款41：了解隐式接口和编译期多态</a></li>
+<li><a href="#条款42：了解typename的双重意义">条款42：了解typename的双重意义</a></li>
+<li><a href="#条款43：学习处理模板化基类内的名称">条款43：学习处理模板化基类内的名称</a></li>
+<li><a href="#条款44：将与参数无关的代码抽离templates">条款44：将与参数无关的代码抽离templates</a></li>
+<li><a href="#条款45：运用成员函数模板接受所有兼容类型">条款45：运用成员函数模板接受所有兼容类型</a></li>
+<li><a href="#条款46：需要类型转换时请为模板定义非成员函数">条款46：需要类型转换时请为模板定义非成员函数</a></li>
+<li><a href="#条款47：请使用traits-classes表现类型信息">条款47：请使用traits classes表现类型信息</a></li>
+<li><a href="#条款48：认适template元编程">条款48：认适template元编程</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>C++<br>templates的最初发展动机很直接：让我们得以建立type-sfae的容器（vector、list、map等）。后来发现templates有能力完成愈多可能的变化。<font color="red">泛型编程</font>（<font color="green">generic<br>programming</font>）——<em>写出的代码和其所处理的对象类型彼此独立</em>（for_each、find、merge等）。最终人们发现C++<br>template机制自身是完整的<font color="red">图灵机</font>（<font color="green">Turing-complete</font>）。于是导出<font color="red">模板元编程</font>（<font color="green">template<br>metaprogramming</font>），创造出在C++编译器内执行并于编译完成时停止执行的程序。</p>
 <h4 id="条款41：了解隐式接口和编译期多态"><a href="#条款41：了解隐式接口和编译期多态" class="headerlink" title="条款41：了解隐式接口和编译期多态"></a>条款41：了解隐式接口和编译期多态</h4><ol>
 <li><p>面向对象编程世界总是以<font color="red">显示接口</font>（<font color="green">explicit interfaces</font>）和<font color="red">运行期多态</font>（<font color="green">runtime polymorphism</font>）解决问题。</p>
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Widget();</span><br><span class="line">    <span class="keyword">virtual</span> ~Widget();</span><br><span class="line">    virutal <span class="built_in">std</span>::<span class="keyword">size_t</span> size() <span class="keyword">const</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">normalize</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(Widget &amp;other)</span></span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doProcessing</span><span class="params">(Widget &amp;w)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (w.size() &gt; <span class="number">10</span> &amp;&amp; w != someNastyWidget)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">Widget <span class="title">temp</span><span class="params">(w)</span></span>;</span><br><span class="line">        temp.normalize();</span><br><span class="line">        temp.swap(w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>

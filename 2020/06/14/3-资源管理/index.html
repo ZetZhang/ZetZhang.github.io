@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="条款13：以对象管理资源 以对象管理资源的观念常被称为“资源取得时机便是初始化实际”（Resource Acquisition Is Initialization; RAII）。在获得的同时立刻被放进管理对象中。auto_ptrs有个不寻常的性质：若通过copy构造函数或copy assignment操作符复制，它们就会变成null，而复制所得的指针将取得资源的唯一拥有权，并在析构函数中释放资源。">
+<meta name="description" content="条款13：以对象管理资源 条款14：在资源管理类中小心copying行为？？？ 条款15：在资源管理类中提供对原始资源的访问 条款16：成对使用new和delete时要采取相同形式 条款17：以独立语句将newed对象置入智能指针   条款13：以对象管理资源 以对象管理资源的观念常被称为“资源取得时机便是初始化实际”（Resource Acquisition Is Initializati">
 <meta name="keywords" content="C++,Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="3 资源管理">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/3-资源管理/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="条款13：以对象管理资源 以对象管理资源的观念常被称为“资源取得时机便是初始化实际”（Resource Acquisition Is Initialization; RAII）。在获得的同时立刻被放进管理对象中。auto_ptrs有个不寻常的性质：若通过copy构造函数或copy assignment操作符复制，它们就会变成null，而复制所得的指针将取得资源的唯一拥有权，并在析构函数中释放资源。">
+<meta property="og:description" content="条款13：以对象管理资源 条款14：在资源管理类中小心copying行为？？？ 条款15：在资源管理类中提供对原始资源的访问 条款16：成对使用new和delete时要采取相同形式 条款17：以独立语句将newed对象置入智能指针   条款13：以对象管理资源 以对象管理资源的观念常被称为“资源取得时机便是初始化实际”（Resource Acquisition Is Initializati">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:26:24.820Z">
+<meta property="og:updated_time" content="2020-06-25T04:25:23.017Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="3 资源管理">
-<meta name="twitter:description" content="条款13：以对象管理资源 以对象管理资源的观念常被称为“资源取得时机便是初始化实际”（Resource Acquisition Is Initialization; RAII）。在获得的同时立刻被放进管理对象中。auto_ptrs有个不寻常的性质：若通过copy构造函数或copy assignment操作符复制，它们就会变成null，而复制所得的指针将取得资源的唯一拥有权，并在析构函数中释放资源。">
+<meta name="twitter:description" content="条款13：以对象管理资源 条款14：在资源管理类中小心copying行为？？？ 条款15：在资源管理类中提供对原始资源的访问 条款16：成对使用new和delete时要采取相同形式 条款17：以独立语句将newed对象置入智能指针   条款13：以对象管理资源 以对象管理资源的观念常被称为“资源取得时机便是初始化实际”（Resource Acquisition Is Initializati">
 
 
 
@@ -352,7 +352,17 @@
       
 
       
-        <h4 id="条款13：以对象管理资源"><a href="#条款13：以对象管理资源" class="headerlink" title="条款13：以对象管理资源"></a>条款13：以对象管理资源</h4><ol>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款13：以对象管理资源">条款13：以对象管理资源</a></li>
+<li><a href="#条款14：在资源管理类中小心copying行为？？？">条款14：在资源管理类中小心copying行为？？？</a></li>
+<li><a href="#条款15：在资源管理类中提供对原始资源的访问">条款15：在资源管理类中提供对原始资源的访问</a></li>
+<li><a href="#条款16：成对使用new和delete时要采取相同形式">条款16：成对使用new和delete时要采取相同形式</a></li>
+<li><a href="#条款17：以独立语句将newed对象置入智能指针">条款17：以独立语句将newed对象置入智能指针</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款13：以对象管理资源"><a href="#条款13：以对象管理资源" class="headerlink" title="条款13：以对象管理资源"></a>条款13：以对象管理资源</h4><ol>
 <li>以对象管理资源的观念常被称为“<font color="red">资源取得时机便是初始化实际</font>”（<font color="green">Resource Acquisition Is Initialization; </font><font color="red">RAII</font>）。在获得的同时立刻被放进管理对象中。<code>auto_ptrs</code>有个不寻常的性质：若通过copy构造函数或copy assignment操作符复制，它们就会变成null，而复制所得的指针将取得资源的唯一拥有权，并在析构函数中释放资源。</li>
 <li><code>auto_ptr</code>的替代方案是“<font color="red">引用计数型智能指针</font>”（<font color="green">reference-counting smart pointer；</font><font color="red">RCSP</font>）。它提供的行为类似<font color="red">垃圾回收</font>（<font color="green">garbage collection</font>）。</li>
 </ol>

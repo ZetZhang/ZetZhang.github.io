@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="一个空的class如：   12345// sizeof X == 1class X &amp;#123; &amp;#125;;                    // sizeof X == 1class Y : public virtual X &amp;#123;&amp;#125;;  // sizeof X == 8class Z : public virtual X &amp;#123;&amp;#125;;  // siz">
+<meta name="description" content="3.1 Data Member的绑定（The Binding of a Data Member） 3.2 Data Member的布局（Data Member Layout） 3.3 Data Member的存取 Static Data Members Nonstatic Data Members   3.4 “继承”于Data Member 只要继承不要多态（Inheritance wit">
 <meta name="keywords" content="C++,C++对象模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第三章 Data语义学">
 <meta property="og:url" content="http://yoursite.com/2020/06/12/第三章-Data语义学/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="一个空的class如：   12345// sizeof X == 1class X &amp;#123; &amp;#125;;                    // sizeof X == 1class Y : public virtual X &amp;#123;&amp;#125;;  // sizeof X == 8class Z : public virtual X &amp;#123;&amp;#125;;  // siz">
+<meta property="og:description" content="3.1 Data Member的绑定（The Binding of a Data Member） 3.2 Data Member的布局（Data Member Layout） 3.3 Data Member的存取 Static Data Members Nonstatic Data Members   3.4 “继承”于Data Member 只要继承不要多态（Inheritance wit">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-12T14:55:14.955Z">
+<meta property="og:updated_time" content="2020-06-25T04:36:10.993Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第三章 Data语义学">
-<meta name="twitter:description" content="一个空的class如：   12345// sizeof X == 1class X &amp;#123; &amp;#125;;                    // sizeof X == 1class Y : public virtual X &amp;#123;&amp;#125;;  // sizeof X == 8class Z : public virtual X &amp;#123;&amp;#125;;  // siz">
+<meta name="twitter:description" content="3.1 Data Member的绑定（The Binding of a Data Member） 3.2 Data Member的布局（Data Member Layout） 3.3 Data Member的存取 Static Data Members Nonstatic Data Members   3.4 “继承”于Data Member 只要继承不要多态（Inheritance wit">
 
 
 
@@ -352,7 +352,31 @@
       
 
       
-        <ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#3.1-data-member的绑定（the-binding-of-a-data-member）">3.1 Data Member的绑定（The Binding of a Data Member）</a></li>
+<li><a href="#3.2-data-member的布局（data-member-layout）">3.2 Data Member的布局（Data Member Layout）</a></li>
+<li><a href="#3.3-data-member的存取">3.3 Data Member的存取</a><ul>
+<li><a href="#static-data-members">Static Data Members</a></li>
+<li><a href="#nonstatic-data-members">Nonstatic Data Members</a></li>
+</ul>
+</li>
+<li><a href="#3.4-“继承”于data-member">3.4 “继承”于Data Member</a><ul>
+<li><a href="#只要继承不要多态（inheritance-without-polymorphism）">只要继承不要多态（Inheritance without Polymorphism）</a></li>
+<li><a href="#加上多态（adding-polymorphism）">加上多态（Adding Polymorphism）</a></li>
+<li><a href="#多重继承（multiple-inheritance）">多重继承（Multiple Inheritance）</a></li>
+<li><a href="#虚拟继承（virtual-inheritance）">虚拟继承（Virtual Inheritance）</a></li>
+</ul>
+</li>
+<li><a href="#3.5-对象成员的效率（object-member-efficiency）">3.5 对象成员的效率（Object Member Efficiency）</a></li>
+<li><a href="#3.6-指向data-members的指针（poniter-to-data-members）">3.6 指向Data Members的指针（Poniter to Data Members）</a><ul>
+<li><a href="#“指向members的指针”的效率问题">“指向Members的指针”的效率问题</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li><p>一个空的class如：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sizeof X == 1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> &#123;</span> &#125;;                    <span class="comment">// sizeof X == 1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Y</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> X &#123;&#125;;  <span class="comment">// sizeof X == 8</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Z</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> X &#123;&#125;;  <span class="comment">// sizeof X == 8</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> :</span> <span class="keyword">public</span> Y, <span class="keyword">public</span> Z &#123;&#125;;<span class="comment">// sizeof X == 12</span></span><br></pre></td></tr></table></figure>
 

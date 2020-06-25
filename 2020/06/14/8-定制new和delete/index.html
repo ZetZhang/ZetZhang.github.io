@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="以下operator new和operator delete的规则同样适用于operator new[]和operatordelete[] 条款49：了解new-handler的行为 当operator new无法满足某一内存分配需求时，就会抛出异常。在它抛出异常前，会先调用一个用户指定的错误处理函数，一个所谓的new-handler，为了指定这个函数，用户需要调用set_new_handler，">
+<meta name="description" content="条款49：了解new-handler的行为 条款50：了解new和delete的合理替换时机 条款51：编写new和delete时需固守常规 条款52：写了placement new也要写placement delete   以下operator new和operator delete的规则同样适用于operator new[]和operatordelete[] 条款49：了解new-han">
 <meta name="keywords" content="C++,Effecive C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="8 定制new和delete">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/8-定制new和delete/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="以下operator new和operator delete的规则同样适用于operator new[]和operatordelete[] 条款49：了解new-handler的行为 当operator new无法满足某一内存分配需求时，就会抛出异常。在它抛出异常前，会先调用一个用户指定的错误处理函数，一个所谓的new-handler，为了指定这个函数，用户需要调用set_new_handler，">
+<meta property="og:description" content="条款49：了解new-handler的行为 条款50：了解new和delete的合理替换时机 条款51：编写new和delete时需固守常规 条款52：写了placement new也要写placement delete   以下operator new和operator delete的规则同样适用于operator new[]和operatordelete[] 条款49：了解new-han">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:31:15.600Z">
+<meta property="og:updated_time" content="2020-06-25T07:12:47.537Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="8 定制new和delete">
-<meta name="twitter:description" content="以下operator new和operator delete的规则同样适用于operator new[]和operatordelete[] 条款49：了解new-handler的行为 当operator new无法满足某一内存分配需求时，就会抛出异常。在它抛出异常前，会先调用一个用户指定的错误处理函数，一个所谓的new-handler，为了指定这个函数，用户需要调用set_new_handler，">
+<meta name="twitter:description" content="条款49：了解new-handler的行为 条款50：了解new和delete的合理替换时机 条款51：编写new和delete时需固守常规 条款52：写了placement new也要写placement delete   以下operator new和operator delete的规则同样适用于operator new[]和operatordelete[] 条款49：了解new-han">
 
 
 
@@ -352,7 +352,16 @@
       
 
       
-        <p>以下operator new和operator delete的规则同样适用于operator new[]和operator<br>delete[]</p>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#条款49：了解new-handler的行为">条款49：了解new-handler的行为</a></li>
+<li><a href="#条款50：了解new和delete的合理替换时机">条款50：了解new和delete的合理替换时机</a></li>
+<li><a href="#条款51：编写new和delete时需固守常规">条款51：编写new和delete时需固守常规</a></li>
+<li><a href="#条款52：写了placement-new也要写placement-delete">条款52：写了placement new也要写placement delete</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>以下operator new和operator delete的规则同样适用于operator new[]和operator<br>delete[]</p>
 <h4 id="条款49：了解new-handler的行为"><a href="#条款49：了解new-handler的行为" class="headerlink" title="条款49：了解new-handler的行为"></a>条款49：了解new-handler的行为</h4><ol>
 <li><p>当operator new无法满足某一内存分配需求时，就会抛出异常。在它抛出异常前，会先调用一个用户指定的错误处理函数，一个所谓的<code>new-handler</code>，为了指定这个函数，用户需要调用<code>set_new_handler</code>，那是声明于<new>的一个标准程序库函数：</new></p>
  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="built_in">std</span> &#123;</span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*new_handler)</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">new_handler <span class="title">set_new_handler</span><span class="params">(new_handler p)</span> <span class="title">throw</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用时</span></span><br><span class="line"><span class="built_in">std</span>::set_new_handler(outOfMem);</span><br></pre></td></tr></table></figure>

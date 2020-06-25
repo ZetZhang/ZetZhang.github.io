@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="EXPLAIN语法 ANALYZE[boolean]：执行statement，得到真是运行时间和统计信息 VERBOSE[boolean]：详细信息 COSTS[boolean]：cost值，默认打开 BUFFERS[boolean]：本次QUERY shared或local buffer的信息，包括命中未命中，脏写 TIMING[boolean]：输出时间开销 FORMAT{TEXT|XML|J">
+<meta name="description" content="EXPLAIN语法 EXPLAIN代价因子校准 cpu_tuple_cost因子 random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准   auto_explain？not found   EXPLAIN语法 ANALYZE[boolean]：执行statement，得到真是运行时间和统计信息 VERBOSE[b">
 <meta name="keywords" content="Linux,Config,PostgreSQL,Database">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PostgreSQL查询优化">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/PostgreSQL查询优化/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="EXPLAIN语法 ANALYZE[boolean]：执行statement，得到真是运行时间和统计信息 VERBOSE[boolean]：详细信息 COSTS[boolean]：cost值，默认打开 BUFFERS[boolean]：本次QUERY shared或local buffer的信息，包括命中未命中，脏写 TIMING[boolean]：输出时间开销 FORMAT{TEXT|XML|J">
+<meta property="og:description" content="EXPLAIN语法 EXPLAIN代价因子校准 cpu_tuple_cost因子 random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准   auto_explain？not found   EXPLAIN语法 ANALYZE[boolean]：执行statement，得到真是运行时间和统计信息 VERBOSE[b">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:24:11.920Z">
+<meta property="og:updated_time" content="2020-06-25T07:22:15.477Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PostgreSQL查询优化">
-<meta name="twitter:description" content="EXPLAIN语法 ANALYZE[boolean]：执行statement，得到真是运行时间和统计信息 VERBOSE[boolean]：详细信息 COSTS[boolean]：cost值，默认打开 BUFFERS[boolean]：本次QUERY shared或local buffer的信息，包括命中未命中，脏写 TIMING[boolean]：输出时间开销 FORMAT{TEXT|XML|J">
+<meta name="twitter:description" content="EXPLAIN语法 EXPLAIN代价因子校准 cpu_tuple_cost因子 random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准   auto_explain？not found   EXPLAIN语法 ANALYZE[boolean]：执行statement，得到真是运行时间和统计信息 VERBOSE[b">
 
 
 
@@ -352,7 +352,19 @@
       
 
       
-        <h3 id="EXPLAIN语法"><a href="#EXPLAIN语法" class="headerlink" title="EXPLAIN语法"></a>EXPLAIN语法</h3><ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#explain语法">EXPLAIN语法</a></li>
+<li><a href="#explain代价因子校准">EXPLAIN代价因子校准</a><ul>
+<li><a href="#cpu_tuple_cost因子">cpu_tuple_cost因子</a></li>
+<li><a href="#random_page_cost因子校准-cpu_index_tuple_cst因子校准-cpu_operator_cost因子校准">random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准</a></li>
+</ul>
+</li>
+<li><a href="#auto_explain？not-found">auto_explain？not found</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h3 id="EXPLAIN语法"><a href="#EXPLAIN语法" class="headerlink" title="EXPLAIN语法"></a>EXPLAIN语法</h3><ul>
 <li><code>ANALYZE[boolean]</code>：执行statement，得到真是运行时间和统计信息</li>
 <li><code>VERBOSE[boolean]</code>：详细信息</li>
 <li><code>COSTS[boolean]</code>：cost值，默认打开</li>

@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="型变 型变(subtype)指根据原始类型子类型关系确定复杂类型子类型关系的规则。型变分为三种形式： 协变(covariant)。保持子类型关系 逆变(contravariant)。逆转子类型关系 不变(invariant)。不保持也不逆转类型关系，即无关   Rust中只有生命周期有子类型关系，长类型是短类型的子类型 PhantomData&amp;lt;T&amp;gt;是一个零大小类型的标记结构体，也叫幻影">
+<meta name="description" content="型变 几个重要的型变列表   型变 型变(subtype)指根据原始类型子类型关系确定复杂类型子类型关系的规则。型变分为三种形式： 协变(covariant)。保持子类型关系 逆变(contravariant)。逆转子类型关系 不变(invariant)。不保持也不逆转类型关系，即无关   Rust中只有生命周期有子类型关系，长类型是短类型的子类型 PhantomData&amp;lt;T&amp;gt;是">
 <meta name="keywords" content="Rust">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rust型变">
 <meta property="og:url" content="http://yoursite.com/2020/06/14/Rust型变/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="型变 型变(subtype)指根据原始类型子类型关系确定复杂类型子类型关系的规则。型变分为三种形式： 协变(covariant)。保持子类型关系 逆变(contravariant)。逆转子类型关系 不变(invariant)。不保持也不逆转类型关系，即无关   Rust中只有生命周期有子类型关系，长类型是短类型的子类型 PhantomData&amp;lt;T&amp;gt;是一个零大小类型的标记结构体，也叫幻影">
+<meta property="og:description" content="型变 几个重要的型变列表   型变 型变(subtype)指根据原始类型子类型关系确定复杂类型子类型关系的规则。型变分为三种形式： 协变(covariant)。保持子类型关系 逆变(contravariant)。逆转子类型关系 不变(invariant)。不保持也不逆转类型关系，即无关   Rust中只有生命周期有子类型关系，长类型是短类型的子类型 PhantomData&amp;lt;T&amp;gt;是">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:18:24.680Z">
+<meta property="og:updated_time" content="2020-06-25T07:30:37.437Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rust型变">
-<meta name="twitter:description" content="型变 型变(subtype)指根据原始类型子类型关系确定复杂类型子类型关系的规则。型变分为三种形式： 协变(covariant)。保持子类型关系 逆变(contravariant)。逆转子类型关系 不变(invariant)。不保持也不逆转类型关系，即无关   Rust中只有生命周期有子类型关系，长类型是短类型的子类型 PhantomData&amp;lt;T&amp;gt;是一个零大小类型的标记结构体，也叫幻影">
+<meta name="twitter:description" content="型变 几个重要的型变列表   型变 型变(subtype)指根据原始类型子类型关系确定复杂类型子类型关系的规则。型变分为三种形式： 协变(covariant)。保持子类型关系 逆变(contravariant)。逆转子类型关系 不变(invariant)。不保持也不逆转类型关系，即无关   Rust中只有生命周期有子类型关系，长类型是短类型的子类型 PhantomData&amp;lt;T&amp;gt;是">
 
 
 
@@ -352,7 +352,14 @@
       
 
       
-        <h2 id="型变"><a href="#型变" class="headerlink" title="型变"></a>型变</h2><ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#型变">型变</a></li>
+<li><a href="#几个重要的型变列表">几个重要的型变列表</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h2 id="型变"><a href="#型变" class="headerlink" title="型变"></a>型变</h2><ul>
 <li>型变(subtype)指根据原始类型子类型关系确定复杂类型子类型关系的规则。型变分为三种形式：<ul>
 <li>协变(covariant)。保持子类型关系</li>
 <li>逆变(contravariant)。逆转子类型关系</li>

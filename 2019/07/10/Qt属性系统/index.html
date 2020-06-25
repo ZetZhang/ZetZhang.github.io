@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="1.属性定义Qt提供了Q_PROPERTY()宏来定义属性，它是基于元对象系统来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。在QObject的子类中，用宏Q_PROPERTY()定义属性，格式是： 123456789101112Q_PROPERTY(type name           (READ getFunction [WRITE setFuncti">
+<meta name="description" content="1.属性定义 2.动态属性 3.类的附加属性   1.属性定义Qt提供了Q_PROPERTY()宏来定义属性，它是基于元对象系统来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。在QObject的子类中，用宏Q_PROPERTY()定义属性，格式是： 123456789101112Q_PROPERTY(type name           (READ">
 <meta name="keywords" content="C++,Qt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Qt属性系统">
 <meta property="og:url" content="http://yoursite.com/2019/07/10/Qt属性系统/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="1.属性定义Qt提供了Q_PROPERTY()宏来定义属性，它是基于元对象系统来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。在QObject的子类中，用宏Q_PROPERTY()定义属性，格式是： 123456789101112Q_PROPERTY(type name           (READ getFunction [WRITE setFuncti">
+<meta property="og:description" content="1.属性定义 2.动态属性 3.类的附加属性   1.属性定义Qt提供了Q_PROPERTY()宏来定义属性，它是基于元对象系统来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。在QObject的子类中，用宏Q_PROPERTY()定义属性，格式是： 123456789101112Q_PROPERTY(type name           (READ">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-12-07T08:14:44.938Z">
+<meta property="og:updated_time" content="2020-06-25T07:27:44.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qt属性系统">
-<meta name="twitter:description" content="1.属性定义Qt提供了Q_PROPERTY()宏来定义属性，它是基于元对象系统来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。在QObject的子类中，用宏Q_PROPERTY()定义属性，格式是： 123456789101112Q_PROPERTY(type name           (READ getFunction [WRITE setFuncti">
+<meta name="twitter:description" content="1.属性定义 2.动态属性 3.类的附加属性   1.属性定义Qt提供了Q_PROPERTY()宏来定义属性，它是基于元对象系统来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。在QObject的子类中，用宏Q_PROPERTY()定义属性，格式是： 123456789101112Q_PROPERTY(type name           (READ">
 
 
 
@@ -352,7 +352,15 @@
       
 
       
-        <h2 id="1-属性定义"><a href="#1-属性定义" class="headerlink" title="1.属性定义"></a>1.属性定义</h2><p>Qt提供了<code>Q_PROPERTY()</code>宏来定义属性，它是基于<a href="https://zetzhang.github.io/2019/07/06/Qt%E5%85%83%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F/" target="_blank" rel="noopener">元对象系统</a>来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。<br>在QObject的子类中，用宏<code>Q_PROPERTY()</code>定义属性，格式是：</p>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#1.属性定义">1.属性定义</a></li>
+<li><a href="#2.动态属性">2.动态属性</a></li>
+<li><a href="#3.类的附加属性">3.类的附加属性</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h2 id="1-属性定义"><a href="#1-属性定义" class="headerlink" title="1.属性定义"></a>1.属性定义</h2><p>Qt提供了<code>Q_PROPERTY()</code>宏来定义属性，它是基于<a href="https://zetzhang.github.io/2019/07/06/Qt%E5%85%83%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F/" target="_blank" rel="noopener">元对象系统</a>来实现的。作为平台与编译器无关的库，Qt C++程序可以被任何标注你的C++编译器编译。<br>在QObject的子类中，用宏<code>Q_PROPERTY()</code>定义属性，格式是：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Q_PROPERTY(type name</span><br><span class="line">           (READ getFunction [WRITE setFunction] |</span><br><span class="line">            MEMBER memberName [(READ getFunction | WRITE setFunction)])</span><br><span class="line">           [RESET resetFunction]</span><br><span class="line">           [NOTIFY notifySignal]</span><br><span class="line">           [REVISION <span class="keyword">int</span>]</span><br><span class="line">           [DESIGNABLE <span class="keyword">bool</span>]</span><br><span class="line">           [SCRIPTABLE <span class="keyword">bool</span>]</span><br><span class="line">           [STORED <span class="keyword">bool</span>]</span><br><span class="line">           [USER <span class="keyword">bool</span>]</span><br><span class="line">           [CONSTANT]</span><br><span class="line">           [FINAL])</span><br></pre></td></tr></table></figure>
 
 <p><code>Q_PROPERTY</code>宏定义一个返回值类型为<code>type</code>，名称为<code>name</code>的属性，用<code>READ</code>、<code>WRITE</code>来作为属性的读/写操作，还有其他的一些关键字定义属性的一些操作特性。属性的类型可以是<code>QVariant</code>支持的任何类型，也可以用户自定义类型。<br><code>Q_PROPERTY</code>宏定义属性的一些主要关键字的意义如下：</p>

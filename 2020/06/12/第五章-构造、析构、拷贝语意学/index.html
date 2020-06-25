@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="纯虚函数的存在（Presence of a Pure Virtal Function） 考虑abstract base class声明:   12345678class Abstract_base &amp;#123;public:    virtual ~Abstract_base() = 0;    virtual void interface() const = 0;    virtual cons">
+<meta name="description" content="纯虚函数的存在（Presence of a Pure Virtal Function） 纯虚函数的存在(Presence of a Pure Virtual Function) 虚拟规格的存在（Presence of a Virtual Specification） 虚拟规格中const的存在 重新考虑class的声明 5.1 ”无继承”情况下的对象构造 抽象数据类型（Abstract Da">
 <meta name="keywords" content="C++,C++对象模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第五章 构造、析构、拷贝语意学">
 <meta property="og:url" content="http://yoursite.com/2020/06/12/第五章-构造、析构、拷贝语意学/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="纯虚函数的存在（Presence of a Pure Virtal Function） 考虑abstract base class声明:   12345678class Abstract_base &amp;#123;public:    virtual ~Abstract_base() = 0;    virtual void interface() const = 0;    virtual cons">
+<meta property="og:description" content="纯虚函数的存在（Presence of a Pure Virtal Function） 纯虚函数的存在(Presence of a Pure Virtual Function) 虚拟规格的存在（Presence of a Virtual Specification） 虚拟规格中const的存在 重新考虑class的声明 5.1 ”无继承”情况下的对象构造 抽象数据类型（Abstract Da">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-14T08:34:23.580Z">
+<meta property="og:updated_time" content="2020-06-25T04:40:07.590Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第五章 构造、析构、拷贝语意学">
-<meta name="twitter:description" content="纯虚函数的存在（Presence of a Pure Virtal Function） 考虑abstract base class声明:   12345678class Abstract_base &amp;#123;public:    virtual ~Abstract_base() = 0;    virtual void interface() const = 0;    virtual cons">
+<meta name="twitter:description" content="纯虚函数的存在（Presence of a Pure Virtal Function） 纯虚函数的存在(Presence of a Pure Virtual Function) 虚拟规格的存在（Presence of a Virtual Specification） 虚拟规格中const的存在 重新考虑class的声明 5.1 ”无继承”情况下的对象构造 抽象数据类型（Abstract Da">
 
 
 
@@ -352,7 +352,30 @@
       
 
       
-        <h5 id="纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）"><a href="#纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）" class="headerlink" title="纯虚函数的存在（Presence of a Pure Virtal Function）"></a>纯虚函数的存在（Presence of a Pure Virtal Function）</h5><ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#纯虚函数的存在（presence-of-a-pure-virtal-function）">纯虚函数的存在（Presence of a Pure Virtal Function）</a></li>
+<li><a href="#纯虚函数的存在(presence-of-a-pure-virtual-function)">纯虚函数的存在(Presence of a Pure Virtual Function)</a></li>
+<li><a href="#虚拟规格的存在（presence-of-a-virtual-specification）">虚拟规格的存在（Presence of a Virtual Specification）</a></li>
+<li><a href="#虚拟规格中const的存在">虚拟规格中const的存在</a></li>
+<li><a href="#重新考虑class的声明">重新考虑class的声明</a></li>
+<li><a href="#5.1-”无继承”情况下的对象构造">5.1 ”无继承”情况下的对象构造</a><ul>
+<li><a href="#抽象数据类型（abstract-data-type）">抽象数据类型（Abstract Data Type）</a></li>
+<li><a href="#为继承做准备">为继承做准备</a></li>
+</ul>
+</li>
+<li><a href="#5.2-继承体系下的对象构造">5.2 继承体系下的对象构造</a><ul>
+<li><a href="#虚拟继承（virtual-inheritance）">虚拟继承（Virtual Inheritance）</a></li>
+<li><a href="#vptr初始化语意学（the-semantics-of-the-vptr-initialization）">vptr初始化语意学（The Semantics of the vptr Initialization）</a></li>
+</ul>
+</li>
+<li><a href="#5.3-对象复制语意学（object-copy-semantics）">5.3 对象复制语意学（Object Copy Semantics）</a></li>
+<li><a href="#5.4-对象的效能（object-efficiency）">5.4 对象的效能（Object Efficiency）</a></li>
+<li><a href="#5.5-析构语意学（semantics-of-destruction）">5.5 析构语意学（Semantics of Destruction）</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h5 id="纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）"><a href="#纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）" class="headerlink" title="纯虚函数的存在（Presence of a Pure Virtal Function）"></a>纯虚函数的存在（Presence of a Pure Virtal Function）</h5><ul>
 <li><p>考虑abstract base class声明:</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Abstract_base</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~Abstract_base() = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">interface</span><span class="params">()</span> <span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">mumble</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> _mumble; &#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">char</span> *_mumble;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
@@ -456,7 +479,7 @@
 <p>  。。。。。。。。</p>
 </li>
 </ul>
-<h5 id="虚拟继承-Virtual-Inheritance"><a href="#虚拟继承-Virtual-Inheritance" class="headerlink" title="虚拟继承(Virtual Inheritance)"></a>虚拟继承(Virtual Inheritance)</h5><ul>
+<h5 id="虚拟继承（Virtual-Inheritance）"><a href="#虚拟继承（Virtual-Inheritance）" class="headerlink" title="虚拟继承（Virtual Inheritance）"></a>虚拟继承（Virtual Inheritance）</h5><ul>
 <li><p>考虑下面虚拟继承，继承自Point：</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> Point &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Point3d(<span class="keyword">float</span> x = <span class="number">0.0</span>, <span class="keyword">float</span> y = <span class="number">0.0</span>, <span class="keyword">float</span> z = <span class="number">0.0</span>) : Point(x, y), _z(z) &#123;&#125;</span><br><span class="line">    Point3d(<span class="keyword">const</span> Point3d &amp;rhs) : Point(rhs), _z(rhs._z) &#123;&#125;</span><br><span class="line">    ~Point3();</span><br><span class="line">    Point3d&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Point3d&amp;);</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">float</span> <span class="title">z</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> _z; &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
@@ -506,7 +529,7 @@
 </ol>
 </li>
 </ul>
-<h4 id="5-3-对象复制语意学-Object-Copy-Semantics"><a href="#5-3-对象复制语意学-Object-Copy-Semantics" class="headerlink" title="5.3 对象复制语意学(Object Copy Semantics)"></a>5.3 对象复制语意学(Object Copy Semantics)</h4><ul>
+<h4 id="5-3-对象复制语意学（Object-Copy-Semantics）"><a href="#5-3-对象复制语意学（Object-Copy-Semantics）" class="headerlink" title="5.3 对象复制语意学（Object Copy Semantics）"></a>5.3 对象复制语意学（Object Copy Semantics）</h4><ul>
 <li><p>当我们设计一个class，并以一个class object指定给另一个class object时，我们有三种<font color="red">选择</font>：</p>
 <ol>
 <li><p><strong>什么都不做，施行默认行为</strong>。</p>
@@ -538,10 +561,10 @@
 <p>  它不能够省略subobjects的多重拷贝，但可以保证语意。建议尽可能不要允许一个virtual base class的拷贝操作，甚至一个比较奇怪的建议：不要在任何virtual base class中声明数据。</p>
 </li>
 </ul>
-<h4 id="5-4-对象的效能-Object-Efficiency"><a href="#5-4-对象的效能-Object-Efficiency" class="headerlink" title="5.4 对象的效能(Object Efficiency)"></a>5.4 对象的效能(Object Efficiency)</h4><ul>
+<h4 id="5-4-对象的效能（Object-Efficiency）"><a href="#5-4-对象的效能（Object-Efficiency）" class="headerlink" title="5.4 对象的效能（Object Efficiency）"></a>5.4 对象的效能（Object Efficiency）</h4><ul>
 <li>测试。</li>
 </ul>
-<h4 id="5-5-析构语意学-Semantics-of-Destruction"><a href="#5-5-析构语意学-Semantics-of-Destruction" class="headerlink" title="5.5 析构语意学(Semantics of Destruction)"></a>5.5 析构语意学(Semantics of Destruction)</h4><ul>
+<h4 id="5-5-析构语意学（Semantics-of-Destruction）"><a href="#5-5-析构语意学（Semantics-of-Destruction）" class="headerlink" title="5.5 析构语意学（Semantics of Destruction）"></a>5.5 析构语意学（Semantics of Destruction）</h4><ul>
 <li><p>如果class没有定义destructor，那么只有在class内含的member object（抑或是class的base class）拥有destructor的情况下，编译器才会自动合成一个来。当从父类派生子类（即使是一种虚拟派生关系）时，如果没有声明一个estructor，编译器就没有必要合成一个destructor。没有任何理由说在delete一个对象之前得先讲内容清除干净。在一个对象的生命之前，没有任何class使用层面的程序操作是必要的，因此也就不需要要给destructor。  </p>
 </li>
 <li><p>一个由程序员定义的<font color="red"><strong>destructor被扩展的方式类似constructors被扩展的方式</strong></font>，但顺序相反：</p>
@@ -740,7 +763,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）"><span class="nav-number">1.</span> <span class="nav-text">纯虚函数的存在（Presence of a Pure Virtal Function）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯虚函数的存在-Presence-of-a-Pure-Virtual-Function"><span class="nav-number">2.</span> <span class="nav-text">纯虚函数的存在(Presence of a Pure Virtual Function)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#虚拟规格的存在（Presence-of-a-Virtual-Specification）"><span class="nav-number">3.</span> <span class="nav-text">虚拟规格的存在（Presence of a Virtual Specification）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#虚拟规格中const的存在"><span class="nav-number">4.</span> <span class="nav-text">虚拟规格中const的存在</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重新考虑class的声明"><span class="nav-number">5.</span> <span class="nav-text">重新考虑class的声明</span></a></li></ol><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-”无继承”情况下的对象构造"><span class="nav-number"></span> <span class="nav-text">5.1 ”无继承”情况下的对象构造</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#抽象数据类型（Abstract-Data-Type）"><span class="nav-number">1.</span> <span class="nav-text">抽象数据类型（Abstract Data Type）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#为继承做准备"><span class="nav-number">2.</span> <span class="nav-text">为继承做准备</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-继承体系下的对象构造"><span class="nav-number"></span> <span class="nav-text">5.2 继承体系下的对象构造</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#虚拟继承-Virtual-Inheritance"><span class="nav-number">1.</span> <span class="nav-text">虚拟继承(Virtual Inheritance)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#vptr初始化语意学（The-Semantics-of-the-vptr-Initialization）"><span class="nav-number">2.</span> <span class="nav-text">vptr初始化语意学（The Semantics of the vptr Initialization）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-对象复制语意学-Object-Copy-Semantics"><span class="nav-number"></span> <span class="nav-text">5.3 对象复制语意学(Object Copy Semantics)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-对象的效能-Object-Efficiency"><span class="nav-number"></span> <span class="nav-text">5.4 对象的效能(Object Efficiency)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-析构语意学-Semantics-of-Destruction"><span class="nav-number"></span> <span class="nav-text">5.5 析构语意学(Semantics of Destruction)</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#纯虚函数的存在（Presence-of-a-Pure-Virtal-Function）"><span class="nav-number">1.</span> <span class="nav-text">纯虚函数的存在（Presence of a Pure Virtal Function）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#纯虚函数的存在-Presence-of-a-Pure-Virtual-Function"><span class="nav-number">2.</span> <span class="nav-text">纯虚函数的存在(Presence of a Pure Virtual Function)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#虚拟规格的存在（Presence-of-a-Virtual-Specification）"><span class="nav-number">3.</span> <span class="nav-text">虚拟规格的存在（Presence of a Virtual Specification）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#虚拟规格中const的存在"><span class="nav-number">4.</span> <span class="nav-text">虚拟规格中const的存在</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重新考虑class的声明"><span class="nav-number">5.</span> <span class="nav-text">重新考虑class的声明</span></a></li></ol><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-”无继承”情况下的对象构造"><span class="nav-number"></span> <span class="nav-text">5.1 ”无继承”情况下的对象构造</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#抽象数据类型（Abstract-Data-Type）"><span class="nav-number">1.</span> <span class="nav-text">抽象数据类型（Abstract Data Type）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#为继承做准备"><span class="nav-number">2.</span> <span class="nav-text">为继承做准备</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-继承体系下的对象构造"><span class="nav-number"></span> <span class="nav-text">5.2 继承体系下的对象构造</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#虚拟继承（Virtual-Inheritance）"><span class="nav-number">1.</span> <span class="nav-text">虚拟继承（Virtual Inheritance）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#vptr初始化语意学（The-Semantics-of-the-vptr-Initialization）"><span class="nav-number">2.</span> <span class="nav-text">vptr初始化语意学（The Semantics of the vptr Initialization）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-对象复制语意学（Object-Copy-Semantics）"><span class="nav-number"></span> <span class="nav-text">5.3 对象复制语意学（Object Copy Semantics）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-对象的效能（Object-Efficiency）"><span class="nav-number"></span> <span class="nav-text">5.4 对象的效能（Object Efficiency）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-析构语意学（Semantics-of-Destruction）"><span class="nav-number"></span> <span class="nav-text">5.5 析构语意学（Semantics of Destruction）</span></a></li></div>
             
 
           </div>

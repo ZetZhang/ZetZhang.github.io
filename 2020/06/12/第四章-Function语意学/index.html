@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="看以下代码,会发生什么:   1234567891011121314151617181920Point3d obj;POint3d *ptr = &amp;amp;obj;obj.normalize();ptr-&amp;gt;normalize();// declaretionPoint3d Point3d::normalie() const&amp;#123;    register float mag = mag">
+<meta name="description" content="4.1 Member的各种调用方式 Nonstatic Member Functions（非静态成员函数） 名称的特殊处理（Name Mangling）   Virtual Member Functions（虚拟成员函数） Static Member Functions（静态成员函数）   4.2 Virtuar Member Functions（虚拟成员函数） 多重继承下的Virtual">
 <meta name="keywords" content="C++,C++对象模型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="第四章 Function语意学">
 <meta property="og:url" content="http://yoursite.com/2020/06/12/第四章-Function语意学/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="看以下代码,会发生什么:   1234567891011121314151617181920Point3d obj;POint3d *ptr = &amp;amp;obj;obj.normalize();ptr-&amp;gt;normalize();// declaretionPoint3d Point3d::normalie() const&amp;#123;    register float mag = mag">
+<meta property="og:description" content="4.1 Member的各种调用方式 Nonstatic Member Functions（非静态成员函数） 名称的特殊处理（Name Mangling）   Virtual Member Functions（虚拟成员函数） Static Member Functions（静态成员函数）   4.2 Virtuar Member Functions（虚拟成员函数） 多重继承下的Virtual">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2020-06-12T14:58:33.175Z">
+<meta property="og:updated_time" content="2020-06-25T07:35:33.847Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="第四章 Function语意学">
-<meta name="twitter:description" content="看以下代码,会发生什么:   1234567891011121314151617181920Point3d obj;POint3d *ptr = &amp;amp;obj;obj.normalize();ptr-&amp;gt;normalize();// declaretionPoint3d Point3d::normalie() const&amp;#123;    register float mag = mag">
+<meta name="twitter:description" content="4.1 Member的各种调用方式 Nonstatic Member Functions（非静态成员函数） 名称的特殊处理（Name Mangling）   Virtual Member Functions（虚拟成员函数） Static Member Functions（静态成员函数）   4.2 Virtuar Member Functions（虚拟成员函数） 多重继承下的Virtual">
 
 
 
@@ -352,7 +352,38 @@
       
 
       
-        <ul>
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#4.1-member的各种调用方式">4.1 Member的各种调用方式</a><ul>
+<li><a href="#nonstatic-member-functions（非静态成员函数）">Nonstatic Member Functions（非静态成员函数）</a><ul>
+<li><a href="#名称的特殊处理（name-mangling）">名称的特殊处理（Name Mangling）</a></li>
+</ul>
+</li>
+<li><a href="#virtual-member-functions（虚拟成员函数）">Virtual Member Functions（虚拟成员函数）</a></li>
+<li><a href="#static-member-functions（静态成员函数）">Static Member Functions（静态成员函数）</a></li>
+</ul>
+</li>
+<li><a href="#4.2-virtuar-member-functions（虚拟成员函数）">4.2 Virtuar Member Functions（虚拟成员函数）</a><ul>
+<li><a href="#多重继承下的virtual-functions">多重继承下的Virtual Functions</a></li>
+<li><a href="#虚拟继承下的virtual-functinos">虚拟继承下的Virtual Functinos</a></li>
+</ul>
+</li>
+<li><a href="#4.3-函数的效能">4.3 函数的效能</a></li>
+<li><a href="#4.4-指向member-function的指针（pointer-tomember-functions）">4.4 指向Member Function的指针（Pointer-toMember Functions）</a><ul>
+<li><a href="#支持“指向virtual-member-functions”的指针">支持“指向Virtual Member Functions”的指针</a></li>
+<li><a href="#在多重继承之下，指向member-functions的指针">在多重继承之下，指向Member Functions的指针</a></li>
+<li><a href="#”指向member-functions之指针的效率">”指向Member Functions之指针的效率</a></li>
+</ul>
+</li>
+<li><a href="#4.5-inline-functions">4.5 Inline Functions</a><ul>
+<li><a href="#形式参数（formal-arguments）">形式参数（Formal Arguments）</a></li>
+<li><a href="#局部变量（local-variables）">局部变量（Local Variables）</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
 <li><p>看以下代码,会发生什么:</p>
   <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Point3d obj;</span><br><span class="line">POint3d *ptr = &amp;obj;</span><br><span class="line">obj.normalize();</span><br><span class="line">ptr-&gt;normalize();</span><br><span class="line"></span><br><span class="line"><span class="comment">// declaretion</span></span><br><span class="line">Point3d Point3d::normalie() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">register</span> <span class="keyword">float</span> mag = magnitude();</span><br><span class="line">    Point3d normal;</span><br><span class="line">    normal._x = _x/mag;</span><br><span class="line">    normal._y = _y/mag;</span><br><span class="line">    normal._z = _z/mag;</span><br><span class="line">    <span class="keyword">return</span> normal;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">float</span> Point3d::magnitude() <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sqrt</span>(_x * _x + _y * _y + _z * _z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
