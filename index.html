@@ -259,6 +259,179 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/27/在Emacs中使用Org简单发送邮箱/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/MY.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/27/在Emacs中使用Org简单发送邮箱/" itemprop="url">在Emacs中使用Org简单发送邮箱</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-27T01:13:13+08:00">
+                2020-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-06/" itemprop="url" rel="index">
+                    <span itemprop="name">2019.06</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#配置方式">配置方式</a><ul>
+<li><a href="#以`outlook`邮箱为例">以<code>outlook</code>邮箱为例</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="配置方式"><a href="#配置方式" class="headerlink" title="配置方式"></a>配置方式</h4><h5 id="以outlook邮箱为例"><a href="#以outlook邮箱为例" class="headerlink" title="以outlook邮箱为例"></a>以<code>outlook</code>邮箱为例</h5><blockquote>
+<p>Server name: <code>smtp.office365.com</code><br>Port: <code>587</code><br>Encryption method: <code>STARTTLS</code></p>
+</blockquote>
+<ol>
+<li>我使用的是<code>Spacemacs</code>，则在配置文件<code>~/.spacemacs</code>中加入配置：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(setq</span><br><span class="line"> user-mail-address            &quot;email@hotmail.com&quot;</span><br><span class="line"> message-send-mail-function   &apos;smtpmail-send-it</span><br><span class="line"> smtpmail-smtp-service        587</span><br><span class="line"> smtpmail-smtp-server         &quot;smtp.office365.com&quot;</span><br><span class="line"> smtpmail-stream-type         &apos;starttls</span><br><span class="line"> smtpmail-auth-credentials    &apos;(expand-file-name &quot;~/.authinfo.gpg&quot;)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在<code>home</code>目录下创建<code>.authinfo</code>文件，写入以下内容：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine smtp.office365.com login &quot;email@hotmail.com&quot; port 587 password &quot;password&quot;</span><br><span class="line">machine outlook.office365.com login &quot;email&quot; port 993 password &quot;password&quot;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>GPG encryption</li>
+</ol>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg -c ~/.authinfo</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>Send email</li>
+</ol>
+<p>在<code>Org</code>日程管理界面中，通过快捷方式<code>Leader 
+m</code>打开发送窗口，在<code>To:</code>后面输入对方邮箱地址并完善余下内容信息即可</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/25/Org-Mode-tutorial/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2241,194 +2414,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/Rust型变/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/MY.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/06/14/Rust型变/" itemprop="url">Rust型变</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-14T15:15:56+08:00">
-                2020-06-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2020-01/" itemprop="url" rel="index">
-                    <span itemprop="name">2020.01</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <!-- vim-markdown-toc Marked -->
-
-<ul>
-<li><a href="#型变">型变</a></li>
-<li><a href="#几个重要的型变列表">几个重要的型变列表</a></li>
-</ul>
-<!-- vim-markdown-toc -->
-<h2 id="型变"><a href="#型变" class="headerlink" title="型变"></a>型变</h2><ul>
-<li>型变(subtype)指根据原始类型子类型关系确定复杂类型子类型关系的规则。型变分为三种形式：<ul>
-<li>协变(covariant)。保持子类型关系</li>
-<li>逆变(contravariant)。逆转子类型关系</li>
-<li>不变(invariant)。不保持也不逆转类型关系，即无关</li>
-</ul>
-</li>
-<li>Rust中只有生命周期有子类型关系，长类型是短类型的子类型</li>
-<li><code>PhantomData&lt;T&gt;</code>是一个零大小类型的标记结构体，也叫幻影类型，它扮演三个角色：<ul>
-<li>型变</li>
-<li>标记拥有关系(drop)</li>
-<li>自动trait实现(Send和Sync)</li>
-</ul>
-</li>
-</ul>
-<h2 id="几个重要的型变列表"><a href="#几个重要的型变列表" class="headerlink" title="几个重要的型变列表"></a>几个重要的型变列表</h2><ul>
-<li>&amp;’a T在<code>&#39;a</code>和<code>T</code>上是协变的，对应*<code>const T</code>也是协变</li>
-<li>&amp;’a mut T在<code>&#39;a</code>上是协变，但在<code>T</code>上是不变的</li>
-<li><code>Fn(T)-&gt;U</code>在<code>T</code>上是不变，在<code>U</code>上是协变</li>
-<li><code>Box&lt;T&gt;</code>、<code>Vec&lt;T&gt;</code>以及其他集合对于它们包含的类型来说是协变</li>
-<li><code>UnsafeCell&lt;T&gt;</code>、<code>Cell&lt;T&gt;</code>、<code>RefCell&lt;T&gt;</code>、<code>Mutex&lt;T&gt;</code>以及其他内部可变类型在<code>T</code>上都是不变，对应<code>* mut T</code>也是不变</li>
-<li>对于结构退来说，如果包含的字段都是协变，则结构体是协变，否则为不变。对<code>Phantomdata&lt;T&gt;</code>类型来说，有以下规则：<ul>
-<li><code>PhantomData&lt;T&gt;</code>，在<code>T</code>上是协变</li>
-<li><code>PhantomData&lt;&amp;&#39;a T&gt;</code>，在<code>&#39;a</code>和<code>T</code>上是协变</li>
-<li><code>PhantomData&lt;&amp;&#39;a mut T&gt;</code>，在<code>&#39;a</code>上是协变，在<code>T</code>上是不变</li>
-<li><code>PhantomData&lt;*const T&gt;</code>，在<code>T</code>上是协变</li>
-<li><code>PhantomData&lt;*mut T&gt;</code>，在<code>T</code>上是不变</li>
-<li><code>PhantomData&lt;fn(T)&gt;</code>，在<code>T</code>上是逆变，如果以后修改语法，会成为不变</li>
-<li><code>PhantomData&lt;fn()-&gt;T&gt;</code>，在<code>T</code>上是协变</li>
-<li><code>PhantomData&lt;fn(T)-&gt;T&gt;</code>，在<code>T</code>上是不变</li>
-<li><code>PhantomData&lt;Cell&lt;&amp;&#39;a()&gt;&gt;</code>，在<code>&#39;a</code>上是不变</li>
-</ul>
-</li>
-<li><strong>当协变不会引起未定义行为的时候，可以用协变，否则就保证该类型为不变或逆变</strong></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2476,7 +2466,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

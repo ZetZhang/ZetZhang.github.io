@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Linux,unix,APUE,TLPI,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -79,18 +79,13 @@
 
 
 
-<meta name="description" content="12345678910111213// IEEE POSIX头文件#include &amp;lt;pthread.h&amp;gt;    // POSIX线程#include &amp;lt;semaphore.h&amp;gt;  // 信号量#include &amp;lt;sys/sem.h&amp;gt;    // 有名信号量(system v)#include &amp;lt;sys/wait.h&amp;gt;   // 进程控制#inclu">
-<meta name="keywords" content="Linux,unix,APUE,TLPI">
-<meta property="og:type" content="article">
-<meta property="og:title" content="pthread_N_IPC ">
-<meta property="og:url" content="http://yoursite.com/2019/06/30/pthread-N-IPC/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content=".27t_lBZ4oZgg_">
+<meta property="og:url" content="http://yoursite.com/page/6/index.html">
 <meta property="og:site_name" content=".27t_lBZ4oZgg_">
-<meta property="og:description" content="12345678910111213// IEEE POSIX头文件#include &amp;lt;pthread.h&amp;gt;    // POSIX线程#include &amp;lt;semaphore.h&amp;gt;  // 信号量#include &amp;lt;sys/sem.h&amp;gt;    // 有名信号量(system v)#include &amp;lt;sys/wait.h&amp;gt;   // 进程控制#inclu">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-12-07T08:14:19.458Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="pthread_N_IPC ">
-<meta name="twitter:description" content="12345678910111213// IEEE POSIX头文件#include &amp;lt;pthread.h&amp;gt;    // POSIX线程#include &amp;lt;semaphore.h&amp;gt;  // 信号量#include &amp;lt;sys/sem.h&amp;gt;    // 有名信号量(system v)#include &amp;lt;sys/wait.h&amp;gt;   // 进程控制#inclu">
+<meta name="twitter:title" content=".27t_lBZ4oZgg_">
 
 
 
@@ -120,13 +115,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/06/30/pthread-N-IPC/">
+  <link rel="canonical" href="http://yoursite.com/page/6/">
 
 
 
 
 
-  <title>pthread_N_IPC  | .27t_lBZ4oZgg_</title>
+  <title>.27t_lBZ4oZgg_</title>
   
 
 
@@ -145,7 +140,8 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -248,9 +244,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -280,7 +276,9 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">pthread_N_IPC </h1>
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/06/30/pthread-N-IPC/" itemprop="url">pthread_N_IPC </a></h1>
         
 
         <div class="post-meta">
@@ -352,7 +350,9 @@
       
 
       
-        <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// IEEE POSIX头文件</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;    // POSIX线程</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;semaphore.h&gt;  // 信号量</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/sem.h&gt;    // 有名信号量(system v)</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;   // 进程控制</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;     // 符号常量</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;  // 基本系统数据类型</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;      // 文件控制</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;   // 文件状态</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ipc.h&gt;    // IPC</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/shm.h&gt;    // XSI共享存储</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/msg.h&gt;    // XSI 消息队列</span></span></span><br></pre></td></tr></table></figure>
+        
+          
+            <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// IEEE POSIX头文件</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;    // POSIX线程</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;semaphore.h&gt;  // 信号量</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/sem.h&gt;    // 有名信号量(system v)</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;   // 进程控制</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;     // 符号常量</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;  // 基本系统数据类型</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;      // 文件控制</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;   // 文件状态</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ipc.h&gt;    // IPC</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/shm.h&gt;    // XSI共享存储</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/msg.h&gt;    // XSI 消息队列</span></span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ISO C</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;     // 验证程序断言</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;      // 出错码</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;      // 标准I/O库</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;     // 实用函数</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;     // 信号</span></span></span><br></pre></td></tr></table></figure>
 
@@ -420,6 +420,8 @@
 
 <p>异步IO、共享内存、内存映射文件、内存锁定、实时性时钟和定时器、备选调度策略、实时性信号、消息队列、信号量</p>
 
+          
+        
       
     </div>
     
@@ -434,42 +436,14 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Linux/" rel="tag"># Linux</a>
-          
-            <a href="/tags/unix/" rel="tag"># unix</a>
-          
-            <a href="/tags/APUE/" rel="tag"># APUE</a>
-          
-            <a href="/tags/TLPI/" rel="tag"># TLPI</a>
-          
-        </div>
+
+      
+
       
 
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/06/30/个人Blog/" rel="prev" title="个人Blog">
-                个人Blog <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -479,11 +453,14 @@
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+  </nav>
+
 
 
           </div>
@@ -491,10 +468,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -725,10 +698,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 
