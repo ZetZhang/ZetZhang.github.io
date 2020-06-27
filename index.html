@@ -359,6 +359,7 @@
 <li><a href="#以`outlook`邮箱为例">以<code>outlook</code>邮箱为例</a></li>
 </ul>
 </li>
+<li><a href="#其他">其他</a></li>
 </ul>
 <!-- vim-markdown-toc -->
 <h4 id="配置方式"><a href="#配置方式" class="headerlink" title="配置方式"></a>配置方式</h4><h5 id="以outlook邮箱为例"><a href="#以outlook邮箱为例" class="headerlink" title="以outlook邮箱为例"></a>以<code>outlook</code>邮箱为例</h5><blockquote>
@@ -384,6 +385,18 @@
 </ol>
 <p>在<code>Org</code>日程管理界面中，通过快捷方式<code>Leader 
 m</code>打开发送窗口，在<code>To:</code>后面输入对方邮箱地址并完善余下内容信息即可</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ol>
+<li><p><code>Manjaro</code>的<code>pacman</code>安装<code>wanderlust</code></p>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S --noconfirm --needed wanderlust</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Leader f e d</code>配置<code>Emacs</code>：</p>
+</li>
+</ol>
+<blockquote>
+<p>未完全配置：SMTP配置出错，跟上面配置冲突。只能IMAP收邮件到Mailbox</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">;; IMAP</span><br><span class="line">(setq elmo-imap4-default-server &quot;outlook.office365.com&quot;)</span><br><span class="line">(setq elmo-imap4-default-user &quot;ichheit@outlook.com&quot;)</span><br><span class="line">(setq elmo-imap4-default-authenticate-type &apos;clear)</span><br><span class="line">(setq elmo-imap4-default-port &apos;993)</span><br><span class="line">(setq elmo-imap4-default-stream-type &apos;ssl)</span><br><span class="line"></span><br><span class="line">(setq elmo-imap4-use-modified-utf7 t)</span><br><span class="line">(setq elmo-imap4-debug t)</span><br><span class="line"></span><br><span class="line">;; SMTP</span><br><span class="line">(setq wl-smtp-connection-type &apos;starttls)</span><br><span class="line">(setq wl-smtp-posting-port 587)</span><br><span class="line">(setq wl-smtp-authenticate-type &quot;login&quot;)</span><br><span class="line">(setq wl-smtp-posting-user &quot;ichheit&quot;)</span><br><span class="line">(setq wl-smtp-posting-server &quot;smtp.office365.com&quot;)</span><br><span class="line">(setq wl-local-domain &quot;outlook.com&quot;)</span><br><span class="line"></span><br><span class="line">(setq wl-default-folder &quot;%inbox&quot;)</span><br><span class="line">(setq wl-default-spec &quot;%&quot;)</span><br><span class="line">(setq wl-draft-folder &quot;%[Outlook]/Drafts&quot;)</span><br><span class="line">(setq wl-trash-folder &quot;%[Outlook]/Trash&quot;)</span><br><span class="line"></span><br><span class="line">(setq wl-folder-check-async t)</span><br><span class="line"></span><br><span class="line">(setq elmo-imap4-use-modified-utf7 t)</span><br><span class="line"></span><br><span class="line">(autoload &apos;wl-user-agent-compose &quot;wl-draft&quot; nil t)</span><br><span class="line">(if (boundp &apos;mail-user-agent)</span><br><span class="line">(setq mail-user-agent &apos;wl-user-agent))</span><br><span class="line">(if (fboundp &apos;define-mail-user-agent)</span><br><span class="line">(define-mail-user-agent</span><br><span class="line">&apos;wl-user-agent</span><br><span class="line">&apos;wl-user-agent-compose</span><br><span class="line">&apos;wl-draft-send</span><br><span class="line">&apos;wl-draft-kill</span><br><span class="line">&apos;mail-send-hook))</span><br><span class="line"></span><br><span class="line">(progn</span><br><span class="line">(require &apos;gnutls)</span><br><span class="line">(open-gnutls-stream &quot;gnutls-tests&quot; nil &quot;outlook.office365.com&quot; 993))</span><br></pre></td></tr></table></figure>
+
 
           
         
