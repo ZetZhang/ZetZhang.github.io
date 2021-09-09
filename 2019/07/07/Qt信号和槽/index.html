@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://zetzhang.github.io/"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-circle.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1.connect函数的不同参数形式 2.使用sender获得信号发送者 3.自定义信号及其使用 4.关于信号和槽的使用上的规则   信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是对象间通信的机制，由Qt的元对象系统的支持才能实现。信号(Signal)会在某种特定情况或动作下被触发。就是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt信号和槽">
+<meta property="og:url" content="http://example.com/2019/07/07/Qt%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%A7%BD/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="1.connect函数的不同参数形式 2.使用sender获得信号发送者 3.自定义信号及其使用 4.关于信号和槽的使用上的规则   信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是对象间通信的机制，由Qt的元对象系统的支持才能实现。信号(Signal)会在某种特定情况或动作下被触发。就是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-07-06T17:38:01.000Z">
+<meta property="article:modified_time" content="2021-09-09T08:26:07.571Z">
+<meta property="article:author" content="Ichheit">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Qt">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2019/07/07/Qt%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%A7%BD/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Qt信号和槽 | .27t_lBZ4oZgg_</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">.27t_lBZ4oZgg_</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2019/07/07/Qt%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%A7%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Qt信号和槽
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-07 01:38:01" itemprop="dateCreated datePublished" datetime="2019-07-07T01:38:01+08:00">2019-07-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-09 16:26:07" itemprop="dateModified" datetime="2021-09-09T16:26:07+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-07/" itemprop="url" rel="index"><span itemprop="name">2019.07</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#1.%60connect%60%E5%87%BD%E6%95%B0%E7%9A%84%E4%B8%8D%E5%90%8C%E5%8F%82%E6%95%B0%E5%BD%A2%E5%BC%8F">1.<code>connect</code>函数的不同参数形式</a></li>
+<li><a href="#2.%E4%BD%BF%E7%94%A8%60sender%60%E8%8E%B7%E5%BE%97%E4%BF%A1%E5%8F%B7%E5%8F%91%E9%80%81%E8%80%85">2.使用<code>sender</code>获得信号发送者</a></li>
+<li><a href="#3.%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%A1%E5%8F%B7%E5%8F%8A%E5%85%B6%E4%BD%BF%E7%94%A8">3.自定义信号及其使用</a></li>
+<li><a href="#4.%E5%85%B3%E4%BA%8E%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%A7%BD%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8A%E7%9A%84%E8%A7%84%E5%88%99">4.关于信号和槽的使用上的规则</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>信号和槽是Qt的一个核心特点，也是区别于其他框架的重要特性。因为有了信号和槽的编程机制，Qt中处理界面各个组件的交互操作时变得更加直观和简单。信号与槽是<font color=blue>对象间通信</font>的机制，由Qt的元对象系统的支持才能实现。<br><font color=red>信号(Signal)</font>会在某种特定情况或动作下被触发。就是特殊情况下被发射的事件，而GUI程序设计的主要内容就是对界面上各组件信号的响应。<br><font color=red>槽(Slot)</font>则等同于接收并处理信号的函数。它跟一般的C++函数是一样的，可以直接被调用。但槽函数与普通函数不同的是，槽函数与一个信号关联，当信号被发射时，关联的槽函数会自动执行。<br>对于这种对象间通信，Qt隐藏了复杂的底层实现。Qt的信号与槽机制类似于“事件——响应”，但更灵活。  </p>
+<hr>
+<h2 id="1-connect函数的不同参数形式"><a href="#1-connect函数的不同参数形式" class="headerlink" title="1.connect函数的不同参数形式"></a>1.<code>connect</code>函数的不同参数形式</h2><ul>
+<li><code>QObject::connect()</code>函数多重函数形式，一种参数原型是：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/×</span><br><span class="line">sender是发送信号的对象名称</span><br><span class="line"><span class="built_in">signal</span>()是信号名称，根据SIGNAL宏展开成相应字符串</span><br><span class="line">receiver是接受信号的对象名称</span><br><span class="line"><span class="built_in">slot</span>()是槽函数名称，根据SLOT宏展开成字符串</span><br><span class="line">×/</span><br><span class="line"><span class="function">QMetaObject::Connection <span class="title">QObject::connect</span><span class="params">(<span class="keyword">const</span> QObject *sender, <span class="keyword">const</span> <span class="keyword">char</span> *signal, <span class="keyword">const</span> QObject *receiver, <span class="keyword">const</span> <span class="keyword">char</span> *method, Qt::ConnectionType type = Qt::AutoConnection)</span></span></span><br></pre></td></tr></table></figure>
+一般语法如下：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// connect()是QObject类中的一个静态函数，QObject又是所有Qt类的基类，实际调用可以忽略前面的限定符</span></span><br><span class="line"><span class="comment">// 宏SIGNAL()指信号，SLOT()指槽函数</span></span><br><span class="line">QObject::<span class="built_in">connection</span>(sender, <span class="built_in">SIGNAL</span>(<span class="built_in">signal</span>()), receiver, <span class="built_in">SLOT</span>(<span class="built_in">slot</span>()));</span><br><span class="line"><span class="comment">// 如果带有参数，标明参数类型</span></span><br><span class="line">QObject::<span class="built_in">connection</span>(spinNum, <span class="built_in">SIGNAL</span>(<span class="built_in">valueChanged</span>(<span class="keyword">int</span>)), <span class="keyword">this</span>, <span class="built_in">SLOT</span>(<span class="built_in">updateStatus</span>(<span class="keyword">int</span>));</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<ul>
+<li>另一种参数形式的connect()函数原型是：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">QMetaObject::Connection <span class="title">QObject::connect</span><span class="params">(<span class="keyword">const</span> QObject *sender, <span class="keyword">const</span> QMetaMethod &amp;signal, <span class="keyword">const</span> QObject *receiver, <span class="keyword">const</span> QMetaMethod, &amp;method, Qt::ConnectionType type = Qt::Auto Connection)</span></span></span><br></pre></td></tr></table></figure>
+这种具有默认参数，信号名称是唯一的，可以使用这种函数指针形式进行关联，语法如下：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// QLineEdit只有一个textChanged(QString)信号，通过在窗体类widget里定义一个槽函数可以将它们关联，语法如下：</span></span><br><span class="line">QObject::<span class="built_in">connection</span>(lineEdit, &amp;QLineEdit::textChanged, <span class="keyword">this</span>, &amp;widget::on_textChanged);</span><br></pre></td></tr></table></figure>
+但如果说类中定义有不同参数的同名信号就不能用函数指针的方式来关联信号和槽了：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// QSpinBox有两个valueChanged()信号</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QSpinBox::valueChanged</span><span class="params">(<span class="keyword">int</span> i)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QSpinBox::valueChanged</span><span class="params">(<span class="keyword">const</span> QString &amp;text)</span></span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在窗体中定义一个槽函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">onValueChanged</span><span class="params">(<span class="keyword">int</span> i)</span></span>;</span><br></pre></td></tr></table></figure>
+Ctrl+B编译时将会出错：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QObject::<span class="built_in">connect</span>(spinNum, &amp;QSpinBox::valueChanged, <span class="keyword">this</span>, &amp;widget::onValueChanged); <span class="comment">// error</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p><code>connect()</code>函数最后都有一个<code>Qt::ConnectionType type</code>，缺省参数是<code>Qt::AutoConnection</code>。<code>Qt::ConnectionType</code>是枚举类型，表示信号与槽的关联方式：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 缺省值，在信号触发时自动确定关联方式。如果发射者和接受者在同一线程，使用Qt::DirectConnection；否则使用Qt::QueuedConnection</span></span><br><span class="line">Qt::AutoConnection type;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 信号被发射时槽函数立刻执行</span></span><br><span class="line">Qt::DirectConnection type;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件循环回到接受者线程后执行槽函数</span></span><br><span class="line">Qt::QueuedConnection type;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 与Qt::QueuedConnection相似，但信号线程会阻塞到槽函数执行完毕。</span></span><br><span class="line"><span class="comment">// 注意在同一线程时不用这种方式，会死锁</span></span><br><span class="line">Qt::BlockingQueuedConnection type;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-使用sender获得信号发送者"><a href="#2-使用sender获得信号发送者" class="headerlink" title="2.使用sender获得信号发送者"></a>2.使用<code>sender</code>获得信号发送者</h2><p>在槽函数里，使用QObject::sender()可以获取信号发送者的指针，知道发射者的类型就可以将它类型转换成确定的类型。  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// QSpinBox的valueChanged(int)信号里可以通过sender()和qobject_cast去的发射者指针然后对发射者进行操作：</span></span><br><span class="line">QSpinBox *spinBox = qobject_cast&lt;QSpinBox *&gt;(<span class="built_in">sender</span>());</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过sender返回并打印Button的text值</span></span><br><span class="line">QObject::<span class="built_in">connect</span>(button1, &amp;QPushButton::clicked, [<span class="keyword">this</span>]&#123;</span><br><span class="line">    QPushButton *button = qobject_cast&lt;QPushButton *&gt;(<span class="built_in">sender</span>());</span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; button-&gt;<span class="built_in">text</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-自定义信号及其使用"><a href="#3-自定义信号及其使用" class="headerlink" title="3.自定义信号及其使用"></a>3.自定义信号及其使用</h2><p>通过在自己设计的类中自定义信号，这个信号就是声明的函数，但这个函数不用实现，只需要发射（emit）：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在类中定义一个 ageChanged(int)</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QPerson</span> :</span> <span class="keyword">public</span> QObject</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> m_age = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">incAge</span><span class="params">()</span></span>;</span><br><span class="line">signals:</span><br><span class="line">    <span class="comment">// void返回类型，可以多参数，但函数无需实现</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ageChanged</span><span class="params">(<span class="keyword">int</span> value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在incAge()函数中发射信号,当m_age改变时，就emit信号。至于有无信号关联的槽函数，发射者不管</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QPerson::incAge</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_age++;</span><br><span class="line">    <span class="function">emit <span class="title">ageChanged</span><span class="params">(m_age)</span></span>; <span class="comment">// emit signal</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-关于信号和槽的使用上的规则"><a href="#4-关于信号和槽的使用上的规则" class="headerlink" title="4.关于信号和槽的使用上的规则"></a>4.关于信号和槽的使用上的规则</h2><ol>
+<li>一个信号可以连接多个槽</li>
+<li>多个信号可以连接同一个槽</li>
+<li>一个信号可以连接另一个信号</li>
+<li>信号与槽的个数和类型需要一致，至少信号的参数不能少于槽的参数</li>
+<li>使用信号和槽的类中，需要在类定义中加入宏Q_OBJECT</li>
+<li>当信号被发射时，关联的槽函数会被立即执行，直到执行完毕才会执行余下的程序流程。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/Qt/" rel="tag"># Qt</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/07/06/Qt%E5%85%83%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F/" rel="prev" title="Qt元对象系统">
+      <i class="fa fa-chevron-left"></i> Qt元对象系统
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/07/10/Qt%E5%B1%9E%E6%80%A7%E7%B3%BB%E7%BB%9F/" rel="next" title="Qt属性系统">
+      Qt属性系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-connect%E5%87%BD%E6%95%B0%E7%9A%84%E4%B8%8D%E5%90%8C%E5%8F%82%E6%95%B0%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">1.connect函数的不同参数形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8sender%E8%8E%B7%E5%BE%97%E4%BF%A1%E5%8F%B7%E5%8F%91%E9%80%81%E8%80%85"><span class="nav-number">2.</span> <span class="nav-text">2.使用sender获得信号发送者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%A1%E5%8F%B7%E5%8F%8A%E5%85%B6%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">3.自定义信号及其使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%85%B3%E4%BA%8E%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%A7%BD%E7%9A%84%E4%BD%BF%E7%94%A8%E4%B8%8A%E7%9A%84%E8%A7%84%E5%88%99"><span class="nav-number">4.</span> <span class="nav-text">4.关于信号和槽的使用上的规则</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ichheit</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ichheit</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+</body>
+</html>

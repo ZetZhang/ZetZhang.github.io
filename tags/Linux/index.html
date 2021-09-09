@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.0">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://zetzhang.github.io/"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -14,6 +28,8 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-circle.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
@@ -185,7 +201,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/14/PostgreSQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/" itemprop="url">
             <span itemprop="name">PostgreSQL查询优化</span>
           </a>
       </div>
@@ -205,7 +221,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/14/Muduo%E6%8A%80%E8%A6%812/" itemprop="url">
             <span itemprop="name">Muduo技要2</span>
           </a>
       </div>
@@ -225,7 +241,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/14/UNIX%E6%A0%BC%E8%A8%80/" itemprop="url">
             <span itemprop="name">UNIX格言</span>
           </a>
       </div>
@@ -245,7 +261,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/14/VIM%E9%85%8D%E7%BD%AE/" itemprop="url">
             <span itemprop="name">VIM配置</span>
           </a>
       </div>
@@ -265,7 +281,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/14/%E5%A6%82%E4%BD%95%E4%BD%BF%E5%85%B1%E4%BA%AB%E5%BA%93%E5%8F%AF%E6%89%A7%E8%A1%8C/" itemprop="url">
             <span itemprop="name">如何使共享库可执行</span>
           </a>
       </div>
@@ -285,7 +301,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/14/Muduo%E6%8A%80%E8%A6%81/" itemprop="url">
             <span itemprop="name">Muduo技要</span>
           </a>
       </div>
@@ -305,7 +321,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/14/yum%E6%8F%90%E7%A4%BArpmdb-open-failed%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" itemprop="url">
             <span itemprop="name">yum提示rpmdb_open_failed解决方案</span>
           </a>
       </div>
@@ -325,7 +341,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/13/%E4%B8%80%E4%BA%9B%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7%E5%91%BD%E4%BB%A4/" itemprop="url">
             <span itemprop="name">一些调试工具命令</span>
           </a>
       </div>
@@ -345,7 +361,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/12/Docker%E7%9A%84dockerfile%E7%BC%96%E5%86%99/" itemprop="url">
             <span itemprop="name">Docker的dockerfile编写</span>
           </a>
       </div>
@@ -365,7 +381,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2020/06/12/Docker%E6%95%B0%E6%8D%AE%E5%8D%B7/" itemprop="url">
             <span itemprop="name">Docker数据卷</span>
           </a>
       </div>
@@ -547,5 +563,8 @@
 
   
 
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
 </body>
 </html>

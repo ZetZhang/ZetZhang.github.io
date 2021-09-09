@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.0">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://zetzhang.github.io/"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -14,6 +28,8 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-circle.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
@@ -184,7 +200,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2019/06/30/%E4%B8%AA%E4%BA%BABlog/" itemprop="url">
             <span itemprop="name">个人Blog</span>
           </a>
       </div>
@@ -204,7 +220,7 @@
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/posts/undefined/" itemprop="url">
+          <a class="post-title-link" href="/2019/06/30/pthread-N-IPC/" itemprop="url">
             <span itemprop="name">pthread_N_IPC </span>
           </a>
       </div>
@@ -384,5 +400,8 @@
 
   
 
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
 </body>
 </html>

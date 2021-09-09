@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://zetzhang.github.io/"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-center-circle.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="2.1 Default Constructor的构造操作 “带有Default Constructor”的Member Class Object “带有Default Constructor”的Base Class “带有一个Virtual Function”的Class “带有一个Virtual Base Class”的Class   2.2 Copy Constructor的构造操作 D">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第二章 构造函数语义学">
+<meta property="og:url" content="http://example.com/2020/06/12/%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E8%AF%AD%E4%B9%89%E5%AD%A6/index.html">
+<meta property="og:site_name" content=".27t_lBZ4oZgg_">
+<meta property="og:description" content="2.1 Default Constructor的构造操作 “带有Default Constructor”的Member Class Object “带有Default Constructor”的Base Class “带有一个Virtual Function”的Class “带有一个Virtual Base Class”的Class   2.2 Copy Constructor的构造操作 D">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-06-12T14:25:02.000Z">
+<meta property="article:modified_time" content="2021-09-09T08:26:07.594Z">
+<meta property="article:author" content="Ichheit">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="C++对象模型">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/06/12/%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E8%AF%AD%E4%B9%89%E5%AD%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>第二章 构造函数语义学 | .27t_lBZ4oZgg_</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">.27t_lBZ4oZgg_</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/12/%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E8%AF%AD%E4%B9%89%E5%AD%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第二章 构造函数语义学
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-12 22:25:02" itemprop="dateCreated datePublished" datetime="2020-06-12T22:25:02+08:00">2020-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-09 16:26:07" itemprop="dateModified" datetime="2021-09-09T16:26:07+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-06/" itemprop="url" rel="index"><span itemprop="name">2019.06</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#2.1-default-constructor%E7%9A%84%E6%9E%84%E9%80%A0%E6%93%8D%E4%BD%9C">2.1 Default Constructor的构造操作</a><ul>
+<li><a href="#%E2%80%9C%E5%B8%A6%E6%9C%89default-constructor%E2%80%9D%E7%9A%84member-class-object">“带有Default Constructor”的Member Class Object</a></li>
+<li><a href="#%E2%80%9C%E5%B8%A6%E6%9C%89default-constructor%E2%80%9D%E7%9A%84base-class">“带有Default Constructor”的Base Class</a></li>
+<li><a href="#%E2%80%9C%E5%B8%A6%E6%9C%89%E4%B8%80%E4%B8%AAvirtual-function%E2%80%9D%E7%9A%84class">“带有一个Virtual Function”的Class</a></li>
+<li><a href="#%E2%80%9C%E5%B8%A6%E6%9C%89%E4%B8%80%E4%B8%AAvirtual-base-class%E2%80%9D%E7%9A%84class">“带有一个Virtual Base Class”的Class</a></li>
+</ul>
+</li>
+<li><a href="#2.2-copy-constructor%E7%9A%84%E6%9E%84%E9%80%A0%E6%93%8D%E4%BD%9C">2.2 Copy Constructor的构造操作</a><ul>
+<li><a href="#default-memberwise-initialization">Default Memberwise Initialization</a></li>
+<li><a href="#bitwise-copy-semantics(%E4%BD%8D%E9%80%90%E6%AC%A1%E6%8B%B7%E8%B4%9D%EF%BC%89">Bitwise Copy Semantics(位逐次拷贝）</a></li>
+<li><a href="#%E4%B8%8D%E8%A6%81bitwise-copy-semantics!">不要Bitwise Copy Semantics!</a></li>
+<li><a href="#%E9%87%8D%E6%96%B0%E8%AE%BE%E5%AE%9Avirtual-table%E7%9A%84%E6%8C%87%E9%92%88">重新设定Virtual Table的指针</a></li>
+<li><a href="#%E5%A4%84%E7%90%86virtual-base-class-subobject">处理Virtual Base Class Subobject</a></li>
+</ul>
+</li>
+<li><a href="#2.3-%E7%A8%8B%E5%BA%8F%E8%BD%AC%E5%8C%96%E8%AF%AD%E4%B9%89%E5%AD%A6%EF%BC%88program-transformation-semantics%EF%BC%89">2.3 程序转化语义学（Program Transformation Semantics）</a><ul>
+<li><a href="#%E6%98%BE%E5%BC%8F%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E6%93%8D%E4%BD%9C%EF%BC%88explicit-initialization%EF%BC%89">显式的初始化操作（Explicit Initialization）</a></li>
+<li><a href="#%E5%8F%82%E6%95%B0%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%88argument-initialization%EF%BC%89">参数的初始化（Argument Initialization）</a></li>
+<li><a href="#%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%88return-value-initialization%EF%BC%89">返回值的初始化（Return Value Initialization）</a></li>
+<li><a href="#%E5%9C%A8%E4%BD%BF%E7%94%A8%E8%80%85%E5%B1%82%E9%9D%A2%E5%81%9A%E4%BC%98%E5%8C%96%EF%BC%88optimization-at-the-user-level%EF%BC%89">在使用者层面做优化（Optimization at the User Level）</a></li>
+<li><a href="#%E5%9C%A8%E7%BC%96%E8%AF%91%E5%99%A8%E5%B1%82%E9%9D%A2%E5%81%9A%E4%BC%98%E5%8C%96%EF%BC%88optimization-at-the-compiler-level%EF%BC%89">在编译器层面做优化（Optimization at the Compiler Level）</a></li>
+<li><a href="#copy-constructor%EF%BC%9A%E8%A6%81%E8%BF%98%E6%98%AF%E4%B8%8D%E8%A6%81%EF%BC%9F">Copy Constructor：要还是不要？</a></li>
+</ul>
+</li>
+<li><a href="#2.4-%E6%88%90%E5%91%98%E4%BB%AC%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%98%9F%E4%BC%8D%EF%BC%88member-initialization-list%EF%BC%89">2.4 成员们的初始化队伍（Member Initialization List）</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<ul>
+<li>关键词explicit之所以被导入这个语言，就是为了给程序员一个方法，使他们能够制止“单一参数的constructor”被当作conversion运算符。</li>
+</ul>
+<h4 id="2-1-Default-Constructor的构造操作"><a href="#2-1-Default-Constructor的构造操作" class="headerlink" title="2.1 Default Constructor的构造操作"></a>2.1 Default Constructor的构造操作</h4><h5 id="“带有Default-Constructor”的Member-Class-Object"><a href="#“带有Default-Constructor”的Member-Class-Object" class="headerlink" title="“带有Default Constructor”的Member Class Object"></a>“带有Default Constructor”的Member Class Object</h5><ul>
+<li>如果class没有constructor，但有一个member object，而且这个object有default constructor，那么这个class的implicit default constructor是<font color=red>nontrivial</font>的。举个例子，下面程序片段中，编译器为class Bar合成一个default constructor：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> &#123;</span> <span class="keyword">public</span>: <span class="built_in">Foo</span>(), <span class="built_in">Foo</span>(<span class="keyword">int</span>) ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span> &#123;</span> <span class="keyword">public</span>: Foo foo; <span class="keyword">char</span> *str; &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo_bar</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Bar bar;    <span class="comment">// Bar::foo 必须在此处初始化。</span></span><br><span class="line">    <span class="keyword">if</span> (str) &#123; &#125; ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  被合成的Bar default constructor内含代码，能够调用class Foo的default constructor处理member object Bar::foo，因为Bar::foo初始化是编译期的责任：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 为member foo调用class Foo的default construcotr</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="title">Bar::Bar</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    foo.Foo::<span class="built_in">Foo</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  而且，被合成default constructor只满足编译期需求，并不是程序员需求。如果default constructor由程序员显式定义出来了，那么编译器的行动是：</li>
+<li>如果class A内含一个或一个以上的member class objects，那么class A的每一个constructor必须调用每一个member classes的default constructor。编译器会扩张已存在的constructors，使得user code被执行之前，先调用的default constructor。</li>
+</ul>
+<h5 id="“带有Default-Constructor”的Base-Class"><a href="#“带有Default-Constructor”的Base-Class" class="headerlink" title="“带有Default Constructor”的Base Class"></a>“带有Default Constructor”的Base Class</h5><ul>
+<li>如果class没有constructors，却派生自有default constructor的base class，那么这个derived class的default constructor会被视为nontrivial。</li>
+<li>如果提供多个constructor，但都没有default constructor，编译器会扩张现有的每一个constructors，将用以调用必要default constructors的程序代码加进去。它不会合成一个新的default constructor。</li>
+</ul>
+<h5 id="“带有一个Virtual-Function”的Class"><a href="#“带有一个Virtual-Function”的Class" class="headerlink" title="“带有一个Virtual Function”的Class"></a>“带有一个Virtual Function”的Class</h5><ul>
+<li>另外有<font color=red>两种情况</font>，也要合成default constructor：<ol>
+<li><strong>class声明（或继承）一个virtual function</strong></li>
+<li><strong>class派生自一个继承串链，其中有一个或更多的virtual base classes。</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">Bell --- Widget</span><br><span class="line">Whistle --- Widget</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">flip</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">flip</span><span class="params">(<span class="keyword">const</span> Widget &amp;widget)</span> </span>&#123; Widget.<span class="built_in">flip</span>(); &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Bell b;</span><br><span class="line">    Whistle w;</span><br><span class="line">    <span class="built_in">flip</span>(b);</span><br><span class="line">    <span class="built_in">flip</span>(w);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+两个扩张在编译期间发生了：</li>
+<li>一个virtual function table（<font color=red>vtbl</font>）被产生出来，内含class的virtual functions地址。</li>
+<li>每个class object中，额外的pointer member（<font color=red>vptr</font>）会被合成出来，内含相关的class vtbl地址。</li>
+</ol>
+  widget.flip()虚拟调用操作会被重新改写，以使用widget之中的vtpr和vtbl：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; *widget.vptr[<span class="number">1</span>])(&amp;widget)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="“带有一个Virtual-Base-Class”的Class"><a href="#“带有一个Virtual-Base-Class”的Class" class="headerlink" title="“带有一个Virtual Base Class”的Class"></a>“带有一个Virtual Base Class”的Class</h5><ul>
+<li>看以下代码：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">A --- X</span><br><span class="line">B --- X</span><br><span class="line">C --- A</span><br><span class="line">C --- B</span><br></pre></td></tr></table></figure>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> &#123;</span> <span class="keyword">public</span>: <span class="keyword">int</span> i; &#125; ;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> X &#123; <span class="keyword">public</span>: <span class="keyword">int</span> j; &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> X &#123; <span class="keyword">public</span>: <span class="keyword">double</span> d; &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> :</span> <span class="keyword">public</span> A, <span class="keyword">public</span> B &#123; <span class="keyword">public</span>: <span class="keyword">int</span> k; &#125;;</span><br><span class="line"><span class="comment">// 无法在编译时期决定（resolve）pa-&gt;X::i的位置</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">const</span> A *pa)</span> </span>&#123; pa-&gt;i = <span class="number">1024</span>; &#125;</span><br><span class="line"><span class="built_in">main</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">foo</span>(<span class="keyword">new</span> A);</span><br><span class="line">    <span class="built_in">foo</span>(<span class="keyword">new</span> C);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  因为pa的类型可以改变，编译器无法固定住foo()中经由pa而存取的X::i的实际偏移位置。编译器必须改变“执行存取操作”的那些代码，使X::i可以延迟至执行期才决定下来。cfont做法是在virtual base classes中安插指针完成。经由reference或pointer存取virtual base class的操作都可以通过指针完成。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(<span class="keyword">const</span> A *pa)</span> </span>&#123;pa-&gt;__vbcX-&gt;i = <span class="number">1024</span>; &#125;</span><br></pre></td></tr></table></figure>
+  __vbcX实在class object构造期间被完成的。编译器会安插允许每个virtual base class在执行器存取操作的代码，如果base没有声明任何constructor，编译器必须为它合成一个default的。</li>
+</ul>
+<h4 id="2-2-Copy-Constructor的构造操作"><a href="#2-2-Copy-Constructor的构造操作" class="headerlink" title="2.2 Copy Constructor的构造操作"></a>2.2 Copy Constructor的构造操作</h4><ul>
+<li>有三种情况，会以一个obect的内容作为另一个class object的初值。<ul>
+<li><strong>对object做显式初始化操作</strong></li>
+<li><strong>当object作为参数交给某个函数时</strong></li>
+<li><strong>函数回传一个class object时</strong></li>
+</ul>
+</li>
+</ul>
+<h5 id="Default-Memberwise-Initialization"><a href="#Default-Memberwise-Initialization" class="headerlink" title="Default Memberwise Initialization"></a>Default Memberwise Initialization</h5><ul>
+<li>如果class没有提供explicit copy constructor，其内部是以<font color=red>default memberwise initialization</font>手法完成的，就是把每个内建的或派生的data member（如指针或数组）的值，从object拷贝到另一个object上，不过它并不会拷贝其中的member class object。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">String</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ... 没有explicit copy constructor</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">char</span> *str;</span><br><span class="line">    <span class="keyword">int</span> len;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// String object的default memberwise initialization发生在这种情况下：</span></span><br><span class="line"><span class="function">String <span class="title">noun</span><span class="params">(<span class="string">&quot;book&quot;</span>)</span></span>;</span><br><span class="line">String verb = noun;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 完成方式好像个别设定每个members一样</span></span><br><span class="line">verb.str = noun.str;</span><br><span class="line">verb.len = noun.len;</span><br></pre></td></tr></table></figure>
+  如果String object被声明为一个class的member:  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Word</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ... 没有explicit copy constructor</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> _occurs;</span><br><span class="line">    String _word;</span><br><span class="line">&#125;;s</span><br></pre></td></tr></table></figure>
+  那么Word object的default memberwise initialization会拷贝_occurs，然后再于_word身上递归实施memberwise initialization。</li>
+<li>一个class可用两种方式复制得到：<ul>
+<li><strong>一是被初始化</strong>。以copy constructor完成。</li>
+<li><strong>二是被指定（asignment）</strong>。以copy assignment operator完成。</li>
+</ul>
+</li>
+</ul>
+<h5 id="Bitwise-Copy-Semantics-位逐次拷贝）"><a href="#Bitwise-Copy-Semantics-位逐次拷贝）" class="headerlink" title="Bitwise Copy Semantics(位逐次拷贝）"></a>Bitwise Copy Semantics(位逐次拷贝）</h5><ul>
+<li>一个class没有定义explicit copy constructor，是否有编译器合成实例，取决于class是否展现<font color=red>bitwise copy semantics</font>而定。有两个例子：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 声明展现了bitwise copy semantics</span></span><br><span class="line"><span class="comment">// 这种情况下不需要合成default copy constructor</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Word</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Word</span>(<span class="keyword">const</span> <span class="keyword">char</span>*);</span><br><span class="line">    ~<span class="built_in">Word</span>() &#123; <span class="keyword">delete</span> []str; &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> cnt;</span><br><span class="line">    <span class="keyword">char</span> *str;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以下声明未展现出bitwise copy semantics</span></span><br><span class="line"><span class="comment">// 这种情况下需要合成出一个copy constructor，以便调用member class String object的copy constructor</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Word</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Word</span>(<span class="keyword">const</span> String&amp;);</span><br><span class="line">    ~<span class="built_in">Word</span>();</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> cnt;</span><br><span class="line">    String str;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 其中String声明了explicit copy constructor</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">String</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">String</span>(<span class="keyword">const</span> <span class="keyword">char</span>*);</span><br><span class="line">    <span class="built_in">String</span>(<span class="keyword">const</span> String&amp;);</span><br><span class="line">    ~<span class="built_in">String</span>();</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;s</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="不要Bitwise-Copy-Semantics"><a href="#不要Bitwise-Copy-Semantics" class="headerlink" title="不要Bitwise Copy Semantics!"></a>不要Bitwise Copy Semantics!</h5><ul>
+<li><font color=red>有4中情况下，class不展现出“bitwise copy semantics”</font>： <ul>
+<li><strong>当class内有个member object，而该object声明有copy constructor时</strong>；</li>
+<li><strong>当class继承自一个base class，而该class存在copy constructor时</strong>，不论是显式声明的还是被合成的；</li>
+<li><strong>当class声明了一个或多个virtual functional时</strong>。</li>
+<li><strong>当class派生自一个继承串联，其中有一个或多个virutal base clases时</strong>。</li>
+</ul>
+</li>
+</ul>
+<h5 id="重新设定Virtual-Table的指针"><a href="#重新设定Virtual-Table的指针" class="headerlink" title="重新设定Virtual Table的指针"></a>重新设定Virtual Table的指针</h5><ul>
+<li>只要有一个class声明了一个或多个virtual functional，就会：<ul>
+<li><strong>增加vtbl，内含virtual function的地址</strong></li>
+<li><strong>一个指向vtbl的vptr，插在class object内</strong>。</li>
+</ul>
+  当vptr导入到class之中，class就不展示biwise semantics了。一个新产生的class object的vptr不能成功而正确地设好初值会导致可怕的后果，编译器需要合成出一个copy constructor以求将vptr初始化。  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">ZooAnimal --- Bear</span><br></pre></td></tr></table></figure>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZooAnimal</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ZooAnimal</span>();</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ZooAnimal</span>();</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">animate</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bear</span> :</span> <span class="keyword">public</span> ZooAnimal &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Bear</span>();</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">animate</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">dance</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  ZooAnimal class object以另一个ZooAnimal class object作为初值，或Bear class object以另一个Bear class object作为初值，都可以直接靠bitwise copy semantics完成（除了member pointer）。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Bear yogi;</span><br><span class="line">Bear winnie = yogi;</span><br></pre></td></tr></table></figure>
+  这个例子里，yogi会被default Bear constructor初始化。yogi的vptr被指向Bear的vtbl（靠安插）。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ZooAnimal franny = yogi;    <span class="comment">// sliced</span></span><br></pre></td></tr></table></figure>
+  frany的vptr不可以被指向Bear的vtbl（如果yogi的vptr被bitwise copy，会导致此结果），否则当draw()被调用而franny被传进去时，会blow up：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">(<span class="keyword">const</span> ZooAnimal &amp;zoey)</span> </span>&#123; zoey.<span class="built_in">draw</span>(); &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// franny的vptr指向ZooAnimal的vtbl</span></span><br><span class="line">    ZooAnimal franny = yogi;</span><br><span class="line">    <span class="built_in">draw</span>(yogi); <span class="comment">// call Bear::draw()</span></span><br><span class="line">    <span class="built_in">draw</span>(franny);   <span class="comment">// call ZooAnimal::draw()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  通过franny调用virtual function draw()，调用的时ZooAnimal而非Bear实例。事实上，yogi中的Bear部分在franny初始化时被sliced掉了，只有franny声明为reference或pointer时才会是Bear的函数实例。</li>
+</ul>
+<h5 id="处理Virtual-Base-Class-Subobject"><a href="#处理Virtual-Base-Class-Subobject" class="headerlink" title="处理Virtual Base Class Subobject"></a>处理Virtual Base Class Subobject</h5><ul>
+<li>编译器必须让derived class object中的virtual base class subobject位置在执行期准备妥当。Bitwise copy semantics可能会破坏位置的完整性，所以编译器必须必须在它自己合成出来的copy constructor中做出仲裁：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">Bear -- public --- ZooAnimal</span><br><span class="line">Raccoon -- public virtual --- ZooAnimal</span><br><span class="line">RedPanda -- public --- Raccoon</span><br></pre></td></tr></table></figure>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Raccoon</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> ZooAnimal &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Raccoon</span>() &#123; <span class="comment">/*设定private data初值*/</span> &#125;</span><br><span class="line">    <span class="built_in">Raccoon</span>(<span class="keyword">int</span> val) &#123; <span class="comment">/*设定private data初值*/</span> &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  一个virtual base class的存在会使bitwise copy semantics无效。问题不在于一个class object以另一个同类的object作为初值之时，而是发生于一个class object以其derived classes的某个object作为初值之时。<br>  一个Raccoon object作为另一个Raccoon object的初值，bitwise copy绰绰有余，而如果企图以RedPanda object作为little_critter的初值，编译器必须判断当后续企图存取ZooAnimal subobject时是否能正确执行：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单的bitwise copy还不够，必须显式将little_critter的virtual base class pointer/offset初始化</span></span><br><span class="line">RedPanda little_red;</span><br><span class="line">Raccoon little_critter = little_red;</span><br></pre></td></tr></table></figure>
+  在这种情况下，为了完成正确的little_critter初值设定，编译器合成一个copy constructor，安插代码设定virtual base class pointer/offset的初值（或是简单的确定它没被抹消），对每个members执行memberwise初始化操作，一起执行其他内存相关工作。</li>
+</ul>
+<h4 id="2-3-程序转化语义学（Program-Transformation-Semantics）"><a href="#2-3-程序转化语义学（Program-Transformation-Semantics）" class="headerlink" title="2.3 程序转化语义学（Program Transformation Semantics）"></a>2.3 程序转化语义学（Program Transformation Semantics）</h4><h5 id="显式的初始化操作（Explicit-Initialization）"><a href="#显式的初始化操作（Explicit-Initialization）" class="headerlink" title="显式的初始化操作（Explicit Initialization）"></a>显式的初始化操作（Explicit Initialization）</h5><ul>
+<li><p>已知有定义：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X x0;</span><br></pre></td></tr></table></figure>
+<p>  下面三个定义，每个都以x0来初始化class object：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo_bar</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">X <span class="title">x1</span><span class="params">(x0)</span></span>;</span><br><span class="line">    X x2 = x0;</span><br><span class="line">    X x3 = <span class="built_in">X</span>(x0);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  以上必要的程序转化有<font color=red>两个阶段</font>：</p>
+<ul>
+<li><strong>重写每个定义，其中初始化操作被剥除</strong>。</li>
+<li><strong>class的copy constructor调用操作被安插进去</strong>。</li>
+</ul>
+<p>  foo_bar()可能看起来这样：</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">C++ 伪码</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo_bar</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 定义重写，初始化操作被剥除</span></span><br><span class="line">    X x1;</span><br><span class="line">    X x2;</span><br><span class="line">    X x3;</span><br><span class="line">    <span class="comment">// 编译器安插copy construction的调用操作</span></span><br><span class="line">    <span class="comment">// 表现出X::X(const X &amp;xx);</span></span><br><span class="line">    x1.X::<span class="built_in">X</span>(x0);</span><br><span class="line">    x2.X::<span class="built_in">X</span>(x0);</span><br><span class="line">    x3.X::<span class="built_in">X</span>(x0);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="参数的初始化（Argument-Initialization）"><a href="#参数的初始化（Argument-Initialization）" class="headerlink" title="参数的初始化（Argument Initialization）"></a>参数的初始化（Argument Initialization）</h5><ul>
+<li>C++ Standard说，把class object当作参数传给函数，或者作为函数的返回值，相当于初始化操作：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X xx = arg;</span><br></pre></td></tr></table></figure>
+  这里xx是形式参数（或返回值），arg是真实参数。因此，函数：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(X x0)</span></span>;</span><br><span class="line">X xx;</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="built_in">foo</span>(xx);</span><br></pre></td></tr></table></figure>
+  会要求<font color=red>局部实例</font>（<font color=green>local instance</font>）x0以memberwise方式将xx当初值。代码转换为：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++伪码</span></span><br><span class="line"><span class="comment">// 编译器产生的临时对象</span></span><br><span class="line">X __temp0;</span><br><span class="line"><span class="comment">// 调用copy constructor</span></span><br><span class="line">__temp0.X::<span class="built_in">X</span>(xx);</span><br><span class="line"><span class="built_in">foo</span>(__temp0);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="返回值的初始化（Return-Value-Initialization）"><a href="#返回值的初始化（Return-Value-Initialization）" class="headerlink" title="返回值的初始化（Return Value Initialization）"></a>返回值的初始化（Return Value Initialization）</h5><ul>
+<li>已知下面函数的定义：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">X <span class="title">bar</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    X xx;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">return</span> xx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  bar()的返回值如何从局部对象xx中拷贝过来？在cfont中的做法是一个双阶段转化：<ul>
+<li><strong>加上额外参数，类型是class object的reference</strong>。这个参数用来放置被<font color=red>拷贝构建</font>（<font color=green>copy constructed</font>）而来的返回值。</li>
+<li><strong>return之前安插一个copy constructor调用</strong>。</li>
+</ul>
+  bar()转换如下：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(X &amp;__result)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    X xx;</span><br><span class="line">    <span class="comment">// default constructor</span></span><br><span class="line">    xx.X::<span class="built_in">X</span>();</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// copy constructor</span></span><br><span class="line">    __result.X:<span class="built_in">XX</span>(xx);</span><br><span class="line">    <span class="keyword">return</span>; <span class="comment">// 即使不传回任何值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X xx = <span class="built_in">bar</span>();</span><br><span class="line"><span class="comment">// 不用default constructor,NRV</span></span><br><span class="line">X xx;</span><br><span class="line"><span class="built_in">bar</span>(xx);</span><br></pre></td></tr></table></figure>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">bar</span>().<span class="built_in">memfunc</span>();</span><br><span class="line"><span class="comment">// 执行bar()所传回的X class object的memfunc()可能转换</span></span><br><span class="line">X __temp0;</span><br><span class="line">(<span class="built_in">bar</span>(__temp0), __temp0).<span class="built_in">memfunc</span>();</span><br></pre></td></tr></table></figure>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 同理，声明一个函数指针</span></span><br><span class="line"><span class="built_in">X</span> (*pf)();</span><br><span class="line">pf = bar;</span><br><span class="line"><span class="comment">// 转为</span></span><br><span class="line"><span class="built_in"><span class="keyword">void</span></span> (*pf)(X&amp;);</span><br><span class="line">pf = bar;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="在使用者层面做优化（Optimization-at-the-User-Level）"><a href="#在使用者层面做优化（Optimization-at-the-User-Level）" class="headerlink" title="在使用者层面做优化（Optimization at the User Level）"></a>在使用者层面做优化（Optimization at the User Level）</h5><ul>
+<li>以下代码：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">X <span class="title">bar</span><span class="params">(<span class="keyword">const</span> T &amp;y, <span class="keyword">const</span> T &amp;z)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    X xx;</span><br><span class="line">    <span class="comment">// ...以y</span></span><br><span class="line">    来处理xx</span><br><span class="line">    <span class="keyword">return</span> xx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  可以这么写：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">X <span class="title">bar</span><span class="params">(<span class="keyword">const</span> T &amp;y, <span class="keyword">const</span> T &amp;z)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">X</span>(y, z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  当bar()被转换后，效率会比较高：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++伪码</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(X &amp;__result)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    __result.X::<span class="built_in">X</span>(y, z);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="在编译器层面做优化（Optimization-at-the-Compiler-Level）"><a href="#在编译器层面做优化（Optimization-at-the-Compiler-Level）" class="headerlink" title="在编译器层面做优化（Optimization at the Compiler Level）"></a>在编译器层面做优化（Optimization at the Compiler Level）</h5><ul>
+<li>在一个像bar()这样的函数中，所有return指令传回相同具名数值（named value），因此<font color=red>编译器可能自己做优化</font>：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">X <span class="title">bar</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    X xx;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">return</span> xx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  xx以_result取代：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(X &amp;__result)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// default constructor被调用</span></span><br><span class="line">    __result.X::<span class="built_in">X</span>();</span><br><span class="line">    <span class="comment">// ... 直接处理__result</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  这样的优化操作，称为<font color=green>Named Return Value</font>（<font color=red>NRV</font>）。虽然NRV优化提供了重要效率改善，但它还是饱受批评。<ul>
+<li><strong>优化是默默的，不透明</strong></li>
+<li><strong>一旦函数复杂，很难优化</strong></li>
+<li><strong>某些人不喜欢</strong></li>
+</ul>
+  举个例子，以下三个初始化语义上相等：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">X <span class="title">xx0</span><span class="params">(<span class="number">1024</span>)</span></span>;    <span class="comment">// xx0.X::X(1024);</span></span><br><span class="line">X xx1 = <span class="built_in">X</span>(<span class="number">1024</span>);</span><br><span class="line">X xx2 = (X)<span class="number">1024</span>;</span><br></pre></td></tr></table></figure>
+  xx0是被单一的constructor操作设定初值：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xx0.X::<span class="built_in">X</span>(<span class="number">1024</span>);</span><br></pre></td></tr></table></figure>
+  而xx1或xx2却调用两个constructor，产生临时性object，并针对临时object调用classX的destructor：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">X __temp0;</span><br><span class="line">__temp0.X::<span class="built_in">X</span>(<span class="number">1024</span>);</span><br><span class="line">xx1.X::<span class="built_in">X</span>(__temp0);</span><br><span class="line">__temp0.X::~<span class="built_in">X</span>();</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="Copy-Constructor：要还是不要？"><a href="#Copy-Constructor：要还是不要？" class="headerlink" title="Copy Constructor：要还是不要？"></a>Copy Constructor：要还是不要？</h5><ul>
+<li>一个3D坐标点类：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Point3d</span>(<span class="keyword">float</span> x, <span class="keyword">float</span> y, <span class="keyword">float</span> z);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">float</span> _x, _y, _z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  class的default copy constructor被视为trivial。默认情况下，一个Point3d class object的“memberwise”初始化操作会导致“bitwise copy”。这样效率高，也安全。<br>  实现copy constructor的最简单方法像这样：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Point3d::<span class="built_in">Point3d</span>(<span class="keyword">const</span> Point3d &amp;rhs)</span><br><span class="line">&#123;</span><br><span class="line">    _x = rhs._x;</span><br><span class="line">    _y = rhs._y;</span><br><span class="line">    _z = rhs._z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+  但使用C++library的memcpy()会更有效率：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Point3d::<span class="built_in">Point3d</span>(<span class="keyword">const</span> Point3d &amp;rhs)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">memcpy</span>(<span class="keyword">this</span>, &amp;rhs, <span class="built_in"><span class="keyword">sizeof</span></span>(Point3d));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-4-成员们的初始化队伍（Member-Initialization-List）"><a href="#2-4-成员们的初始化队伍（Member-Initialization-List）" class="headerlink" title="2.4 成员们的初始化队伍（Member Initialization List）"></a>2.4 成员们的初始化队伍（Member Initialization List）</h4><ul>
+<li>当你写下一个constructor时，就有机会设定class members的初值，不是在member initialization list，就是在constructor函数本体。</li>
+<li>下列情况下，为了让你程序能够顺利执行，必须使用member initialization list：<ol>
+<li><font color=red><strong>当初始化reference member时</strong></font>；</li>
+<li><font color=red><strong>当初始化const member时</strong></font>；</li>
+<li><font color=red><strong>当调用一个base class的constructor，且拥有一组参数时</strong></font>；</li>
+<li><font color=red><strong>当调用一个member class的constructor，而 它拥有一组参数时</strong></font>。<br>这四种情况都能正确编译并执行，但效率不高。例如：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Word</span> &#123;</span></span><br><span class="line">    String _name;</span><br><span class="line">    <span class="keyword">int</span> _cnt;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Word</span>() &#123;</span><br><span class="line">        _name = <span class="number">0</span>;</span><br><span class="line">        _cnt = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+constructor可能的内部扩张结果：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Word::<span class="built_in">Word</span>( <span class="comment">/* this pointer goes here */</span> )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// String default constructor</span></span><br><span class="line">    _name.String::<span class="built_in">String</span>();</span><br><span class="line">    <span class="comment">// tempory</span></span><br><span class="line">    String temp = <span class="built_in">String</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="comment">// memberwise copy _name</span></span><br><span class="line">    _name.String::<span class="keyword">operator</span>=(temp);</span><br><span class="line">    <span class="comment">// destroy tempory</span></span><br><span class="line">    temp.String::~<span class="built_in">String</span>();</span><br><span class="line">    _cnt = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+一个有效率的实现方法是：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Word::Word : _name(<span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    _cnt = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+它会扩张：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Word::<span class="built_in">Word</span>( <span class="comment">/* this pointer goes here */</span> )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// String(int) constructor</span></span><br><span class="line">    _name.String::<span class="built_in">String</span>(<span class="number">0</span>);</span><br><span class="line">    _cnt = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/" rel="tag"># C++对象模型</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/12/%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%85%B3%E4%BA%8E%E5%AF%B9%E8%B1%A1/" rel="prev" title="第一章 关于对象">
+      <i class="fa fa-chevron-left"></i> 第一章 关于对象
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/12/%E7%AC%AC%E4%B8%89%E7%AB%A0-Data%E8%AF%AD%E4%B9%89%E5%AD%A6/" rel="next" title="第三章 Data语义学">
+      第三章 Data语义学 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Default-Constructor%E7%9A%84%E6%9E%84%E9%80%A0%E6%93%8D%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">2.1 Default Constructor的构造操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%80%9C%E5%B8%A6%E6%9C%89Default-Constructor%E2%80%9D%E7%9A%84Member-Class-Object"><span class="nav-number">1.1.</span> <span class="nav-text">“带有Default Constructor”的Member Class Object</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%80%9C%E5%B8%A6%E6%9C%89Default-Constructor%E2%80%9D%E7%9A%84Base-Class"><span class="nav-number">1.2.</span> <span class="nav-text">“带有Default Constructor”的Base Class</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%80%9C%E5%B8%A6%E6%9C%89%E4%B8%80%E4%B8%AAVirtual-Function%E2%80%9D%E7%9A%84Class"><span class="nav-number">1.3.</span> <span class="nav-text">“带有一个Virtual Function”的Class</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E2%80%9C%E5%B8%A6%E6%9C%89%E4%B8%80%E4%B8%AAVirtual-Base-Class%E2%80%9D%E7%9A%84Class"><span class="nav-number">1.4.</span> <span class="nav-text">“带有一个Virtual Base Class”的Class</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-Copy-Constructor%E7%9A%84%E6%9E%84%E9%80%A0%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">2.2 Copy Constructor的构造操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Default-Memberwise-Initialization"><span class="nav-number">2.1.</span> <span class="nav-text">Default Memberwise Initialization</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Bitwise-Copy-Semantics-%E4%BD%8D%E9%80%90%E6%AC%A1%E6%8B%B7%E8%B4%9D%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">Bitwise Copy Semantics(位逐次拷贝）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8D%E8%A6%81Bitwise-Copy-Semantics"><span class="nav-number">2.3.</span> <span class="nav-text">不要Bitwise Copy Semantics!</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%87%8D%E6%96%B0%E8%AE%BE%E5%AE%9AVirtual-Table%E7%9A%84%E6%8C%87%E9%92%88"><span class="nav-number">2.4.</span> <span class="nav-text">重新设定Virtual Table的指针</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A4%84%E7%90%86Virtual-Base-Class-Subobject"><span class="nav-number">2.5.</span> <span class="nav-text">处理Virtual Base Class Subobject</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E7%A8%8B%E5%BA%8F%E8%BD%AC%E5%8C%96%E8%AF%AD%E4%B9%89%E5%AD%A6%EF%BC%88Program-Transformation-Semantics%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">2.3 程序转化语义学（Program Transformation Semantics）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%98%BE%E5%BC%8F%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E6%93%8D%E4%BD%9C%EF%BC%88Explicit-Initialization%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">显式的初始化操作（Explicit Initialization）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%88Argument-Initialization%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">参数的初始化（Argument Initialization）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%88Return-Value-Initialization%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">返回值的初始化（Return Value Initialization）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%A8%E4%BD%BF%E7%94%A8%E8%80%85%E5%B1%82%E9%9D%A2%E5%81%9A%E4%BC%98%E5%8C%96%EF%BC%88Optimization-at-the-User-Level%EF%BC%89"><span class="nav-number">3.4.</span> <span class="nav-text">在使用者层面做优化（Optimization at the User Level）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%A8%E7%BC%96%E8%AF%91%E5%99%A8%E5%B1%82%E9%9D%A2%E5%81%9A%E4%BC%98%E5%8C%96%EF%BC%88Optimization-at-the-Compiler-Level%EF%BC%89"><span class="nav-number">3.5.</span> <span class="nav-text">在编译器层面做优化（Optimization at the Compiler Level）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Copy-Constructor%EF%BC%9A%E8%A6%81%E8%BF%98%E6%98%AF%E4%B8%8D%E8%A6%81%EF%BC%9F"><span class="nav-number">3.6.</span> <span class="nav-text">Copy Constructor：要还是不要？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-%E6%88%90%E5%91%98%E4%BB%AC%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%98%9F%E4%BC%8D%EF%BC%88Member-Initialization-List%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">2.4 成员们的初始化队伍（Member Initialization List）</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ichheit</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ichheit</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+  
+</body>
+</html>
