@@ -176,6 +176,115 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/14/5-%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ichheit">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content=".27t_lBZ4oZgg_">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/14/5-%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">5 实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-14 13:44:50" itemprop="dateCreated datePublished" datetime="2020-06-14T13:44:50+08:00">2020-06-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-09-09 16:26:07" itemprop="dateModified" datetime="2021-09-09T16:26:07+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-01/" itemprop="url" rel="index"><span itemprop="name">2019.01</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#%E6%9D%A1%E6%AC%BE26%EF%BC%9A%E5%B0%BD%E5%8F%AF%E8%83%BD%E5%BB%B6%E5%90%8E%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89%E5%BC%8F%E7%9A%84%E5%87%BA%E7%8E%B0%E6%97%B6%E9%97%B4">条款26：尽可能延后变量定义式的出现时间</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE27%EF%BC%9A%E5%B0%BD%E9%87%8F%E5%B0%91%E5%81%9A%E8%BD%AC%E5%9E%8B%E5%8A%A8%E4%BD%9C">条款27：尽量少做转型动作</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE28%EF%BC%9A%E9%81%BF%E5%85%8D%E8%BF%94%E5%9B%9Ehandles%E6%8C%87%E5%90%91%E5%AF%B9%E8%B1%A1%E5%86%85%E9%83%A8%E6%88%90%E5%88%86">条款28：避免返回handles指向对象内部成分</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE29%EF%BC%9A%E4%B8%BA%E2%80%9D%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E2%80%9C%E5%8A%AA%E5%8A%9B%E6%98%AF%E5%80%BC%E5%BE%97%E7%9A%84">条款29：为”异常安全“努力是值得的</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE30%EF%BC%9A%E9%80%8F%E5%BD%BB%E4%BA%86%E8%A7%A3inlining%E7%9A%84%E9%87%8C%E9%87%8C%E5%A4%96%E5%A4%96">条款30：透彻了解inlining的里里外外</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE31%EF%BC%9A%E5%B0%86%E6%96%87%E4%BB%B6%E9%97%B4%E7%9A%84%E7%BC%96%E8%AF%91%E4%BE%9D%E5%AD%98%E5%85%B3%E7%B3%BB%E9%99%8D%E8%87%B3%E6%9C%80%E4%BD%8E">条款31：将文件间的编译依存关系降至最低</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<p>大多数情况下，适当提出classes或class templates定义以及functions和function<br>templates声明，是最花费心力的两件事。<em><strong>太快定义变量可能造成效率上的拖延；过度使用转型可能导致代码变慢又难维护，又找来微妙的理解错误；返回对象内部数据的handle可能会破坏封装并留给客户dangling<br>handles；未考虑异常带来的冲击则可能导致资源泄露和数据败坏；过度热心地inlining可能引起代码膨胀；过度耦合（coupling）则可能导致让人不满意的冗长build<br>times。</strong></em></p>
+<h4 id="条款26：尽可能延后变量定义式的出现时间"><a href="#条款26：尽可能延后变量定义式的出现时间" class="headerlink" title="条款26：尽可能延后变量定义式的出现时间"></a>条款26：尽可能延后变量定义式的出现时间</h4><ol>
+<li>当定义了一个类型带有构造函数或析构函数，就得付出构造成本和析构成本。如果函数可能抛出异常，最好将未使用的变量尽量延后声明（为何不声明定义分割是因为将函数构造出来再赋值比直接构造时指定初值效率低）。</li>
+<li>对于在循环结构中定义在里头还是外头需要权衡：如果赋值成本比“构造+析构”成本高，那么倒不如在循环结构中定义。</li>
+</ol>
+<h4 id="条款27：尽量少做转型动作"><a href="#条款27：尽量少做转型动作" class="headerlink" title="条款27：尽量少做转型动作"></a>条款27：尽量少做转型动作</h4><ol>
+<li>回顾转型语法：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// old-style casts</span></span><br><span class="line">(T)<span class="function">expression</span></span><br><span class="line"><span class="function"><span class="title">T</span><span class="params">(expression)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">// C++-style casts</span></span></span><br><span class="line"><span class="function"><span class="comment">/*</span></span></span><br><span class="line"><span class="comment"><span class="function">    const_cast通常用来将对象常量行转除（cast away he constness）</span></span></span><br><span class="line"><span class="comment"><span class="function">*/</span></span></span><br><span class="line"><span class="function"><span class="keyword">const_cast</span>&lt;T&gt;<span class="params">(expression)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">/*</span></span></span><br><span class="line"><span class="comment"><span class="function">    dynamic_cast主要用来执行安全向下转型（safe downcasting），用来决定某对象是否归属继承体系中的某个类型，它是唯一无法由旧式语法执行的动作，也很耗费重大运行成本的转型动作</span></span></span><br><span class="line"><span class="comment"><span class="function">*/</span></span></span><br><span class="line"><span class="function"><span class="keyword">dynamic_cast</span>&lt;T&gt;<span class="params">(expression)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">/*</span></span></span><br><span class="line"><span class="comment"><span class="function">    reinterpret_cast意图执行低级转型，它取决于编译器，不可移植。它可以这么用，将pointer to int转型为一个int</span></span></span><br><span class="line"><span class="comment"><span class="function">*/</span></span></span><br><span class="line"><span class="function"><span class="keyword">reinterpret_cast</span>&lt;T&gt;<span class="params">(expression)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="comment">/*</span></span></span><br><span class="line"><span class="comment"><span class="function">    static_cast用来强迫隐式转换（implicit conversions），它基本什么都能做，就是无法将const转为non-const，这只有const_cast办得到。</span></span></span><br><span class="line"><span class="comment"><span class="function">*/</span></span></span><br><span class="line"><span class="function">satic_cast&lt;T&gt;<span class="params">(expression)</span></span></span><br></pre></td></tr></table></figure>
+有人觉得转型起始什么都没做，其实这是错误的观念：底层转型表述几乎会产生一些代码：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> &#123;</span> ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base &#123; ... &#125;;</span><br><span class="line">Derived d;</span><br><span class="line">Base *pb = &amp;d;</span><br></pre></td></tr></table></figure>
+这里不过是建立一个base class指针指向一个derived class对象，但有时候两个指针值并不相同。这种情况下会有个<font color=red>偏移量</font>（<font color=green>offset</font>）在<strong>运行期</strong>被施行于Derived*指针身上，才取得正确Base*指针值。<br>我们很容易写出似是而非的代码（在其他语言可能是真的）。例如derived classes内的virtual函数代码调用base class对应函数：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment">    这段程序将*this转型为Window，它调用的不是当前对象上的函数，</span></span><br><span class="line"><span class="comment">    而是*this对象的baseclass部分的一个临时副本。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Window</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onResize</span><span class="params">()</span> </span>&#123; ... &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SpecialWindow</span>:</span> <span class="keyword">public</span> Window</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onResize</span><span class="params">()</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">static_cast</span>&lt;Winddow&gt;(*<span class="keyword">this</span>).<span class="built_in">onResize</span>();</span><br><span class="line">        <span class="comment">// 正确做法是：</span></span><br><span class="line">        Window::<span class="built_in">onResize</span>();</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="条款28：避免返回handles指向对象内部成分"><a href="#条款28：避免返回handles指向对象内部成分" class="headerlink" title="条款28：避免返回handles指向对象内部成分"></a>条款28：避免返回handles指向对象内部成分</h4><ol>
+<li>一个成员函数返回<font color=red>references</font>、<font color=red>pointers</font>和<font color=red>itertors</font>，这些统统都是所谓的<font color=red><strong>handles</strong></font>（号码牌，用来取得某个对象）。而一个返回“代表对象内部数据”的handle，随之而来的是降低对象封装性的风险。</li>
+</ol>
+<h4 id="条款29：为”异常安全“努力是值得的"><a href="#条款29：为”异常安全“努力是值得的" class="headerlink" title="条款29：为”异常安全“努力是值得的"></a>条款29：为”异常安全“努力是值得的</h4><ol>
+<li>当异常被抛出时，带有<font oclor=red>异常安全性</font>（<font color=green>Exception safety</font>）的函数一般不泄露任何资源并不允许数据败坏。这样的函数可分为三种保证：基本型、强烈型和不抛出异常型。</li>
+<li>强烈保证以copy-and-swap实现出来，保证一个动作要么全部完成，否则不进行任何变动。</li>
+</ol>
+<h4 id="条款30：透彻了解inlining的里里外外"><a href="#条款30：透彻了解inlining的里里外外" class="headerlink" title="条款30：透彻了解inlining的里里外外"></a>条款30：透彻了解inlining的里里外外</h4><ol>
+<li>用<font color=red>inline</font>内嵌函数可以免除函数的调用成本，编译器最优化机制通常被设计来浓缩不含函数调用的代码。然而过多的inline可能导致增加<font color=red>目标码</font>（<font color=green>object coed</font>）大小。在内存有限 的机器上，过度热衷inlining会使程序体积太大，即使拥有虚内存，造成的代码膨胀会导致额外的<font color=red>换页行为</font>（<font color=green>paging</font>），降低指令<font color=red>高速缓存的命中率</font>（<font color=green>instruction cache hit rate</font>），以及伴随这些问题而来的效率损失。</li>
+<li>Inline函数通常被置于头文件内，因为多数build environments在编译过程中进行inlining，在链接期完成inlining。inlining在多数C++程序中是编译期行为。</li>
+<li>inline是一个向编译器发出的申请，而不是强制命令。大部分编译器拒绝过于复杂（如有循环和递归）的函数inlining。对于virtual函数也会，因为virtual意味着”wait，知道runtime才确定调用哪个函数“。</li>
+</ol>
+<h4 id="条款31：将文件间的编译依存关系降至最低"><a href="#条款31：将文件间的编译依存关系降至最低" class="headerlink" title="条款31：将文件间的编译依存关系降至最低"></a>条款31：将文件间的编译依存关系降至最低</h4><ol>
+<li><code>#include</code>指示符提供的定义式和其含入文件之间形成了一种<font color=red>编译依存关系</font>（<font color=green>compilation dependency</font>）。如果这些头文件中有任何一个被改变，或者这些头文件所依赖的其他头文件有任何改变，那么每个含有class的文件就得重新编译。解决方案是通过<strong>前置声明</strong>配合指针或引用类型声明来减少编译依赖。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/14/4-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1992,449 +2101,6 @@ pi所指对象的生命因delete而结束。所有后继对pi的参考操作不�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/12/%E7%AC%AC%E4%B8%89%E7%AB%A0-Data%E8%AF%AD%E4%B9%89%E5%AD%A6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Ichheit">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content=".27t_lBZ4oZgg_">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/12/%E7%AC%AC%E4%B8%89%E7%AB%A0-Data%E8%AF%AD%E4%B9%89%E5%AD%A6/" class="post-title-link" itemprop="url">第三章 Data语义学</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-12 22:53:24" itemprop="dateCreated datePublished" datetime="2020-06-12T22:53:24+08:00">2020-06-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-09-09 16:26:07" itemprop="dateModified" datetime="2021-09-09T16:26:07+08:00">2021-09-09</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/2019-06/" itemprop="url" rel="index"><span itemprop="name">2019.06</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <!-- vim-markdown-toc Marked -->
-
-<ul>
-<li><a href="#3.1-data-member%E7%9A%84%E7%BB%91%E5%AE%9A%EF%BC%88the-binding-of-a-data-member%EF%BC%89">3.1 Data Member的绑定（The Binding of a Data Member）</a></li>
-<li><a href="#3.2-data-member%E7%9A%84%E5%B8%83%E5%B1%80%EF%BC%88data-member-layout%EF%BC%89">3.2 Data Member的布局（Data Member Layout）</a></li>
-<li><a href="#3.3-data-member%E7%9A%84%E5%AD%98%E5%8F%96">3.3 Data Member的存取</a><ul>
-<li><a href="#static-data-members">Static Data Members</a></li>
-<li><a href="#nonstatic-data-members">Nonstatic Data Members</a></li>
-</ul>
-</li>
-<li><a href="#3.4-%E2%80%9C%E7%BB%A7%E6%89%BF%E2%80%9D%E4%BA%8Edata-member">3.4 “继承”于Data Member</a><ul>
-<li><a href="#%E5%8F%AA%E8%A6%81%E7%BB%A7%E6%89%BF%E4%B8%8D%E8%A6%81%E5%A4%9A%E6%80%81%EF%BC%88inheritance-without-polymorphism%EF%BC%89">只要继承不要多态（Inheritance without Polymorphism）</a></li>
-<li><a href="#%E5%8A%A0%E4%B8%8A%E5%A4%9A%E6%80%81%EF%BC%88adding-polymorphism%EF%BC%89">加上多态（Adding Polymorphism）</a></li>
-<li><a href="#%E5%A4%9A%E9%87%8D%E7%BB%A7%E6%89%BF%EF%BC%88multiple-inheritance%EF%BC%89">多重继承（Multiple Inheritance）</a></li>
-<li><a href="#%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF%EF%BC%88virtual-inheritance%EF%BC%89">虚拟继承（Virtual Inheritance）</a></li>
-</ul>
-</li>
-<li><a href="#3.5-%E5%AF%B9%E8%B1%A1%E6%88%90%E5%91%98%E7%9A%84%E6%95%88%E7%8E%87%EF%BC%88object-member-efficiency%EF%BC%89">3.5 对象成员的效率（Object Member Efficiency）</a></li>
-<li><a href="#3.6-%E6%8C%87%E5%90%91data-members%E7%9A%84%E6%8C%87%E9%92%88%EF%BC%88poniter-to-data-members%EF%BC%89">3.6 指向Data Members的指针（Poniter to Data Members）</a><ul>
-<li><a href="#%E2%80%9C%E6%8C%87%E5%90%91members%E7%9A%84%E6%8C%87%E9%92%88%E2%80%9D%E7%9A%84%E6%95%88%E7%8E%87%E9%97%AE%E9%A2%98">“指向Members的指针”的效率问题</a></li>
-</ul>
-</li>
-</ul>
-<!-- vim-markdown-toc -->
-<ul>
-<li>一个空的class如：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// sizeof X == 1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> &#123;</span> &#125;;                    <span class="comment">// sizeof X == 1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Y</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> X &#123;&#125;;  <span class="comment">// sizeof X == 8</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Z</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> X &#123;&#125;;  <span class="comment">// sizeof X == 8</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> :</span> <span class="keyword">public</span> Y, <span class="keyword">public</span> Z &#123;&#125;;<span class="comment">// sizeof X == 12</span></span><br></pre></td></tr></table></figure>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">Y --- X</span><br><span class="line">Z --- X</span><br><span class="line">A --- Y</span><br><span class="line">A --- Z</span><br></pre></td></tr></table></figure>
-  <font color=red><strong>事实上并不是空的，它有一个隐藏的1byte大小，那是编译器安插进去的一个char</strong></font>。有机器上Y、Z得出大小是8。这个值的大小和机器有关，也和编译器有关：<ol>
-<li><strong>语言本身所造成的额外负担（overhead）</strong>。当语言支持virtual base classes时，会导致额外负担。在derived中，反映在某种形式的<font color=red>指针</font>身上，它或者指向virtual base class subobject，或指向一个相关表格；表格中是virtual base class subobject地址。</li>
-<li><strong>编译器对于特殊情况所提供的优化处理</strong>。</li>
-<li><strong>Allgnment的限制</strong>。大部分机器结构体大小会收到alignment的限制（内存对齐），使它们能够更有效率在内存中被存取。<font color=red>alignment就是将数值调整到某数的整数倍</font>。</li>
-</ol>
-</li>
-<li><font color=red>Empty virtual base class</font>已经成为C++OO设计的一个特有术语了。他提供一个<font color=red>virtual interface</font>，没有定义任何数据。</li>
-<li>对于class A竟然大小为12这个结果。记住，<font color=red><strong>一个virual base class sbobject只会在derived class中存在一份实例</strong></font>，不管它在继承体系中出现多少次。它的大小由以下决定：<ol>
-<li><strong>被大家共享的唯一一个Class X，大小为1byte</strong>。</li>
-<li><strong>Base class Y，减去因virtual base class X二配置的大小，结果是4bytes</strong>。</li>
-<li><strong>class A自己的大小：0byte</strong>。</li>
-<li><strong>class A的alignment数量</strong>。</li>
-</ol>
-</li>
-<li>C++对象模型尽量以空间优化和存取速度优化的考虑来表现nonstatic data members，并且保持和C语言struct数据配置的兼容性。至于static data members，则被放置在程序的一个global data segment中，不会影响个别的class object大小。在程序之中，不管class被产生出多少个objects（经由直接产生或间接产生），static data members永远只存在一份实例。但是一个template class的static data members的行为稍有不同。</li>
-<li>每一个class object必须有足够的大小容纳所有的nonstatic data members，因为它可能比你想象的还大，原因是：<ul>
-<li><strong>编译器自动加上额外的data members</strong>，用以支持某些特性（virtual）。</li>
-<li><strong>因为alignment的需要</strong>。</li>
-</ul>
-</li>
-</ul>
-<h4 id="3-1-Data-Member的绑定（The-Binding-of-a-Data-Member）"><a href="#3-1-Data-Member的绑定（The-Binding-of-a-Data-Member）" class="headerlink" title="3.1 Data Member的绑定（The Binding of a Data Member）"></a>3.1 Data Member的绑定（The Binding of a Data Member）</h4><ul>
-<li>早期C++有两种防御性程序设计风格：<ol>
-<li>把所有data members放在class声明处，以确保正确的绑定： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">float</span> x, y, z;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">float</span> <span class="title">X</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> x; &#125;</span><br><span class="line">    <span class="comment">// ...etc</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
-<li>把所有的inline functions，不管大小都放在class声明之外： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Point3d</span>();</span><br><span class="line">    <span class="function"><span class="keyword">float</span> <span class="title">X</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">X</span><span class="params">(<span class="keyword">float</span>)</span> <span class="keyword">const</span></span>;</span><br><span class="line">    <span class="comment">// ...etc</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">float</span> <span class="title">Point3d::X</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
- 但这种<strong>设计风格在C++2.0之后就不存在了</strong>。这个古老的语言规则称为“<font color=red>member rwriting rule</font>”。大概意思是“一个inline函数实体，在整个class声明未被完全看见之前，不会被评估求值（evaluated）的”。也就是说： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="keyword">int</span> x;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 对于函数本体的分析延迟，直到class声明右大括号出现才开始</span></span><br><span class="line">    <span class="function"><span class="keyword">float</span> <span class="title">X</span><span class="params">()</span> cons </span>&#123; <span class="keyword">return</span> x; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">float</span> x;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 分析在这里进行</span></span><br></pre></td></tr></table></figure>
- 因此一个inline member function躯体之内的data member绑定操作，会在整个class声明完成之后才发生。但这对member function的argument list并不是真的。argument list中的名称会在第一次遇到的时候被适当resolved完成。因此extern和nested type names之间的非直觉绑定操作还是会发生。 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> length;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// length is resolved for global</span></span><br><span class="line">    <span class="comment">// _val is resolved for Point3d::_val</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">mumble</span><span class="params">(length val)</span> </span>&#123; _val = val; &#125;</span><br><span class="line">    <span class="function">length <span class="title">mumble</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> _val; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// length必须在class对他第一个参考操作前被看见</span></span><br><span class="line">    <span class="comment">// 这样的声明使之前操作不合法</span></span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">float</span> length;</span><br><span class="line">    length _val;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
- 上述的语言状况，仍然需要某种防御性程序风格：<font color=red><strong>请总是把“nested type 声明”放在class的起始处</strong></font>。这样做才能保证非直觉绑定的正确性。</li>
-</ol>
-</li>
-</ul>
-<h4 id="3-2-Data-Member的布局（Data-Member-Layout）"><a href="#3-2-Data-Member的布局（Data-Member-Layout）" class="headerlink" title="3.2 Data Member的布局（Data Member Layout）"></a>3.2 Data Member的布局（Data Member Layout）</h4><ul>
-<li>已知一组data members：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">float</span> x;</span><br><span class="line">    staic List&lt;Point3d*&gt; *freeList;</span><br><span class="line">    <span class="keyword">float</span> y;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> chunkSize  <span class="number">250</span>;</span><br><span class="line">    <span class="keyword">float</span> z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-  <font color=red><strong>Nonsatic data members在class object中的排列顺序和其被声明的顺序一样</strong>。</font>任何中介的static data members都不会放进对象布局之中。上述例子中，每个Point3d对象是由三个float组成的。static data members存放在程序的<font color=red>data segment</font>中，和个别class objects无关。<br>  C++ Standard要求，在同一个access section（private、public、protected等区段）中，members的排列只需要符合“较晚出现的members在class object中有较高的地址”这一条件就可以了。下面这个template funciton，接受两个data members，然后<strong>判断谁先出现在class object中</strong>。如果两个members都是不同的access sections中的第一个被声明者，函数就会判断哪个section先出现：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;class class_type, class data_type1, class data_type2&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">char</span>* <span class="title">access_order</span><span class="params">(data_type1 class_type::*mem1, data_type2 class_type::*mem2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">assert</span> (mem1 != mem2);</span><br><span class="line">    <span class="keyword">return</span> mem1 &lt; mem2 ? <span class="string">&quot;Member 1 occurs first&quot;</span> : <span class="string">&quot;member 2 occurs first&quot;</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call</span></span><br><span class="line"><span class="built_in">access_order</span>(&amp;Point3d::z, &amp;Point3d::y);</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h4 id="3-3-Data-Member的存取"><a href="#3-3-Data-Member的存取" class="headerlink" title="3.3 Data Member的存取"></a>3.3 Data Member的存取</h4><ul>
-<li>已知这段代码：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Point3d origin, *pt = &amp;origin;</span><br><span class="line"><span class="comment">// 存取data members， like this：</span></span><br><span class="line">origin.x = <span class="number">0.0</span>;</span><br><span class="line">pt-&gt;x = <span class="number">0.0</span>;</span><br></pre></td></tr></table></figure>
-  通过origin存取和通过pt存取有什么重大差异吗？</li>
-</ul>
-<h5 id="Static-Data-Members"><a href="#Static-Data-Members" class="headerlink" title="Static Data Members"></a>Static Data Members</h5><ul>
-<li><font color=red>Static data members</font>，按字面意义，被编译器提出class之外，并被视为global变量。每个member的存取许可，以及class的关联，都不会招致任何空间上或执行时间上的额外负担。每个static data member只有一个实例。</li>
-<li>但如果static data members是一个从<font color=red>复杂继承关系中继承</font>而来的，它仍然只有唯一一个实例，其存取路径仍然那么直接。如果static data member经由函数调用，或其他某些语法存取呢？例如：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">foobar</span>().chunkSize = <span class="number">250</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 可能的转化</span></span><br><span class="line">(<span class="keyword">void</span>) <span class="built_in">foobar</span>();</span><br><span class="line">Point3d.chunkSize = <span class="number">250</span>;</span><br></pre></td></tr></table></figure>
-  若取一个static data member的地址，会得到一个指向其数据类型的指针，而不是指向其class member的指针，因为static member并不内含在一个class object之中：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&amp;Point3d::chunkSize;</span><br><span class="line"><span class="comment">// 会得到如下类型的内存地址</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span>*</span><br></pre></td></tr></table></figure></li>
-<li>如果有两个classes，每个都声明了一个static member freeList，那么当它们放在程序的data segment时，会导致<font color=red>名称冲突</font>。编译器的解决方式是暗中对每个<font color=green>static data member编码</font>（<font color=red><strong>name-mangling</strong></font>），以获得一个独一无二的程序识别代码。任何name-mangling做法都有两个重点：<ol>
-<li>一个算法，<strong>推导出独一无二的名称</strong>。</li>
-<li>万一编译系统（或环境工具）必须和使用者交谈，那些独一无二的名称可以轻易<strong>被推导回到原来的名称</strong>。 </li>
-</ol>
-</li>
-</ul>
-<h5 id="Nonstatic-Data-Members"><a href="#Nonstatic-Data-Members" class="headerlink" title="Nonstatic Data Members"></a>Nonstatic Data Members</h5><ul>
-<li><font color=red>Nonstatic data members</font>直接放在每个class object中。除非经由<font color=red>显式</font>（<font color=green>explcit</font>）或<font color=red>隐式</font>的（<font color=green>implicit</font>），否则没有办法直接存取它们。只要在member funcion中直接处理一个nonstatic data member，implicit class object就会发生。例如：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Point3d <span class="title">Point3d::translate</span><span class="params">(<span class="keyword">const</span> Point3d &amp;pt)</span> </span>&#123;</span><br><span class="line">    x += pt.x;</span><br><span class="line">    y += pt.y;</span><br><span class="line">    z += pt.z;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-  表面上x、y、z直接存取，事实上是经由implicit class object（由this指针表述）完成的。这个函数的参数是：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// member function的内部转化</span></span><br><span class="line"><span class="function">Point3d <span class="title">Point3d::translate</span><span class="params">(Point3d *<span class="keyword">const</span> <span class="keyword">this</span>, <span class="keyword">const</span> Point3d &amp;pt)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>-&gt;x += pt.x;</span><br><span class="line">    <span class="keyword">this</span>-&gt;y += pt.y;</span><br><span class="line">    <span class="keyword">this</span>-&gt;z += pt.z;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>欲对一个nonstatic data member进行存取操作，编译器需要把<strong>class object的起始地址加上data member的偏移位置（offset）</strong>。例如：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">origin._y = <span class="number">0.0</span>;</span><br><span class="line"><span class="comment">// 相当于</span></span><br><span class="line">&amp;origin + (&amp;Point3d::_y - <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
-  每一个nonstatic data member的偏移位置（offset）在编译时期即可获知，甚至如果派生自单一或多重继承串链也是一样。</li>
-<li>再来看看<font color=red>虚拟继承</font>。虚拟继承将为经由base class subobject存取class members导入一层间接性。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">origin.x = <span class="number">0.0</span>;</span><br><span class="line">pt-&gt;x = <span class="number">0.0</span>;</span><br></pre></td></tr></table></figure>
-  从origin存取和从pt存取有什么重大差异？答案是当Pointe3d是一个derived class，而其继承结构中有一个virtual base class，并且被存取member是一个从该virtual base class继承而来的member就会有重大差异。这时候，我们无法在编译时期直到member真正的offset位置。<font color=red>这个存取操作必须延迟到执行期</font>。如果使用origin就不会有这个问题。</li>
-</ul>
-<h4 id="3-4-“继承”于Data-Member"><a href="#3-4-“继承”于Data-Member" class="headerlink" title="3.4 “继承”于Data Member"></a>3.4 “继承”于Data Member</h4><ul>
-<li>如果为2D和3D坐标点提供两个抽象数据类型：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">Point2d</span><br><span class="line">Point3d</span><br></pre></td></tr></table></figure>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// supporting abstract data types</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point2d</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// constructor(s)</span></span><br><span class="line">    <span class="comment">// operations</span></span><br><span class="line">    <span class="comment">// access functions</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">float</span> x, y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// constructor(s)</span></span><br><span class="line">    <span class="comment">// operations</span></span><br><span class="line">    <span class="comment">// access functions</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">float</span> x, y, z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-  这和提供两层或三层继承结构，每一层（代表一个维度）是一个class，派生自较低维层次有什么不同？</li>
-</ul>
-<h5 id="只要继承不要多态（Inheritance-without-Polymorphism）"><a href="#只要继承不要多态（Inheritance-without-Polymorphism）" class="headerlink" title="只要继承不要多态（Inheritance without Polymorphism）"></a>只要继承不要多态（Inheritance without Polymorphism）</h5><ul>
-<li>我们可能希望不论是2D或3D坐标点，能共享同一个实例，但又能继续使用于类型性质相关的实例。以上的设计策略。带来的影响则是可以共享数据本身以及数据处理方法，并将它局部化。一般而言，<font color=red>具体继承</font>（<font color=green>concrete inheritance</font>，相对于虚拟继承virtual inheritance）并不会增加空间或存取时间上的额外负担。  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">Point3d --- Point2d</span><br></pre></td></tr></table></figure>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point2d</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Point2d</span>(<span class="keyword">float</span> x = <span class="number">0.0</span>, <span class="keyword">float</span> y = <span class="number">0.0</span>) : _x(x), _y(y) &#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">float</span> <span class="title">x</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> _x; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">float</span> <span class="title">y</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> _y; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">x</span><span class="params">(<span class="keyword">float</span> newX)</span> </span>&#123; _x = newX; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">y</span><span class="params">(<span class="keyword">float</span> newY)</span> </span>&#123; _y = newY; &#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="keyword">operator</span>+=(<span class="keyword">const</span> Piont2d &amp;rhs) &#123;</span><br><span class="line">        _x += rhs.<span class="built_in">x</span>();</span><br><span class="line">        _y += rhs.<span class="built_in">y</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ... more members</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _x, _y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// inheritance from concrete class</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> :</span> <span class="keyword">public</span> Point2d &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Point3d</span>(<span class="keyword">float</span> x = <span class="number">0.0</span>, <span class="keyword">float</span> y = <span class="number">0.0</span>, <span class="keyword">float</span> z = <span class="number">0.0</span>) : <span class="built_in">Point2d</span>(x, y), _z(z) &#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">float</span> <span class="title">z</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> _z; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">z</span><span class="params">(<span class="keyword">float</span> newZ)</span> </span>&#123; _z = newZ; &#125;</span><br><span class="line">    <span class="keyword">void</span> oeprator+=(<span class="keyword">const</span> Point3d &amp;rhs) &#123;</span><br><span class="line">        Point2d::<span class="keyword">operator</span>+=(rhs);</span><br><span class="line">        _z += rhs.<span class="built_in">z</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ... more members</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-  这样的设计的好处是可以把管理x和y坐标的程序代码局部化。也表现处两个类之间的紧密关系。但把原本两个独立不相干的classes凑成一堆”type/subtype“，并带有继承关系，会有什么易犯的错误呢？<ul>
-<li>经验不足的人可能会重复设计一些相同操作的函数。以例子中的constructor和operator+=为例，它们并没有被做成inline函数。</li>
-<li>第二是，把class分解成两层或更多层，可能会为了”表现class继承体系的抽象化“而膨胀所需的空间。<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Concrete</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    <span class="keyword">char</span> c1;</span><br><span class="line">    <span class="keyword">char</span> c2;</span><br><span class="line">    <span class="keyword">char</span> c3;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-在32位机器中，每个Concrete class object大小是<strong>8bytes</strong>，细分如下:</li>
-</ul>
-<ol>
-<li>val占用4bytes；</li>
-<li>c1、c2和c3各占用1bytes；</li>
-<li>alignment（调整到word边界）需要1bytes。</li>
-</ol>
-  现在把Concrete分裂为三层结构：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">Concrete2 --- Concrete1</span><br><span class="line">Concrete3 --- Concrete2</span><br></pre></td></tr></table></figure>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Concrete1</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ... </span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    <span class="keyword">char</span> bit1;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Concrete2</span> :</span> <span class="keyword">public</span> Concrete1 &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ... </span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    <span class="keyword">char</span> bit2;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Concrete3</span> :</span> <span class="keyword">public</span> Concrete2 &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ... </span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    <span class="keyword">char</span> bit3;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-  现在Concrete3 object的大小是16bytes，比原先的设计多了100%。（p106）  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Concrete2 *pc2;</span><br><span class="line">Concrete1 *pc1_1, *pc1_2;</span><br><span class="line"><span class="comment">// 如果C++把derived class members和Concrete1 subobject捆绑在一起，去除填补空间</span></span><br><span class="line">pc1_1 = pc2;    <span class="comment">// pc1_1指向Concrete2对象</span></span><br><span class="line"><span class="comment">// derived class subobject被覆盖掉</span></span><br><span class="line"><span class="comment">// 于是bit2 member现在有了一个并非预期的数值</span></span><br><span class="line">*pc1_2 = *pc1_1;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h5 id="加上多态（Adding-Polymorphism）"><a href="#加上多态（Adding-Polymorphism）" class="headerlink" title="加上多态（Adding Polymorphism）"></a>加上多态（Adding Polymorphism）</h5><ul>
-<li>如果在继承关系中提供要给virtual function接口：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point2d</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Point2d</span>(<span class="keyword">float</span> x = <span class="number">0.0</span>, <span class="keyword">float</span> y = <span class="number">0.0</span>) : _x(x), _y(y) &#123;&#125;;</span><br><span class="line">    <span class="comment">// 之前的存取操作</span></span><br><span class="line">    <span class="comment">// 加上z的保留空间（目前什么也不做）</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">float</span> <span class="title">z</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">0.0</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">z</span><span class="params">(<span class="keyword">float</span>)</span> </span>&#123;&#125;</span><br><span class="line">    <span class="comment">// 谁当以下运算符为virtual</span></span><br><span class="line">    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="keyword">operator</span>+=(<span class="keyword">const</span> Point2d &amp;rhs) &#123;</span><br><span class="line">        _x += rhs.<span class="built_in">x</span>();</span><br><span class="line">        _y += rhs.<span class="built_in">y</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ... more members</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _x, _y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> :</span> <span class="keyword">public</span> Point2d &#123;</span><br><span class="line">pblic:</span><br><span class="line">    <span class="built_in">Point3d</span>(<span class="keyword">float</span> x = <span class="number">0.0</span>, <span class="keyword">float</span> y = <span class="number">0l</span>0, <span class="keyword">float</span> z = <span class="number">0.0</span>) : <span class="built_in">Ponit2d</span>(x, y), _z(z) &#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">float</span> <span class="title">z</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> _z; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">z</span><span class="params">(<span class="keyword">float</span> newZ)</span> </span>&#123; _z = newZ; &#125;</span><br><span class="line">    vodi <span class="keyword">operator</span>+=(<span class="keyword">const</span> Piont2d &amp;rhs) &#123;</span><br><span class="line">        Point2d::oeprator+=(rhs);</span><br><span class="line">        _z += rhs.<span class="built_in">z</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ... more members</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-  这个设计有个好处是可以把operator+=运用在一个Pointe3d对象和一个Point2对象身上：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Point2d <span class="title">p2d</span><span class="params">(<span class="number">2.1</span>, <span class="number">2.2</span>)</span></span>;</span><br><span class="line"><span class="function">Point3d <span class="title">p3d</span><span class="params">(<span class="number">3.1</span>,, <span class="number">3.2</span>, <span class="number">3.3</span>)</span></span>;</span><br><span class="line">p3d += p2d;</span><br></pre></td></tr></table></figure>
-  虽然class的声明语法没变，但事情不一样了：z() member function和operator+=()运算符都成了虚函数；<font color=red><strong>每个Point3d class object内含一个额外的vptr member和一个Piont3d virtual table</strong></font>；此外每个virtual member function的调用也复杂了。</li>
-<li>C++编辑器领域主要讨论的问题是把vptr放置在class object哪里最好？cfont编译器中，被放在class object的尾端：    <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">no_virts</span> &#123;</span></span><br><span class="line">    <span class="keyword">int</span> d1, d2;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">has_virts</span> :</span> <span class="keyword">public</span> no_virts &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> d3;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">no_virts *p = <span class="keyword">new</span> has_virts;</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th align="center">struct no_virts nv;</th>
-<th align="center">class has_virts : <br>public no_virts hv;</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">int d1</td>
-<td align="center"><strong>int d1</strong></td>
-</tr>
-<tr>
-<td align="center">int d2</td>
-<td align="center"><strong>int d2</strong></td>
-</tr>
-<tr>
-<td align="center">&nbsp;</td>
-<td align="center">int d3</td>
-</tr>
-<tr>
-<td align="center">&nbsp;</td>
-<td align="center">__vptr__has_virts</td>
-</tr>
-<tr>
-<td align="center">把vptr放在object尾端，可以保留base class C struct的对象布局，因而允许C程序代码也能使用，这做法出现在C++问世时。</td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">到了C++2.0，开始支持<font color=red>虚继承</font>以及<font color=red>抽象基类</font>，某些编译器开始把vptr放到class object前端：</td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">struct no_virts nv;</td>
-<td align="center">class has_virts : <br>public no_virts hv;</td>
-</tr>
-<tr>
-<td align="center">:-:</td>
-<td align="center">:-:</td>
-</tr>
-<tr>
-<td align="center">int d1</td>
-<td align="center">__vptr__has_virts</td>
-</tr>
-<tr>
-<td align="center">int d2</td>
-<td align="center"><strong>int d1</strong></td>
-</tr>
-<tr>
-<td align="center">&nbsp;</td>
-<td align="center"><strong>int d2</strong></td>
-</tr>
-<tr>
-<td align="center">&nbsp;</td>
-<td align="center">int d3</td>
-</tr>
-<tr>
-<td align="center">vptr放在class object前端，对于多继承下通过指向class members的指针调用virtual function会有一些帮助。否则，<strong>不仅从class object起始点开始量起的offset必须在执行器备妥，class vptr之间的offset也必须备妥</strong>。</td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">以下是Point2d和Point3d加上了virtual function之后的继承布局（单一继承）：</td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">class Point2d p2d;</td>
-<td align="center">class Point3d :<br>public Point2d pt3d;</td>
-</tr>
-<tr>
-<td align="center">:-:</td>
-<td align="center">:-:</td>
-</tr>
-<tr>
-<td align="center">float _x</td>
-<td align="center"><strong>float _x</strong></td>
-</tr>
-<tr>
-<td align="center">float _y</td>
-<td align="center"><strong>float _y</strong></td>
-</tr>
-<tr>
-<td align="center">__vptr__Point2d</td>
-<td align="center"><strong>__vptr__Point2d</strong></td>
-</tr>
-<tr>
-<td align="center">&nbsp;</td>
-<td align="center">float _z</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-<h5 id="多重继承（Multiple-Inheritance）"><a href="#多重继承（Multiple-Inheritance）" class="headerlink" title="多重继承（Multiple Inheritance）"></a>多重继承（Multiple Inheritance）</h5><ul>
-<li>单一继承提供了一种<font color=red>自然多态</font>（<font color=green>natural polymorphism</font>）形式，是关于base type和derived type之间的转换。base 它们的object都是从相同的地址开始。差异只在<strong>derived object比较大，用以容纳它自己的nonstatic data members</strong>。一个derived class指定给base class的指针或reference。这个操作并不需要编译器调停或修改地址。可以很自然地发生，而且提供了最佳执行效率。</li>
-<li>多重继承不像单一继承，也不容易模塑处模型。它的复杂度在于derived class和其base class之间的非自然关系：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">Point3d --- Point2d </span><br><span class="line">Vertex3d --- Point3d</span><br><span class="line">Vertex3d --- Vertex</span><br></pre></td></tr></table></figure>
-  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point2d</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ...有virtual接口，会有vptr</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _x, _y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> :</span> <span class="keyword">public</span> Point2d &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _z;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vertex</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ... vptr</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    Vertex *next</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vertex3d</span> :</span> <span class="keyword">public</span> Point3d, <span class="keyword">public</span> Vertex &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> mumble;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-  多重继承的问题主要发生在derived class objects和后继base class objects之间的转换，不论是：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">mumble</span><span class="params">(<span class="keyword">const</span> Vertex&amp;)</span></span>;</span><br><span class="line">Vertex3d v;</span><br><span class="line">...</span><br><span class="line"><span class="built_in">mumble</span>(v); <span class="comment">// 不自然</span></span><br></pre></td></tr></table></figure>
-  或是经由所支持的virtual function机制做转换。多继承对象符出的成本在于地址的指定操作而已：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Vertex3d v3d;</span><br><span class="line">Vertex *pv;</span><br><span class="line">Point2d *p2d;</span><br><span class="line">Point3d *p3d;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 指定操作</span></span><br><span class="line">pv = &amp;v3d;</span><br><span class="line"><span class="comment">// 需要内部转化</span></span><br><span class="line">pv = (Vertex*)(((<span class="keyword">char</span>*)&amp;v3d) + <span class="built_in"><span class="keyword">sizeof</span></span>(Point3d));</span><br><span class="line"><span class="comment">// 如果v3d为指针类型，即pv3d，则:</span></span><br><span class="line">pv = pv3d ? (Vertex*)((<span class="keyword">char</span>*)pv3d) + <span class="built_in"><span class="keyword">sizeof</span></span>(Point3d) : <span class="number">0</span>; <span class="comment">// 防止pv3d为0</span></span><br></pre></td></tr></table></figure>
-  以下为<font color=red>多重继承</font>（<font color=green>Multiple Inheritance</font>)：<table>
-<thead>
-<tr>
-<th align="center">class Point2d pt2d;</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">float _x</td>
-</tr>
-<tr>
-<td align="center">float _y</td>
-</tr>
-<tr>
-<td align="center">__vptr__Point2d</td>
-</tr>
-<tr>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">class Point3d :<br>public Point2d pt3d;</td>
-</tr>
-<tr>
-<td align="center">:-:</td>
-</tr>
-<tr>
-<td align="center">float _x</td>
-</tr>
-<tr>
-<td align="center">float _y</td>
-</tr>
-<tr>
-<td align="center">__vptr__Point2d</td>
-</tr>
-<tr>
-<td align="center">float _z</td>
-</tr>
-<tr>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">Vertex v;</td>
-</tr>
-<tr>
-<td align="center">:-:</td>
-</tr>
-<tr>
-<td align="center">Vertex *next</td>
-</tr>
-<tr>
-<td align="center">__vptr__Vertex</td>
-</tr>
-<tr>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">class Vertex3d :<br> public Point3d,<br>public Vertex<br>{}v3d;</td>
-</tr>
-<tr>
-<td align="center">:-:</td>
-</tr>
-<tr>
-<td align="center">float _x</td>
-</tr>
-<tr>
-<td align="center">float _y</td>
-</tr>
-<tr>
-<td align="center">__vptr__Point2d</td>
-</tr>
-<tr>
-<td align="center">float _z</td>
-</tr>
-<tr>
-<td align="center">Vertex *next</td>
-</tr>
-<tr>
-<td align="center">__vptr__Vertex</td>
-</tr>
-<tr>
-<td align="center">float mumble</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-<h5 id="虚拟继承（Virtual-Inheritance）"><a href="#虚拟继承（Virtual-Inheritance）" class="headerlink" title="虚拟继承（Virtual Inheritance）"></a>虚拟继承（Virtual Inheritance）</h5><ul>
-<li>多重继承的一个语意上的副作用是，<font color=red><strong>必须支持某种形式上的”shared subobject继承“</strong></font>。如早期的iostream library：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// pre-standard iostream implementation</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ios</span> &#123;</span> ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">istream</span> :</span> <span class="keyword">public</span> ios &#123; ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ostream</span> :</span> <span class="keyword">public</span> ios &#123; ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">iostream</span> :</span> <span class="keyword">public</span> istream, <span class="keyword">public</span> ostream &#123; ... &#125;;</span><br></pre></td></tr></table></figure>
-  下图可表现iostream的继承体系图。第一个为多重继承，第二个为虚拟多重继承：  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">istream --- ios1[ios]</span><br><span class="line">ostream --- ios2[ios]</span><br><span class="line">iostream --- istream</span><br><span class="line">iostream --- ostream</span><br></pre></td></tr></table></figure>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">istream --- ios</span><br><span class="line">ostream --- ios</span><br><span class="line">iostream --- istream</span><br><span class="line">iostream --- ostream</span><br></pre></td></tr></table></figure>
-  在iostream对象布局中，只需要一份就好：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ios</span> &#123;</span> ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">istream</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> ios &#123; ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ostream</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> ios &#123; ... &#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">iostream</span> :</span> <span class="keyword">public</span> istream, <span class="keyword">public</span> ostream &#123; ... &#125;;</span><br></pre></td></tr></table></figure>
-  上述iostream的实现挑战在于：**一个有效的方法，将istream和ostream各自维护ios subobjet，折叠成由iostream维护的单一ios subobject，并且保存base class和derived class的指针（reference）之间的<font color=red>多态指定操作</font>（<font color=green>polymorphism assignments</font>)**。</li>
-<li>一般的实现方法是。Class如果内含一个或多个virtual base class subobjects，像istream那样，将被分割两部分：<font color=red><strong>一个不变区域</strong></font>和<font color=red><strong>一个共享区域</strong></font>。不变区域中的数据，总是有<strong>固定的offset</strong>，所以这里可以直接存取。而共享区域，就是virtual base class subobject。它们只能被间接存取。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point2d</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _x, _y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vertex</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> Point2d &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    Vertex *next;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> :</span> <span class="keyword">public</span> <span class="keyword">virtual</span> Point2d &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> _z;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vertex3d</span> :</span> <span class="keyword">public</span> Vertex, <span class="keyword">public</span> Point3d &#123;</span><br><span class="line"><span class="keyword">public</span> :</span><br><span class="line">    ...</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">float</span> mumble;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph BT</span><br><span class="line">Vertex -- _x,_y--- Point2d</span><br><span class="line">Point3d -- _z --- Point2d</span><br><span class="line">Vertex3d -- next --- Vertex</span><br><span class="line">Vertex3d -- _z --- Point3d</span><br><span class="line">none[ ] -- mumble --- Vertex3d</span><br></pre></td></tr></table></figure>
-  这中间存在一个问题：如何能够存取class共享部分呢？cfont编译器是在derived class object中插指针，每个指向virtual base class。需要完成操作都是通过指针间接完成的。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Point3d::<span class="keyword">operator</span>+=(<span class="keyword">const</span> Point3d &amp;rhs)</span><br><span class="line">&#123;</span><br><span class="line">    _X += rhs._x;</span><br><span class="line">    _y += rhs._y;</span><br><span class="line">    _z += rhs._z;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 转化为虚构代码vbc为virtual base class</span></span><br><span class="line">__vbcPoint2d-&gt;_x += rhs.__vbcPoint2d-&gt;_x;</span><br><span class="line">__vbcPoint2d-&gt;_y += rhs.__vbcPoint2d-&gt;_y;</span><br><span class="line">_z += rhs._z;</span><br></pre></td></tr></table></figure>
-  这样实现模型有两个主要缺点：<ol>
-<li><strong>每个对象针对其每个virtual base class背负一个额外的指针</strong>。而我们希望class object负担是稳定的。</li>
-<li><strong>虚继承链加长会导致存取层次增加</strong>。我们呢希望有着固定的存取时间。</li>
-</ol>
-</li>
-<li>对于第二个问题。MetaWare和其他编译器到今天还是用cfont原始模型：它们经由拷贝操作取得所有nested virtual base class指针，放到derived class object中，虽然有空间代价。</li>
-<li>至于第一个问题，有两个解决方法。Microsoft编译器引入virtual base class table。每个class object如果有一个以上virual base classes，编译器就安插指针，指向virtual base class table，真正的vptr则被放在该表格中。第二个解决方法，是在virtual function table中放置virtual base class的offset（而非地址）。<table>
-<thead>
-<tr>
-<th align="center">class Vertex3d :<br>public Vertex,<br>public Point3d<br>{…} v3d;</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">Vertex *next</td>
-</tr>
-<tr>
-<td align="center"><strong>Point2d *pPoint2d</strong></td>
-</tr>
-<tr>
-<td align="center">__vptr__Vertex</td>
-</tr>
-<tr>
-<td align="center">float _z</td>
-</tr>
-<tr>
-<td align="center"><strong>Point2d *pPoint2d</strong></td>
-</tr>
-<tr>
-<td align="center">__vptr__Point3d</td>
-</tr>
-<tr>
-<td align="center">float mumble</td>
-</tr>
-<tr>
-<td align="center">float _x</td>
-</tr>
-<tr>
-<td align="center">float _y</td>
-</tr>
-<tr>
-<td align="center">__vptr__Point2d</td>
-</tr>
-<tr>
-<td align="center">该方法把<font color=red>virtual base class offset</font>和<font color=red>virtual function entires</font>混杂在一起。Sum编译器中，virtual function table由正值或负值来索引。正值则索引到virtual functions；负值则索引到virtual base class offsets。</td>
-</tr>
-<tr>
-<td align="center"><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">this</span> + __vptr__Point3d[<span class="number">-1</span>])-&gt;_x +=</span><br><span class="line">    (&amp;rhs + rhs.__vptr__Point3d[<span class="number">-1</span>])-&gt;_x;</span><br><span class="line">(<span class="keyword">this</span> + __vptr__Point3d[<span class="number">-1</span>])-&gt;_y += </span><br><span class="line">    (&amp;rhs + rhs.__vptr__Point3d[<span class="number">-1</span>])-&gt;_y;</span><br><span class="line">_ += rhs._z;</span><br></pre></td></tr></table></figure></td>
-</tr>
-<tr>
-<td align="center">因此Derived class实例和base class实例之间的转换操作为：</td>
-</tr>
-<tr>
-<td align="center"><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Point2d *p2d = pv3d;</span><br><span class="line"><span class="comment">// translation</span></span><br><span class="line">Point2d *pt2 = pv3d ? pv3d + pv3d-&gt;__vptr__Point3d[<span class="number">-1</span>] : <span class="number">0</span>;</span><br></pre></td></tr></table></figure></td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-<h4 id="3-5-对象成员的效率（Object-Member-Efficiency）"><a href="#3-5-对象成员的效率（Object-Member-Efficiency）" class="headerlink" title="3.5 对象成员的效率（Object Member Efficiency）"></a>3.5 对象成员的效率（Object Member Efficiency）</h4><ul>
-<li>下面测试旨在测试<font color=red>聚合</font>（<font color=green>aggregation</font>）、<font color=red>封装</font>（<font color=green>encapsulation</font>）以及<font color=red>继承</font>（<font color=green>inheritance</font>）所引发的额外负荷程序。跳过。</li>
-</ul>
-<h4 id="3-6-指向Data-Members的指针（Poniter-to-Data-Members）"><a href="#3-6-指向Data-Members的指针（Poniter-to-Data-Members）" class="headerlink" title="3.6 指向Data Members的指针（Poniter to Data Members）"></a>3.6 指向Data Members的指针（Poniter to Data Members）</h4><ul>
-<li>考虑下面Point3d声明。有一个virtual function，一个static data member，以及三个坐标：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point3d</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Point3d</span>();</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">static</span> Point3d origin;</span><br><span class="line">    <span class="keyword">float</span> x, y, z;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-  每个Point3d object含有三个坐标值，依序为x、y、z，以及vptr。static data member origin放在class object之外。vptr的位置根据编译器不同而不同。不是放头就是尾。<code>&amp;Point3d::z;</code>取得某个坐标成员的地址代表什么呢？<strong>代表着z坐标在class object中偏移位置（offset）</strong>。</li>
-<li>一台32位机器上，每一个float是4bytes，所以期望获取地址偏移位置要么是8要么是12。然而获取的总是多1，也就是9和13（我的输出并没有+1）。</li>
-<li>在多继承下，要将第二个或后继base class的指针，和一个与derived class object绑定的member结合起来，那么将会因为需要加入offset值而变得复杂。例如:  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Base1</span> &#123;</span> <span class="keyword">int</span> val1; &#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Base2</span> &#123;</span> <span class="keyword">int</span> val2; &#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Derived</span> :</span> Base1, Base2 &#123; ... &#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span> Derived::*dmp, Derived *pd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 期望第一个参数是一个derived class的member指针，结果是base class的会怎样。</span></span><br><span class="line">    pd-&gt;*dmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func2</span><span class="params">(Derived *pd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// bmp将成为1</span></span><br><span class="line">    <span class="keyword">int</span> Base2::*bmp = &amp;Base2::val2;</span><br><span class="line">    <span class="comment">// bmp == 1但在Derived中val2 == 5</span></span><br><span class="line">    <span class="built_in">func1</span>(bmp, pd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-  要解决这个问题，必须：  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 经由编译器内部转换</span></span><br><span class="line"><span class="built_in">func1</span>(bmp ? bmp + <span class="built_in"><span class="keyword">sizeof</span></span>(Base1) : <span class="number">0</span>, pd);</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h5 id="“指向Members的指针”的效率问题"><a href="#“指向Members的指针”的效率问题" class="headerlink" title="“指向Members的指针”的效率问题"></a>“指向Members的指针”的效率问题</h5><ul>
-<li>下面是测试数据。了解在3D坐标点的不同class表现方式下指向members的指针所带来的影响。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2504,7 +2170,7 @@ pi所指对象的生命因delete而结束。所有后继对pi的参考操作不�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-count">52</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
