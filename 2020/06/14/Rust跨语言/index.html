@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="语言交互 链接与Crate Type 交叉编译 extern语法   与C&#x2F;C++交互 Rust调用C函数 C调用Rust库 第三方工具   使用Rust提升动态语言性能 Rust与WebAssembly WebAssembly要点 使用Rust开发WebAssembly WebAssembly开发生态 扩展   语言交互 外部函数接口（Foreign Function Interface，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust跨语言">
+<meta property="og:url" content="http://example.com/2020/06/14/Rust%E8%B7%A8%E8%AF%AD%E8%A8%80/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="语言交互 链接与Crate Type 交叉编译 extern语法   与C&#x2F;C++交互 Rust调用C函数 C调用Rust库 第三方工具   使用Rust提升动态语言性能 Rust与WebAssembly WebAssembly要点 使用Rust开发WebAssembly WebAssembly开发生态 扩展   语言交互 外部函数接口（Foreign Function Interface，">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-14T07:34:40.000Z">
+<meta property="article:modified_time" content="2021-09-09T07:12:12.704Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Rust">
+<meta property="article:tag" content="FFI">
+<meta property="article:tag" content="ABI">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/06/14/Rust%E8%B7%A8%E8%AF%AD%E8%A8%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Rust跨语言 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/14/Rust%E8%B7%A8%E8%AF%AD%E8%A8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Rust跨语言
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-14 15:34:40" itemprop="dateCreated datePublished" datetime="2020-06-14T15:34:40+08:00">2020-06-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-09 15:12:12" itemprop="dateModified" datetime="2021-09-09T15:12:12+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-06/" itemprop="url" rel="index"><span itemprop="name">2020.06</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#%E8%AF%AD%E8%A8%80%E4%BA%A4%E4%BA%92">语言交互</a><ul>
+<li><a href="#%E9%93%BE%E6%8E%A5%E4%B8%8Ecrate-type">链接与Crate Type</a></li>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91">交叉编译</a></li>
+<li><a href="#extern%E8%AF%AD%E6%B3%95">extern语法</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%8Ec/c++%E4%BA%A4%E4%BA%92">与C/C++交互</a><ul>
+<li><a href="#rust%E8%B0%83%E7%94%A8c%E5%87%BD%E6%95%B0">Rust调用C函数</a></li>
+<li><a href="#c%E8%B0%83%E7%94%A8rust%E5%BA%93">C调用Rust库</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E5%B7%A5%E5%85%B7">第三方工具</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BD%BF%E7%94%A8rust%E6%8F%90%E5%8D%87%E5%8A%A8%E6%80%81%E8%AF%AD%E8%A8%80%E6%80%A7%E8%83%BD">使用Rust提升动态语言性能</a></li>
+<li><a href="#rust%E4%B8%8Ewebassembly">Rust与WebAssembly</a></li>
+<li><a href="#webassembly%E8%A6%81%E7%82%B9">WebAssembly要点</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8rust%E5%BC%80%E5%8F%91webassembly">使用Rust开发WebAssembly</a></li>
+<li><a href="#webassembly%E5%BC%80%E5%8F%91%E7%94%9F%E6%80%81">WebAssembly开发生态</a></li>
+<li><a href="#%E6%89%A9%E5%B1%95">扩展</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h2 id="语言交互"><a href="#语言交互" class="headerlink" title="语言交互"></a>语言交互</h2><ul>
+<li>外部函数接口（Foreign Function Interface，FFI）用于规范语言间调用的语法特征。其他有java的JNI（Java Native Interface），一样的意思</li>
+<li>应用程序二进制接口（ABI）涵盖内容：<ul>
+<li>调用约定。参数、函数、返回值</li>
+<li>内存布局。大小和对齐方式</li>
+<li>处理器指令集。不同平台实现</li>
+<li>目标文件和库的二进制形式。</li>
+</ul>
+</li>
+<li>Rust中使用FFI需要通过extern和extern块对FFI接口进行标注，编译时会由LLVM默认生成C-ABI</li>
+</ul>
+<h3 id="链接与Crate-Type"><a href="#链接与Crate-Type" class="headerlink" title="链接与Crate Type"></a>链接与Crate Type</h3><ul>
+<li>链接产生于程序开发的模块化。C和C++每个文件都是一个编译单元，Rust是以包（crate）为编译单元</li>
+<li>链接过程就是编译器经过符号解析、存储空间分配和重定位的过程，最终生成可执行文件或库。</li>
+<li>库分为静态库和动态库。静态库是普通目标文件集合的简单拼接，使用简单，但浪费空间；动态库则是把链接过程延迟到运行时，如运行时重定位，这比较省空间</li>
+<li>Rust支持四种库：Rust的dylib、rlib，和其他语言的cdylib、staticlib</li>
+<li>Rust库类型的命令行参数或crate_type属性：<ul>
+<li><code>--crate-type=bin</code>或<code>#[crate_type = &quot;bin&quot;]</code>，表示是可执行文件，程序必须包含main函数</li>
+<li><code>--crate-type=lib</code>或<code>#[crate_type = &quot;lib&quot;]</code>，表示生成Rust库，什么库编译器决定，一般是rlib静态库</li>
+<li><code>--crate-type=rlib</code>或<code>#[crate_type = &quot;rlib&quot;]</code>，生成静态Rust库</li>
+<li><code>--crate-type=dylib</code>或<code>#[crate_type = &quot;dylib&quot;]</code>，生成动态Rust库</li>
+<li><code>--crate-type=staitclib</code>或<code>#[crate_type = &quot;staticlib&quot;]</code>，将生成静态系统库，Rust编译器永远不会链接它。用于和C语言链接</li>
+<li><code>--crate-type=cdylib</code>或<code>#[crate_type = &quot;cdylib&quot;]</code>，生成动态系统库</li>
+</ul>
+</li>
+</ul>
+<h3 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h3><ul>
+<li>本地平台上编译出需要在其他平台运行的程序叫做交叉编译。</li>
+<li>可以使用rustc进行交叉编译，只需要传递target参数即可：如<code>$ rustc --target=arm-unknown-linux-gnueabihf hello.rs</code></li>
+<li>也可以使用Cargo交叉编译，方法类似，在cargo<br>build命令传递–target参数即可。Rust默认使用cc作为交叉编译的链接器，修改配置文件可以指定链接器：<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># $ car ~/.cargo/config</span></span><br><span class="line"><span class="section">[target.arm-unknown-linux-gnueabihf]</span></span><br><span class="line"><span class="attr">linker</span> = <span class="string">&quot;arm-linux-gnueabihf-gcc-4.8&quot;</span>  <span class="comment"># 指定链接器</span></span><br><span class="line"><span class="comment"># 使用cargo交叉编译</span></span><br><span class="line"><span class="comment"># $ cargo build --target=arm-unknown-linux-gnueabihf</span></span><br></pre></td></tr></table></figure></li>
+<li>target triple格式是<code>&#123;arch&#125;-&#123;vendor&#125;-&#123;sys&#125;-&#123;abi&#125;</code>，分别代表编译程序的主机系统、供应商、操作系统、ABI接口，最后abi有时候可以省略</li>
+</ul>
+<h3 id="extern语法"><a href="#extern语法" class="headerlink" title="extern语法"></a>extern语法</h3><ul>
+<li>有extern关键字和extern块。有三个extern API字符串是跨平台的：<code>extern &quot;Rust&quot;</code>、<code>extern &quot;C&quot;</code>、<code>extern &quot;system&quot;</code></li>
+<li>另外有三个Rust编译器专用的ABI字符串：<ul>
+<li><code>extern &quot;rust-intrinsic&quot;</code>，代表Rust编译器内部函数的ABI</li>
+<li><code>extern &quot;rust-call&quot;</code>，Fn::call的ABI</li>
+<li><code>extern &quot;platform-intrinsic&quot;</code>，特定平台内在函数的ABI</li>
+</ul>
+</li>
+</ul>
+<h2 id="与C-C-交互"><a href="#与C-C-交互" class="headerlink" title="与C/C++交互"></a>与C/C++交互</h2><h3 id="Rust调用C函数"><a href="#Rust调用C函数" class="headerlink" title="Rust调用C函数"></a>Rust调用C函数</h3><ul>
+<li>首先新建C/C++源代码文件夹，编写好代码后，使用<code>extern &quot;C&quot; &#123;&#125;</code>外暴露接口</li>
+<li>在caogo.toml配置文件中，<code>[build-dependencies]</code>中使用cc库，然后在<code>[package]</code>中将某个build.rs文件指定为自动化编译配置文件</li>
+<li>在build.rs中引进包<code>extern crate cc</code>，使用<code>cc.Build::new()</code>等方法初始化，在Rust源文件中正常使用时，用<code>extern &#123; ... &#125;</code>声明指定的外部接口</li>
+</ul>
+<h3 id="C调用Rust库"><a href="#C调用Rust库" class="headerlink" title="C调用Rust库"></a>C调用Rust库</h3><ul>
+<li>首先在cargo.toml配置文件中<code>[lib]</code>设置Rust链接库名称，如：<code>name = &quot;callrust&quot;</code>，将在Rust同级目录下写C头文件用于暴露Rust接口，并设置<code>crate-type  = [&quot;staticlib&quot;, &quot;cdylib&quot;]</code>用于生成什么类型的链接库，库将产生在target/Debug下</li>
+<li>编写Rust程序，将对应接口写在callrust.c中，并编写markdown文件：cargo用于编译Rust代码，gcc用于链接库并生成对应二进制文件</li>
+<li>在另起的C源代码文件夹中直接<code>#include &quot;callrust&quot;</code>，然后调用接口函数即可</li>
+</ul>
+<h3 id="第三方工具"><a href="#第三方工具" class="headerlink" title="第三方工具"></a>第三方工具</h3><ul>
+<li>rust-bindgen：根据头文件自动生成Rust FFI的C绑定，支持部分C++功能</li>
+<li>cbindgen：根据Rust代码自动生成头文件</li>
+<li>ctest：为Rust FFI的C绑定自动生成测试文件</li>
+<li>移动平台下也有两个库：<ul>
+<li>cargo-lipo：提供<code>cargo lipo</code>命令，自动生成用于iOS的通用库</li>
+<li>jni：提供Rust的JNI绑定，用于和Android平台交互</li>
+</ul>
+</li>
+</ul>
+<h2 id="使用Rust提升动态语言性能"><a href="#使用Rust提升动态语言性能" class="headerlink" title="使用Rust提升动态语言性能"></a>使用Rust提升动态语言性能</h2><ul>
+<li>使用Rust为动态库编写扩展，能保证性能，还能提升内存安全</li>
+<li>动态语言有自己的虚拟机，调用Rust代码不能像C/C++_直接链接Rust的链接库获取函数调用信息。因此动态语言提供FFI 基本都是基于libffi库来实现动态调用C函数的能力，兼容C-ABI的链接库都可以直接被动态调用。libffi库是动态语言虚拟机和二进制的一道桥梁</li>
+</ul>
+<h2 id="Rust与WebAssembly"><a href="#Rust与WebAssembly" class="headerlink" title="Rust与WebAssembly"></a>Rust与WebAssembly</h2><p>WebAssembly是兴起的新的字节码格式，缩写是“WASM”，它是一个面向Web通用二进制和文本格式项目，它是为了作为C/C++/Rust语言的一种编译目标，在客户端提供一种接近本地运行速度的多语言编写代码的方式。某种意义上说，WebAssembly是一种中间语言（<br>IR），就像汇编（Assembly）语言那样是所有语言转换成机器码的通用底层语言，WebAssembly就是面向Web的汇编</p>
+<ul>
+<li>WebAssembly比JavaScript快的原因：<ul>
+<li>WebAssembly体积更小，下载和解析更快。</li>
+<li>WebAssembly不受JavaScript约束，可以利用更多CPU特性。如64位整数、内存读写偏移量、非内存对齐读写和多种CPU指令等。</li>
+<li>生成WebAssembly编译器工具链的优化和改进。如在Rust中，可以用wasm-gc工具优化生成的wasm文件大小。</li>
+<li>WebAssembly不需要垃圾回收。内存操作是手动控制，但也没必要担心内存泄漏，它的内存空间是JavaScript分配的对象，最终Javascript的GC管理</li>
+<li>WebAssembly在Web只是一个应用环境，WebAssembly还可以应用其他领域：桌面图形化程序、区块链智能合约和编写操作系统微内核</li>
+</ul>
+</li>
+</ul>
+<h2 id="WebAssembly要点"><a href="#WebAssembly要点" class="headerlink" title="WebAssembly要点"></a>WebAssembly要点</h2><ul>
+<li>模块。一个.wasm文件局势一个基本编译单位</li>
+<li>线性内存。用于和JavaScript通信，是个可变大小的ArrayBuffer，由JavaScript分配</li>
+<li>表格。用于存放函数引用，支持动态调用函数</li>
+<li>实例。同一个模块的多个实例共享相同的内存和表格</li>
+<li>栈式机器。WebAssembly指令的运行基于栈式机器定义，每种指令都是在站上进行出栈和入站操作</li>
+</ul>
+<h2 id="使用Rust开发WebAssembly"><a href="#使用Rust开发WebAssembly" class="headerlink" title="使用Rust开发WebAssembly"></a>使用Rust开发WebAssembly</h2><ul>
+<li>可以手写wat文本格式开发wasm模块，但效率不高，WebAssmebly设计之初是为了作为编译目标存在的，因此可以作为很多变成语言的编译目标：<ul>
+<li>C/C++，可以通过EmScripten工具来编译到wasm。EmScripten是个LLVM后端工具，可以将LLVM中间码编译到asm.js。所以C/C++的编译流程可以通过任何一个LLVM前端工具生成LLVM IR，然后通过EmScripten生成asm.js，最后通过WebAssembly编译工具链Binaryen将asm.js生成wasm二进制格式。一些不支持wasm的浏览器也可以使用asm.js来代替</li>
+<li>Rust，支持wasm的两种编译目标：<ul>
+<li>wasm32-unknown-unknown，使用LLVM WebAssembly Backend和lld链接器</li>
+<li>wasm32-unknown-emscripten，继续使用EmScripten，和C/C++类似</li>
+</ul>
+</li>
+<li>搭建wasm开发环境：<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ rustup toolchain install nightly</span><br><span class="line">$ rustup target add wasm32-unknwon-unknown --toolchain nightly</span><br></pre></td></tr></table></figure></li>
+<li>生成wasm例子：<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cargo install wasm-gc</span><br><span class="line">$ cargo build --target wasm32-unknown-unknown</span><br><span class="line">$ cp target/wasm32-unknown-unknown-unknown/debug/hello_wasm.wasm output</span><br><span class="line">$ wasm-gc output/hello_wasm.wasm output/small_hello.wasm</span><br></pre></td></tr></table></figure>
+<h2 id="WebAssembly开发生态"><a href="#WebAssembly开发生态" class="headerlink" title="WebAssembly开发生态"></a>WebAssembly开发生态</h2></li>
+</ul>
+</li>
+<li>Rust开发效率还是很低，WebAssembly标准值定义了四种类型：i32、i64、f32和f64。因此，Rust官方打造了一系列工具：<ul>
+<li>wasm-bindgen：它的核心是促进JavaScript和Rust之间使用wasm进行通信，允许开发者直接使用Rust的结构体、JavaScript的类、字符串等类型<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cargo +nightly install wasm-bindgen-cli</span><br></pre></td></tr></table></figure></li>
+<li>wasm-pack：一站式构建、发布Rust编译的wasm到npm平台。不需要安装npm、node.js等JavaScript环境，wasm-pack会编译并优化生成JavaScript绑定，然后发布到npm中<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cargo install wasm-pack</span><br><span class="line"><span class="comment"># 在项目的根目录下执行命令，自动生成JavaScript相关文件，方便打包wasm到npm平台</span></span><br><span class="line">$ wasm-pack build</span><br></pre></td></tr></table></figure></li>
+<li>cargo-generate：直接生成wasm-bindgen和wasm-pack项目模板，方便开发<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cargo install cargo-generate</span><br><span class="line"><span class="comment"># 命令生成模板会在Cargo.toml文件配置好wasm-bindgen，需要先安装wasm-bindgen-cli工具</span></span><br><span class="line">$ cargo-generate --git https://github.com/your-responsbility</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>除此之外，社区的一些有代表性的框架：<ul>
+<li>stdweb：Rust和WebAssembly实现的Web客户端标准库，可能会被web-sys替代</li>
+<li>cargo-web：方便编写Web客户端的Cargo子命令库</li>
+<li>yew：构建客户端Web应用的Rust框架，基于stdweb库</li>
+<li>percy：实现虚拟Dom，根据服务端HTML字符串渲染到浏览器的Dom</li>
+<li>ruukh：实验性Rust Web前端框架</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MjAzNDI1MA==&mid=2648210830&idx=1&sn=0cc558bddbdb4a2fc46e88899355f392&chksm=f1c5302bc6b2b93d18475908366cee2ab6578d0e372a30682ae9f27a146ed65df06da5011add&mpshare=1&scene=1&srcid=0614QlAVxJwnv78DfLGPcVvR&sharer_sharetime=1592119955890&sharer_shareid=d75e104079b232035471512d1d57b844#rd">Rust FFI 开发系列教程 - 序言</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MjAzNDI1MA==&mid=2648210039&idx=2&sn=473d5fb6a022e2f8b84bdf7b72cd07e0&chksm=f1c537d2c6b2bec475e01dbb7a700a0f88796b4c7c65804f50ed1303a6643c61c16cad0077d0&mpshare=1&scene=1&srcid=0614K1t3l4DLRTRGxmQagcFc&sharer_sharetime=1592119988371&sharer_shareid=d75e104079b232035471512d1d57b844#rd">设计优雅的 Rust 库 API</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MjAzNDI1MA==&mid=2648208895&idx=2&sn=c20ddf5904df7a03ae870466c395fa8c&chksm=f1c5385ac6b2b14cf05979110e8d99e98765244e44579bd2e2b02f2e5bb9e3a7c2311a5f6ca7&mpshare=1&scene=1&srcid=0614bEtcOeEC5soG4lvYNsc2&sharer_sharetime=1592120071267&sharer_shareid=d75e104079b232035471512d1d57b844#rd">Rust FFI 实践</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+              <a href="/tags/FFI/" rel="tag"># FFI</a>
+              <a href="/tags/ABI/" rel="tag"># ABI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/14/UNIX%E6%A0%BC%E8%A8%80/" rel="prev" title="UNIX格言">
+      <i class="fa fa-chevron-left"></i> UNIX格言
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/14/Muduo%E6%8A%80%E8%A6%812/" rel="next" title="Muduo技要2">
+      Muduo技要2 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E8%A8%80%E4%BA%A4%E4%BA%92"><span class="nav-number">1.</span> <span class="nav-text">语言交互</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%E4%B8%8ECrate-Type"><span class="nav-number">1.1.</span> <span class="nav-text">链接与Crate Type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91"><span class="nav-number">1.2.</span> <span class="nav-text">交叉编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#extern%E8%AF%AD%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">extern语法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8EC-C-%E4%BA%A4%E4%BA%92"><span class="nav-number">2.</span> <span class="nav-text">与C&#x2F;C++交互</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rust%E8%B0%83%E7%94%A8C%E5%87%BD%E6%95%B0"><span class="nav-number">2.1.</span> <span class="nav-text">Rust调用C函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C%E8%B0%83%E7%94%A8Rust%E5%BA%93"><span class="nav-number">2.2.</span> <span class="nav-text">C调用Rust库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%96%B9%E5%B7%A5%E5%85%B7"><span class="nav-number">2.3.</span> <span class="nav-text">第三方工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Rust%E6%8F%90%E5%8D%87%E5%8A%A8%E6%80%81%E8%AF%AD%E8%A8%80%E6%80%A7%E8%83%BD"><span class="nav-number">3.</span> <span class="nav-text">使用Rust提升动态语言性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rust%E4%B8%8EWebAssembly"><span class="nav-number">4.</span> <span class="nav-text">Rust与WebAssembly</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebAssembly%E8%A6%81%E7%82%B9"><span class="nav-number">5.</span> <span class="nav-text">WebAssembly要点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Rust%E5%BC%80%E5%8F%91WebAssembly"><span class="nav-number">6.</span> <span class="nav-text">使用Rust开发WebAssembly</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebAssembly%E5%BC%80%E5%8F%91%E7%94%9F%E6%80%81"><span class="nav-number">7.</span> <span class="nav-text">WebAssembly开发生态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">8.</span> <span class="nav-text">扩展</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

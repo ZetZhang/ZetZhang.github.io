@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="条款13：以对象管理资源 条款14：在资源管理类中小心copying行为？？？ 条款15：在资源管理类中提供对原始资源的访问 条款16：成对使用new和delete时要采取相同形式 条款17：以独立语句将newed对象置入智能指针   条款13：以对象管理资源 以对象管理资源的观念常被称为“资源取得时机便是初始化实际”（Resource Acquisition Is Initializati">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3 资源管理">
+<meta property="og:url" content="http://example.com/2020/06/14/3-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="条款13：以对象管理资源 条款14：在资源管理类中小心copying行为？？？ 条款15：在资源管理类中提供对原始资源的访问 条款16：成对使用new和delete时要采取相同形式 条款17：以独立语句将newed对象置入智能指针   条款13：以对象管理资源 以对象管理资源的观念常被称为“资源取得时机便是初始化实际”（Resource Acquisition Is Initializati">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-14T05:42:47.000Z">
+<meta property="article:modified_time" content="2021-09-09T07:12:12.701Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Effecive C++">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/06/14/3-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>3 资源管理 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/14/3-%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          3 资源管理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-14 13:42:47" itemprop="dateCreated datePublished" datetime="2020-06-14T13:42:47+08:00">2020-06-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-09 15:12:12" itemprop="dateModified" datetime="2021-09-09T15:12:12+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-01/" itemprop="url" rel="index"><span itemprop="name">2019.01</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#%E6%9D%A1%E6%AC%BE13%EF%BC%9A%E4%BB%A5%E5%AF%B9%E8%B1%A1%E7%AE%A1%E7%90%86%E8%B5%84%E6%BA%90">条款13：以对象管理资源</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE14%EF%BC%9A%E5%9C%A8%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B1%BB%E4%B8%AD%E5%B0%8F%E5%BF%83copying%E8%A1%8C%E4%B8%BA%EF%BC%9F%EF%BC%9F%EF%BC%9F">条款14：在资源管理类中小心copying行为？？？</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE15%EF%BC%9A%E5%9C%A8%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B1%BB%E4%B8%AD%E6%8F%90%E4%BE%9B%E5%AF%B9%E5%8E%9F%E5%A7%8B%E8%B5%84%E6%BA%90%E7%9A%84%E8%AE%BF%E9%97%AE">条款15：在资源管理类中提供对原始资源的访问</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE16%EF%BC%9A%E6%88%90%E5%AF%B9%E4%BD%BF%E7%94%A8new%E5%92%8Cdelete%E6%97%B6%E8%A6%81%E9%87%87%E5%8F%96%E7%9B%B8%E5%90%8C%E5%BD%A2%E5%BC%8F">条款16：成对使用new和delete时要采取相同形式</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE17%EF%BC%9A%E4%BB%A5%E7%8B%AC%E7%AB%8B%E8%AF%AD%E5%8F%A5%E5%B0%86newed%E5%AF%B9%E8%B1%A1%E7%BD%AE%E5%85%A5%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88">条款17：以独立语句将newed对象置入智能指针</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款13：以对象管理资源"><a href="#条款13：以对象管理资源" class="headerlink" title="条款13：以对象管理资源"></a>条款13：以对象管理资源</h4><ol>
+<li>以对象管理资源的观念常被称为“<font color=red>资源取得时机便是初始化实际</font>”（<font color=green>Resource Acquisition Is Initialization; </font><font color=red>RAII</font>）。在获得的同时立刻被放进管理对象中。<code>auto_ptrs</code>有个不寻常的性质：若通过copy构造函数或copy assignment操作符复制，它们就会变成null，而复制所得的指针将取得资源的唯一拥有权，并在析构函数中释放资源。</li>
+<li><code>auto_ptr</code>的替代方案是“<font color=red>引用计数型智能指针</font>”（<font color=green>reference-counting smart pointer；</font><font color=red>RCSP</font>）。它提供的行为类似<font color=red>垃圾回收</font>（<font color=green>garbage collection</font>）。</li>
+</ol>
+<h4 id="条款14：在资源管理类中小心copying行为？？？"><a href="#条款14：在资源管理类中小心copying行为？？？" class="headerlink" title="条款14：在资源管理类中小心copying行为？？？"></a>条款14：在资源管理类中小心copying行为？？？</h4><ol>
+<li>复制RAII对象必须一并复制它所管理的资源，所以资源的copying行为决定RAII对象的copying行为。</li>
+<li>普遍而常见的RAII class copying行为是：抑制copying、施行引用计数法（reference counting）。</li>
+</ol>
+<h4 id="条款15：在资源管理类中提供对原始资源的访问"><a href="#条款15：在资源管理类中提供对原始资源的访问" class="headerlink" title="条款15：在资源管理类中提供对原始资源的访问"></a>条款15：在资源管理类中提供对原始资源的访问</h4><ol>
+<li>除非发誓永不录用APIs，否则只得绕过资源管理对象（resource-managing objects）直接访问<font color=red>原始资源</font>（<font color=green>raw resources</font>）。要将RAII class对象转换为其所包含的原始资源。有两个做法：显式转换和隐式转换。前者通过get成员函数可获得指针；后者可行是因为RAII重载了<font color=red>指针取值</font>（<font color=green>pointer dereferencing</font>）操作符（operator-&gt;和operator*），它们允许隐式转化至底部原始指针。</li>
+</ol>
+<h4 id="条款16：成对使用new和delete时要采取相同形式"><a href="#条款16：成对使用new和delete时要采取相同形式" class="headerlink" title="条款16：成对使用new和delete时要采取相同形式"></a>条款16：成对使用new和delete时要采取相同形式</h4><ol>
+<li>当你使用new，有两件事发生。第一，内存被分配出来（operator new）；第二，针对此内存会有一个（或更多）构造函数被调用。当你使用delete，也有两件事发生；针对此内存会有一个（或更多）析构函数被调用，然后内存被释放（operator delete）。</li>
+<li>new时使用[]，必须在相应调用delete时也使用[]。对于喜欢对数组形式做typedef动作的人，最好不要这样做，而C++ STL标准库中的容器templates，可将数组需求降至最低。</li>
+</ol>
+<h4 id="条款17：以独立语句将newed对象置入智能指针"><a href="#条款17：以独立语句将newed对象置入智能指针" class="headerlink" title="条款17：以独立语句将newed对象置入智能指针"></a>条款17：以独立语句将newed对象置入智能指针</h4><p>对于<code>processWidget(std::shared_ptr&lt;Widget&gt;(new Widget), priority());</code>这行代码可以通过编译，然而上述调用可能泄露资源。因为它的执行顺序可能时</p>
+<ol>
+<li>执行“new Widget”</li>
+<li>调用priority删除</li>
+<li>调用std::shared_ptr构造函数  </li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;万一对priority的调用导致异常，“new Widget”返回的指针将会丢失，因为尚未置入std::shared_ptr内。解决方法是使用独立语句将创建Widget和置入指针两个步骤分割开来：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::shared_ptr&lt;Widget&gt; <span class="title">pw</span><span class="params">(<span class="keyword">new</span> Widget)</span></span>;</span><br><span class="line"><span class="built_in">processWidget</span>(pw, <span class="built_in">priority</span>());</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/Effecive-C/" rel="tag"># Effecive C++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/14/2-%E6%9E%84%E9%80%A0%E3%80%81%E6%9E%90%E6%9E%84%E3%80%81%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" rel="prev" title="2 构造、析构、赋值运算">
+      <i class="fa fa-chevron-left"></i> 2 构造、析构、赋值运算
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/14/4-%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" rel="next" title="4 设计与声明">
+      4 设计与声明 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE13%EF%BC%9A%E4%BB%A5%E5%AF%B9%E8%B1%A1%E7%AE%A1%E7%90%86%E8%B5%84%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">条款13：以对象管理资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE14%EF%BC%9A%E5%9C%A8%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B1%BB%E4%B8%AD%E5%B0%8F%E5%BF%83copying%E8%A1%8C%E4%B8%BA%EF%BC%9F%EF%BC%9F%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">条款14：在资源管理类中小心copying行为？？？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE15%EF%BC%9A%E5%9C%A8%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B1%BB%E4%B8%AD%E6%8F%90%E4%BE%9B%E5%AF%B9%E5%8E%9F%E5%A7%8B%E8%B5%84%E6%BA%90%E7%9A%84%E8%AE%BF%E9%97%AE"><span class="nav-number">3.</span> <span class="nav-text">条款15：在资源管理类中提供对原始资源的访问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE16%EF%BC%9A%E6%88%90%E5%AF%B9%E4%BD%BF%E7%94%A8new%E5%92%8Cdelete%E6%97%B6%E8%A6%81%E9%87%87%E5%8F%96%E7%9B%B8%E5%90%8C%E5%BD%A2%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">条款16：成对使用new和delete时要采取相同形式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE17%EF%BC%9A%E4%BB%A5%E7%8B%AC%E7%AB%8B%E8%AF%AD%E5%8F%A5%E5%B0%86newed%E5%AF%B9%E8%B1%A1%E7%BD%AE%E5%85%A5%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="nav-number">5.</span> <span class="nav-text">条款17：以独立语句将newed对象置入智能指针</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="deriving限制一些特定trait 其他一些实现trait macro_rules片段分类符句法含义： 对于原变量后面的记号有额外的规则： 宏系统完全不处理解析模糊 #[macro_use]、#[macro_export]、#[no_link]       deriving限制一些特定trait Clone Copy Debug Default Eq Hash Ord PartialEq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust一些结构体需要实现的trait特质">
+<meta property="og:url" content="http://example.com/2020/06/14/Rust%E4%B8%80%E4%BA%9B%E7%BB%93%E6%9E%84%E4%BD%93%E9%9C%80%E8%A6%81%E5%AE%9E%E7%8E%B0%E7%9A%84trait%E7%89%B9%E8%B4%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="deriving限制一些特定trait 其他一些实现trait macro_rules片段分类符句法含义： 对于原变量后面的记号有额外的规则： 宏系统完全不处理解析模糊 #[macro_use]、#[macro_export]、#[no_link]       deriving限制一些特定trait Clone Copy Debug Default Eq Hash Ord PartialEq">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-14T07:17:47.000Z">
+<meta property="article:modified_time" content="2021-09-09T07:12:12.704Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Rust">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/06/14/Rust%E4%B8%80%E4%BA%9B%E7%BB%93%E6%9E%84%E4%BD%93%E9%9C%80%E8%A6%81%E5%AE%9E%E7%8E%B0%E7%9A%84trait%E7%89%B9%E8%B4%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Rust一些结构体需要实现的trait特质 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/14/Rust%E4%B8%80%E4%BA%9B%E7%BB%93%E6%9E%84%E4%BD%93%E9%9C%80%E8%A6%81%E5%AE%9E%E7%8E%B0%E7%9A%84trait%E7%89%B9%E8%B4%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Rust一些结构体需要实现的trait特质
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-14 15:17:47" itemprop="dateCreated datePublished" datetime="2020-06-14T15:17:47+08:00">2020-06-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-09 15:12:12" itemprop="dateModified" datetime="2021-09-09T15:12:12+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-01/" itemprop="url" rel="index"><span itemprop="name">2020.01</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#deriving%E9%99%90%E5%88%B6%E4%B8%80%E4%BA%9B%E7%89%B9%E5%AE%9Atrait">deriving限制一些特定trait</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96%E4%B8%80%E4%BA%9B%E5%AE%9E%E7%8E%B0trait">其他一些实现trait</a></li>
+<li><a href="#macro_rules%E7%89%87%E6%AE%B5%E5%88%86%E7%B1%BB%E7%AC%A6%E5%8F%A5%E6%B3%95%E5%90%AB%E4%B9%89%EF%BC%9A">macro_rules片段分类符句法含义：</a><ul>
+<li><a href="#%E5%AF%B9%E4%BA%8E%E5%8E%9F%E5%8F%98%E9%87%8F%E5%90%8E%E9%9D%A2%E7%9A%84%E8%AE%B0%E5%8F%B7%E6%9C%89%E9%A2%9D%E5%A4%96%E7%9A%84%E8%A7%84%E5%88%99%EF%BC%9A">对于原变量后面的记号有额外的规则：</a></li>
+<li><a href="#%E5%AE%8F%E7%B3%BB%E7%BB%9F%E5%AE%8C%E5%85%A8%E4%B8%8D%E5%A4%84%E7%90%86%E8%A7%A3%E6%9E%90%E6%A8%A1%E7%B3%8A">宏系统完全不处理解析模糊</a></li>
+<li><a href="##%5Bmacro_use%5D%E3%80%81#%5Bmacro_export%5D%E3%80%81#%5Bno_link%5D">#[macro_use]、#[macro_export]、#[no_link]</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+
+<!-- vim-markdown-toc -->
+<h3 id="deriving限制一些特定trait"><a href="#deriving限制一些特定trait" class="headerlink" title="deriving限制一些特定trait"></a>deriving限制一些特定trait</h3><ul>
+<li><code>Clone</code></li>
+<li><code>Copy</code></li>
+<li><code>Debug</code></li>
+<li><code>Default</code></li>
+<li><code>Eq</code></li>
+<li><code>Hash</code></li>
+<li><code>Ord</code></li>
+<li><code>PartialEq</code></li>
+<li><code>PartialOrd</code></li>
+</ul>
+<h3 id="其他一些实现trait"><a href="#其他一些实现trait" class="headerlink" title="其他一些实现trait"></a>其他一些实现trait</h3><ul>
+<li>检查相等问题需要实现<code>core::cmp::PartialEq</code>的trait</li>
+<li>构造和析构可以实现<code>new</code>方法和<code>Drop trait</code>的<code>drop</code>方法</li>
+<li>调用函数可以重载trait系统，有三个，分别是<code>Fn</code>、<code>FnMut</code>和<code>FnOnce</code></li>
+<li>如果需要实现打印输出功能，需要实现<code>fmt::Display trait</code>(<code>std::fmt::Display</code>)，错误输出则需要返回fmt::Result</li>
+<li>实现错误类型需要实现<code>error::Error trait</code>(<code>std::error</code>)的description方法和cause方法</li>
+<li>如果需要重载<code>+</code>运算符可以通过重载Add特性实现 <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/stable/std/ops/">std::ops</a></li>
+<li>想要自定义指针类型，可以通过重载<code>Deref</code>和<code>DereMut</code>(<code>std::ops::Deref</code>)特性的<code>deref</code>方法来实现解引用运算符</li>
+<li>实现自定义派生属性，则需要在函数前加上<code>#[proc_macro_derive(attr_name)]</code>，并且<code>input</code>参数和返回值为<code>TokenStream</code>，实现函数名为<code>derive</code>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Add +.</span><br><span class="line">AddAssign +=.</span><br><span class="line">BitAnd &amp;.</span><br><span class="line">BitAndAssign &amp;=.</span><br><span class="line">BitOr |.</span><br><span class="line">BitOrAssign |=.</span><br><span class="line">BitXor ^.</span><br><span class="line">BitXorAssign ^=.</span><br><span class="line">Deref *v.</span><br><span class="line">DerefMut *v = 1;.</span><br><span class="line">Div /.</span><br><span class="line">DivAssign /=.</span><br><span class="line">Drop &#x27;destructor&#x27;.</span><br><span class="line">Fn an immutable receiver.</span><br><span class="line">FnMut a mutable receiver.</span><br><span class="line">FnOnce a by-value receiver.</span><br><span class="line">Index (container[index]).</span><br><span class="line">IndexMut (container[index]).</span><br><span class="line">Mul *.</span><br><span class="line">MulAssign *=.</span><br><span class="line">Neg -.</span><br><span class="line">Not !.</span><br><span class="line">RangeBounds RangeBounds is implemented by Rust&#x27;s built-in range types, produced by range syntax like .., a.., ..b, ..=c, d..e, or f..=g.</span><br><span class="line">Rem %.</span><br><span class="line">RemAssign %=.</span><br><span class="line">Shl &lt;&lt;</span><br><span class="line">ShlAssign &lt;&lt;=.</span><br><span class="line">Shr &gt;&gt; </span><br><span class="line">ShrAssign &gt;&gt;=.</span><br><span class="line">Sub -.</span><br><span class="line">SubAssign -=.</span><br><span class="line">CoerceUnsized	Experimental Trait that indicates that this is a pointer or a wrapper for one, where unsizing can be performed on the pointee.</span><br><span class="line">DispatchFromDyn	Experimental This is used for object safety, to check that a method&#x27;s receiver type can be dispatched on.</span><br><span class="line">Generator	Experimental The trait implemented by builtin generator types.</span><br><span class="line">Try	Experimental A trait for customizing the behavior of the ? operator.</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="macro-rules片段分类符句法含义："><a href="#macro-rules片段分类符句法含义：" class="headerlink" title="macro_rules片段分类符句法含义："></a>macro_rules片段分类符句法含义：</h3><ul>
+<li><code>ident</code>：一个标识符。如：x，foo</li>
+<li><code>path</code>：一个受限的名字，指代路径。如：T::SpecialA、foo、std::iter等</li>
+<li><code>expr</code>：一个表达式。如2+2；f(42)</li>
+<li><code>ty</code>：一个类型。如i32;Vec&lt;(char, String)&gt;；&amp;T</li>
+<li><code>pat</code>：一个模式。如：Some(t)；_</li>
+<li><code>stmt</code>：一个单独语句。如：let x = 3</li>
+<li><code>block</code>：一个大括号界定的语句序列</li>
+<li><code>item</code>：一个项。如fn foo() {}， struct Bar，模块、声明、函数定义、类型定义、结构体定义、impl实现等都是</li>
+<li><code>meta</code>：一个元数据项，可以从属性中找到。如：cfg(target_os = “windows”)，包含在#[…]或![…]属性内信息</li>
+<li><code>tt</code>：TokenTree缩写，指代词条树</li>
+<li><code>vis</code>：指代可见性，如pub</li>
+<li><code>lifetime</code>：指代生命周期</li>
+</ul>
+<h4 id="对于原变量后面的记号有额外的规则："><a href="#对于原变量后面的记号有额外的规则：" class="headerlink" title="对于原变量后面的记号有额外的规则："></a>对于原变量后面的记号有额外的规则：</h4><ul>
+<li>expr和stmt变量必须后跟任意一个：=&gt; , ;</li>
+<li>ty和path变量必须后跟任意一个：=&gt; , = | ; : &gt; [ { as where</li>
+<li>pat变量必须后跟任意一个：=&gt; , = | if in</li>
+<li>其他变量可以跟任何记号</li>
+</ul>
+<h4 id="宏系统完全不处理解析模糊"><a href="#宏系统完全不处理解析模糊" class="headerlink" title="宏系统完全不处理解析模糊"></a>宏系统完全不处理解析模糊</h4><ul>
+<li>通过在某些记号前面加上记号可以解决问题，如：<code>$(I $i:ident)* E $e:expr</code></li>
+</ul>
+<h4 id="macro-use-、-macro-export-、-no-link"><a href="#macro-use-、-macro-export-、-no-link" class="headerlink" title="#[macro_use]、#[macro_export]、#[no_link]"></a>#[macro_use]、#[macro_export]、#[no_link]</h4>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Rust/" rel="tag"># Rust</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/14/Rust%E5%9E%8B%E5%8F%98/" rel="prev" title="Rust型变">
+      <i class="fa fa-chevron-left"></i> Rust型变
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/14/Rust%E7%9A%84%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5/" rel="next" title="Rust的一些概念">
+      Rust的一些概念 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#deriving%E9%99%90%E5%88%B6%E4%B8%80%E4%BA%9B%E7%89%B9%E5%AE%9Atrait"><span class="nav-number">1.</span> <span class="nav-text">deriving限制一些特定trait</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E4%B8%80%E4%BA%9B%E5%AE%9E%E7%8E%B0trait"><span class="nav-number">2.</span> <span class="nav-text">其他一些实现trait</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#macro-rules%E7%89%87%E6%AE%B5%E5%88%86%E7%B1%BB%E7%AC%A6%E5%8F%A5%E6%B3%95%E5%90%AB%E4%B9%89%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">macro_rules片段分类符句法含义：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E5%8E%9F%E5%8F%98%E9%87%8F%E5%90%8E%E9%9D%A2%E7%9A%84%E8%AE%B0%E5%8F%B7%E6%9C%89%E9%A2%9D%E5%A4%96%E7%9A%84%E8%A7%84%E5%88%99%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">对于原变量后面的记号有额外的规则：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%8F%E7%B3%BB%E7%BB%9F%E5%AE%8C%E5%85%A8%E4%B8%8D%E5%A4%84%E7%90%86%E8%A7%A3%E6%9E%90%E6%A8%A1%E7%B3%8A"><span class="nav-number">3.2.</span> <span class="nav-text">宏系统完全不处理解析模糊</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#macro-use-%E3%80%81-macro-export-%E3%80%81-no-link"><span class="nav-number">3.3.</span> <span class="nav-text">#[macro_use]、#[macro_export]、#[no_link]</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

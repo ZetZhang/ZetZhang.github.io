@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="安装依赖： 安装PostgreSQL： 授权用户： 配置环境变量： 初始化数据库： 启动日志服务： 启动数据库： 检查结果： 修改数据库密码： 配置为远程访问： 重启生效： 在debian中 基本安装 通过配置文件       PostgreSQL官网 安装依赖：12345# centos$ yum -y install readline-devel zlib-devel gcc gcc-c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PostgreSQL安装.md">
+<meta property="og:url" content="http://example.com/2020/06/12/PostgreSQL%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="安装依赖： 安装PostgreSQL： 授权用户： 配置环境变量： 初始化数据库： 启动日志服务： 启动数据库： 检查结果： 修改数据库密码： 配置为远程访问： 重启生效： 在debian中 基本安装 通过配置文件       PostgreSQL官网 安装依赖：12345# centos$ yum -y install readline-devel zlib-devel gcc gcc-c">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-12T12:52:46.000Z">
+<meta property="article:modified_time" content="2021-09-09T07:12:12.701Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Config">
+<meta property="article:tag" content="PostgreSQL">
+<meta property="article:tag" content="Database">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/06/12/PostgreSQL%E5%AE%89%E8%A3%85/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>PostgreSQL安装.md | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/12/PostgreSQL%E5%AE%89%E8%A3%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PostgreSQL安装.md
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-12 20:52:46" itemprop="dateCreated datePublished" datetime="2020-06-12T20:52:46+08:00">2020-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-09 15:12:12" itemprop="dateModified" datetime="2021-09-09T15:12:12+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-06/" itemprop="url" rel="index"><span itemprop="name">2020.06</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%EF%BC%9A">安装依赖：</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85postgresql%EF%BC%9A">安装PostgreSQL：</a></li>
+<li><a href="#%E6%8E%88%E6%9D%83%E7%94%A8%E6%88%B7%EF%BC%9A">授权用户：</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%EF%BC%9A">配置环境变量：</a></li>
+<li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A">初始化数据库：</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1%EF%BC%9A">启动日志服务：</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A">启动数据库：</a></li>
+<li><a href="#%E6%A3%80%E6%9F%A5%E7%BB%93%E6%9E%9C%EF%BC%9A">检查结果：</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%86%E7%A0%81%EF%BC%9A">修改数据库密码：</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E4%B8%BA%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%EF%BC%9A">配置为远程访问：</a></li>
+<li><a href="#%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88%EF%BC%9A">重启生效：</a></li>
+<li><a href="#%E5%9C%A8debian%E4%B8%AD">在debian中</a><ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E5%AE%89%E8%A3%85">基本安装</a><ul>
+<li><a href="#%E9%80%9A%E8%BF%87%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">通过配置文件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<p><a target="_blank" rel="noopener" href="https://www.postgresql.org/">PostgreSQL官网</a></p>
+<h3 id="安装依赖："><a href="#安装依赖：" class="headerlink" title="安装依赖："></a>安装依赖：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># centos</span></span><br><span class="line">$ yum -y install readline-devel zlib-devel gcc gcc-c++ zlib readline</span><br><span class="line"><span class="comment"># debian/ubuntu</span></span><br><span class="line">$ apt-get install -y gcc make</span><br><span class="line">$ apt-get install -y libreadline-dev zlib1g zlib1g.dev</span><br></pre></td></tr></table></figure>
+<h3 id="安装PostgreSQL："><a href="#安装PostgreSQL：" class="headerlink" title="安装PostgreSQL："></a>安装PostgreSQL：</h3><p><a target="_blank" rel="noopener" href="https://sandbox-experiment-resource-north-4.obs.cn-north-4.myhuaweicloud.com/postgresql-arm/postgresql-10.3.tar.gz">postgresql-10.3(maybe too<br>old)</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://sandbox-experiment-resource-north-4.obs.cn-north-4.myhuaweicloud.com/postgresql-arm/postgresql-10.3.tar.gz</span><br><span class="line">$ tar -zxvf postgresql-10.3.tar.gz -C /opt/</span><br><span class="line">$ <span class="built_in">cd</span> /opt/postgresql-*/</span><br><span class="line">$ ./configure --build=arm-linux --host=arm-linux --prefix=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line"><span class="comment"># canuse：./configure --prefix=/usr/local/pgsql --with-blocksize=8 \</span></span><br><span class="line"><span class="comment"># --enable-dtrace --enable-debug --enable-thread-safety</span></span><br><span class="line"><span class="comment"># --with-libxml --with-python --with-openssl</span></span><br><span class="line"><span class="comment"># $ make world</span></span><br><span class="line"><span class="comment"># $ make check-world (by normal user)</span></span><br><span class="line"><span class="comment"># $ make install-world</span></span><br><span class="line">$ make &amp;&amp; make install &amp;&amp; make clean</span><br></pre></td></tr></table></figure>
+<h3 id="授权用户："><a href="#授权用户：" class="headerlink" title="授权用户："></a>授权用户：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ adduser postgres</span><br><span class="line">$ chown -R postgres:postgres /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ ls -ld /usr/<span class="built_in">local</span>/pgsql</span><br></pre></td></tr></table></figure>
+<h3 id="配置环境变量："><a href="#配置环境变量：" class="headerlink" title="配置环境变量："></a>配置环境变量：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ su postgres</span><br><span class="line">$ vim ~/.bash_profile</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>配置文件中加入：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> PGHOME=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ <span class="built_in">export</span> PGDATA=/usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line">$ <span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$PGHOME</span>/bin</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>执行修改：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span>  ~/.bash_profile &amp;&amp; psql -V</span><br></pre></td></tr></table></figure>
+<h3 id="初始化数据库："><a href="#初始化数据库：" class="headerlink" title="初始化数据库："></a>初始化数据库：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ initdb -D <span class="variable">$PGDATA</span> -E UTF8 --locale=C -U postgres -W</span><br></pre></td></tr></table></figure>
+<h3 id="启动日志服务："><a href="#启动日志服务：" class="headerlink" title="启动日志服务："></a>启动日志服务：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br><span class="line">$ chmod 755 /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<h3 id="启动数据库："><a href="#启动数据库：" class="headerlink" title="启动数据库："></a>启动数据库：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span>  -l  <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br></pre></td></tr></table></figure>
+<h3 id="检查结果："><a href="#检查结果：" class="headerlink" title="检查结果："></a>检查结果：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ps -ef | grep <span class="string">&quot;postgres&quot;</span></span><br><span class="line">$ netstat -nlp | grep <span class="string">&quot;postgres&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="修改数据库密码："><a href="#修改数据库密码：" class="headerlink" title="修改数据库密码："></a>修改数据库密码：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ psql中`\password postgres`可修改</span><br></pre></td></tr></table></figure>
+<h3 id="配置为远程访问："><a href="#配置为远程访问：" class="headerlink" title="配置为远程访问："></a>配置为远程访问：</h3><blockquote>
+<p>将”listen_addresses=’localhost’”取消注释并修改为任意地址’*’</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /usr/<span class="built_in">local</span>/pgsql/data/postgresql.conf</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>修改访问地址控制设置：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /usr/<span class="built_in">local</span>/pgsql/data/pg_hba.conf</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在”IPv4 local connections”下构建规则：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host    all             all             0.0.0.0/0               md5</span><br></pre></td></tr></table></figure>
+<h3 id="重启生效："><a href="#重启生效：" class="headerlink" title="重启生效："></a>重启生效：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl restart</span><br></pre></td></tr></table></figure>
+
+<h2 id="在debian中"><a href="#在debian中" class="headerlink" title="在debian中"></a>在debian中</h2><h3 id="基本安装"><a href="#基本安装" class="headerlink" title="基本安装"></a>基本安装</h3><blockquote>
+<p>创建文件<code>/etc/apt/sources.list.d/pgdg.list</code>，里面添加：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 其中stretch-pgdg具体可以在https://www.postgresql.org/download/linux/debian/中选择具体版本得到</span></span><br><span class="line">deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Import the repository signing key, and update the package lists:</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ apt-get install -y gnupg gnupg1 gnupg2</span><br><span class="line">$ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -</span><br><span class="line">$ apt-get update</span><br><span class="line">$ apt-get install -y postgresql-10</span><br><span class="line"></span><br><span class="line">$ useradd -m -s /bin/bash postgres</span><br><span class="line">$ mkdir /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ chown postgres:postgres /usr/<span class="built_in">local</span>/pgsql</span><br><span class="line">$ sudo -u postgres /usr/lib/postgressql</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>数据库初始化：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /usr/lib/postgresql/11/bin/initdb -D <span class="variable">$PGDATA</span> -E UTF8 --locale=C -U postgres -W</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>vim ~/.bash_profile</code>配置：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PGHOME=/usr/<span class="built_in">local</span>/pgsql</span><br><span class="line"><span class="built_in">export</span> PGDATA=/usr/<span class="built_in">local</span>/pgsql/data</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/lib/postgresql/11/bin</span><br><span class="line"><span class="built_in">export</span> LANG=en_US.utf8</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>数据库日志：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 大可不必</span></span><br><span class="line">$ mkdir -p /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br><span class="line">$ chmod 755 /usr/<span class="built_in">local</span>/pgsql/<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>can start data server <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般启动</span></span><br><span class="line">$ /usr/lib/postgresql/11/bin/pg_ctl -D /usr/<span class="built_in">local</span>/pgsql/data -l logfile start</span><br><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span> -l <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br></pre></td></tr></table></figure>
+<h4 id="通过配置文件"><a href="#通过配置文件" class="headerlink" title="通过配置文件"></a>通过配置文件</h4><blockquote>
+<p>启动，vim /etc/sysctl.conf中配置内核相关参数：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kernel.shmmni = 4096</span><br><span class="line">kernel.sem = 50100 64128000 50100 1280</span><br><span class="line">fs.file-max = 7672460</span><br><span class="line">net.ipv4.ip_local_port_range = 9000 65000</span><br><span class="line">net.core.rmem_default = 1048576</span><br><span class="line">net.core.rmem_max = 4194304</span><br><span class="line">net.core.wmem_default = 262144</span><br><span class="line">net.core.wmen_max = 1028576</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>vim /etc/sysconfig/iptables</code>进行防火墙设置：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-A RH-Firewall-1-INPUT -i lo -j ACCEPT</span><br><span class="line"># 允许源IP</span><br><span class="line">-A RH-Firewall-1-INPUT -s 192.168.0.0/16 -j ACCEPT</span><br><span class="line"># 允许源IP访问目标端口</span><br><span class="line">-A RH-Firewall-1-INPUT -s 192.168.1.0/24 -m state --state </span><br><span class="line">NEW -m tcp -p tcp --dport [PORT] -j ACCEPT</span><br><span class="line"># 允许任意IP访问目标端口</span><br><span class="line">-A RH-Firewall-1-INPUT -p tcp -m state --state NEW -m</span><br><span class="line">tcp --dport [PORT] -j ACCEPT</span><br><span class="line"># 不是很懂</span><br><span class="line"># 使用iptables -L -v -n查看出入规则</span><br></pre></td></tr></table></figure></li>
+<li>在/etc/security/limits.conf配置。。。<blockquote>
+<p><code>vim /usr/local/pgsql/data/pg_hba.conf</code>中的IPv4 local<br>connections修改访问地址控制规则设置：</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host    all             all             0.0.0.0/0               md5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>vim /usr/local/pgsql/data/postgresql.conf</code>中</p>
+</blockquote>
+<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">将listen_addresses=<span class="string">&#x27;localhost&#x27;</span>取消注释并修改为任意地址<span class="string">&#x27;*0.0.0.0&#x27;</span></span><br><span class="line">superuser_reserved_connections超级用户最多连接改为13</span><br><span class="line">unix_socket_directories连接改为<span class="string">&#x27;.&#x27;</span>根目录下</span><br><span class="line">unix_socket_permissions权限为0700</span><br><span class="line"><span class="comment"># 心跳检测</span></span><br><span class="line">tcp_keepalives_idle = 60</span><br><span class="line">tcp_keepalives_interval = 10</span><br><span class="line">tcp_keepalives_count = 10</span><br><span class="line"><span class="comment"># 延迟</span></span><br><span class="line">vacuum_cost_delay = 10</span><br><span class="line">bgwritter_delay = 10ms</span><br><span class="line">wal_writer_delay = 200ms</span><br><span class="line"><span class="comment"># 归档</span></span><br><span class="line">hot_standby = on</span><br><span class="line"><span class="comment"># 日志</span></span><br><span class="line">log_destination = <span class="string">&quot;csvlog&quot;</span></span><br><span class="line">logging_collector = on</span><br><span class="line">log_directory = <span class="string">&#x27;pg_log&#x27;</span></span><br><span class="line">log_file_mode = 0600</span><br><span class="line">log_truncate_on_rotation = on等</span><br><span class="line"><span class="comment"># 还有checkpoint</span></span><br><span class="line">log_checkpoints = on</span><br><span class="line">log_connection = on</span><br><span class="line">log_disconnections = on</span><br><span class="line">log_error_verbosity = verbose</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>启动psql</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl -D <span class="variable">$PGDATA</span> -l <span class="variable">$PGHOME</span>/<span class="built_in">log</span>/pg_server.log start</span><br><span class="line">$ psql -h localhost -U postgres</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Config/" rel="tag"># Config</a>
+              <a href="/tags/PostgreSQL/" rel="tag"># PostgreSQL</a>
+              <a href="/tags/Database/" rel="tag"># Database</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/07/10/Qt%E5%B1%9E%E6%80%A7%E7%B3%BB%E7%BB%9F/" rel="prev" title="Qt属性系统">
+      <i class="fa fa-chevron-left"></i> Qt属性系统
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/12/Docker%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" rel="next" title="Docker基本使用">
+      Docker基本使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">安装依赖：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85PostgreSQL%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">安装PostgreSQL：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%88%E6%9D%83%E7%94%A8%E6%88%B7%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">授权用户：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">配置环境变量：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">初始化数据库：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">启动日志服务：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">启动数据库：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E7%BB%93%E6%9E%9C%EF%BC%9A"><span class="nav-number">8.</span> <span class="nav-text">检查结果：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%86%E7%A0%81%EF%BC%9A"><span class="nav-number">9.</span> <span class="nav-text">修改数据库密码：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BA%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE%EF%BC%9A"><span class="nav-number">10.</span> <span class="nav-text">配置为远程访问：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%90%AF%E7%94%9F%E6%95%88%EF%BC%9A"><span class="nav-number">11.</span> <span class="nav-text">重启生效：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8debian%E4%B8%AD"><span class="nav-number"></span> <span class="nav-text">在debian中</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">基本安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E8%BF%87%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">通过配置文件</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="性能指标 test 正确使用TCP read 消息格式 网络神话 Reactor和Proactor 线程分配 多线程的性能优势   C++编译链接模型精要 一些记录 一些名词 C++设计   C++并发相关错误类型 不必要的阻塞 竞争条件 需要思考的问题 假如测试一个队列需要考虑的不同应用场景     性能指标 带宽MB&#x2F;s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Muduo技要2">
+<meta property="og:url" content="http://example.com/2020/06/14/Muduo%E6%8A%80%E8%A6%812/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="性能指标 test 正确使用TCP read 消息格式 网络神话 Reactor和Proactor 线程分配 多线程的性能优势   C++编译链接模型精要 一些记录 一些名词 C++设计   C++并发相关错误类型 不必要的阻塞 竞争条件 需要思考的问题 假如测试一个队列需要考虑的不同应用场景     性能指标 带宽MB&#x2F;s，关心消息量，不管消息数 吞吐量QPS，TPS 延迟 资源使用率">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-14T07:52:47.000Z">
+<meta property="article:modified_time" content="2021-09-09T07:12:12.701Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Muduo">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/06/14/Muduo%E6%8A%80%E8%A6%812/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Muduo技要2 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/14/Muduo%E6%8A%80%E8%A6%812/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Muduo技要2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-14 15:52:47" itemprop="dateCreated datePublished" datetime="2020-06-14T15:52:47+08:00">2020-06-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-09 15:12:12" itemprop="dateModified" datetime="2021-09-09T15:12:12+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-04/" itemprop="url" rel="index"><span itemprop="name">2020.04</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87">性能指标</a></li>
+<li><a href="#test">test</a></li>
+<li><a href="#%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8tcp">正确使用TCP</a></li>
+<li><a href="#read">read</a></li>
+<li><a href="#%E6%B6%88%E6%81%AF%E6%A0%BC%E5%BC%8F">消息格式</a></li>
+<li><a href="#%E7%BD%91%E7%BB%9C%E7%A5%9E%E8%AF%9D">网络神话</a><ul>
+<li><a href="#reactor%E5%92%8Cproactor">Reactor和Proactor</a></li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E5%88%86%E9%85%8D">线程分配</a></li>
+<li><a href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8A%BF">多线程的性能优势</a></li>
+</ul>
+</li>
+<li><a href="#c++%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E5%9E%8B%E7%B2%BE%E8%A6%81">C++编译链接模型精要</a><ul>
+<li><a href="#%E4%B8%80%E4%BA%9B%E8%AE%B0%E5%BD%95">一些记录</a></li>
+<li><a href="#%E4%B8%80%E4%BA%9B%E5%90%8D%E8%AF%8D">一些名词</a></li>
+<li><a href="#c++%E8%AE%BE%E8%AE%A1">C++设计</a></li>
+</ul>
+</li>
+<li><a href="#c++%E5%B9%B6%E5%8F%91%E7%9B%B8%E5%85%B3%E9%94%99%E8%AF%AF%E7%B1%BB%E5%9E%8B">C++并发相关错误类型</a><ul>
+<li><a href="#%E4%B8%8D%E5%BF%85%E8%A6%81%E7%9A%84%E9%98%BB%E5%A1%9E">不必要的阻塞</a></li>
+<li><a href="#%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6">竞争条件</a></li>
+<li><a href="#%E9%9C%80%E8%A6%81%E6%80%9D%E8%80%83%E7%9A%84%E9%97%AE%E9%A2%98">需要思考的问题</a></li>
+<li><a href="#%E5%81%87%E5%A6%82%E6%B5%8B%E8%AF%95%E4%B8%80%E4%B8%AA%E9%98%9F%E5%88%97%E9%9C%80%E8%A6%81%E8%80%83%E8%99%91%E7%9A%84%E4%B8%8D%E5%90%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF">假如测试一个队列需要考虑的不同应用场景</a></li>
+</ul>
+</li>
+</ul>
+<!-- vim-markdown-toc -->
+<h3 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h3><ul>
+<li>带宽MB/s，关心消息量，不管消息数</li>
+<li>吞吐量QPS，TPS</li>
+<li>延迟</li>
+<li>资源使用率</li>
+</ul>
+<h3 id="test"><a href="#test" class="headerlink" title="test"></a>test</h3><ul>
+<li><p><code>sysctl -A | grep tcp.*mem</code> # 查看网络缓冲区</p>
+</li>
+<li><p><code>sysctl -A | grep range</code> # 查看端口范围</p>
+</li>
+<li><p><code>ntptime</code> # 查看ntp时间</p>
+</li>
+<li><p><code>ntpq -pn</code> # ntp同步情况，service ntp start启动</p>
+</li>
+<li><p><code>nc</code> # netcat $ nc ip port | [pipe]</p>
+</li>
+<li><p><code>tcpdump</code>和<code>Wiretshark</code>来性能分析</p>
+</li>
+<li><p><code>tcpcopy</code>可以用来进行压力测试</p>
+</li>
+<li><p><code>strace</code></p>
+</li>
+<li><p><code>prove</code></p>
+</li>
+<li><p><code>perf</code> # 查看程序的性能热点 e.g. perf record bin/memcached footprint ptmalloc 1000000 &amp;&amp; perf report</p>
+</li>
+<li><p><code>netstat -tpna | grep :prot</code>列出某服务客户端地址，<code>netstat</code>或<code>lsof</code>找出进程发起的连接</p>
+</li>
+<li><p>nm，查看name mangilng</p>
+</li>
+</ul>
+<h3 id="正确使用TCP"><a href="#正确使用TCP" class="headerlink" title="正确使用TCP"></a>正确使用TCP</h3><ul>
+<li><code>SO_REUSERADDR</code></li>
+<li>ignore <code>SIGPIPE</code></li>
+<li><code>TCP_NODELAY</code></li>
+</ul>
+<h3 id="read"><a href="#read" class="headerlink" title="read"></a>read</h3><ul>
+<li><code>netcat</code></li>
+</ul>
+<h3 id="消息格式"><a href="#消息格式" class="headerlink" title="消息格式"></a>消息格式</h3><ul>
+<li><code>Google Protocol Buffers</code></li>
+</ul>
+<h3 id="网络神话"><a href="#网络神话" class="headerlink" title="网络神话"></a>网络神话</h3><h4 id="Reactor和Proactor"><a href="#Reactor和Proactor" class="headerlink" title="Reactor和Proactor"></a>Reactor和Proactor</h4><ul>
+<li>Reactor模式指“non-blocking IO + IO multiplexing”，Proactor模式是另一个。</li>
+<li>Recator的基本结构是事件循环（event loop）和事件驱动（event-driven）和事件回调实现业务逻辑，提高并发度和吞吐量，适合IO密集型横须</li>
+<li>CPU密集型程序应该使用线程池，即blocking_queue实现的任务队列</li>
+</ul>
+<h4 id="线程分配"><a href="#线程分配" class="headerlink" title="线程分配"></a>线程分配</h4><ul>
+<li>当线程很廉价时，创造多于CPU数目的线程，一线程处理一个TCP连接，通常使用阻塞Blocking IO</li>
+<li>当线程很宝贵时，创造跟CPU数目一样多的线程，一个线程处理多个TCP连接上的IO，即”non-blocking IO + IO multiplexing”</li>
+<li>进程指fork的产物，线程指pthread_create的宝贵的原生NPTL Pthread线程，每个线程由clone产生，对应内核的task_struct</li>
+<li>两种场合必须使用单线程：程序fork和限制程序的CPU占用率。此外，只有单线程能使用fork</li>
+</ul>
+<h4 id="多线程的性能优势"><a href="#多线程的性能优势" class="headerlink" title="多线程的性能优势"></a>多线程的性能优势</h4><ul>
+<li>如果很少CPU负载让IO跑满，或很少IO负载就让CPU跑满，那么多线程没有性能优势</li>
+<li>多线程适用场景：<ul>
+<li>多个CPU可用。</li>
+<li>线程间共享数据，或者也可进程间共享</li>
+<li>可修改的共享数据，或者也可进程间shared memory</li>
+<li>提供非均质服务，如处理优先级事件</li>
+<li>lantency和throughput一样重要，即IO和CPU同样重要</li>
+<li>异步操作</li>
+<li>scale up，能享受到多线程的优势</li>
+<li>可预测性能。超过临界点会性能下降，线程数量不随负载变化</li>
+<li>多线程划分责任和功能</li>
+</ul>
+</li>
+</ul>
+<h3 id="C-编译链接模型精要"><a href="#C-编译链接模型精要" class="headerlink" title="C++编译链接模型精要"></a>C++编译链接模型精要</h3><h4 id="一些记录"><a href="#一些记录" class="headerlink" title="一些记录"></a>一些记录</h4><ul>
+<li>C++三大约束：C兼容、零开销（与Rust的零成本抽象区别？）原则和值语义</li>
+<li>笼统地表示编译过程可分为：preprocessor/compiler/assembler/linker四个步骤，C++没有import或using（C++20可能出现），include头文件将导致当需要使用一个函数时预处理阶段必不可少的导入了一堆不相关的函数</li>
+<li>一些编译选项：-Wall、-Wextra、-Werror、-Wconversion、-Wshadow</li>
+<li>使用前向生命可以减少include，CCS规定不能重载&amp;&amp;、||、，三个操作符，Google规定不能重载一元<code>operator&amp;()</code>，这样class就不能前向生命了</li>
+<li>判断一个C++可执行文件是release还是debug模式可以通过看class template的短函数有没有被inline展开，在nm命令中查看可以发现，开启-O2编译的程序是看不到inline函数的任何信息的<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span>;</span>  <span class="comment">// 前向生命</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">(Foo &amp;foo)</span> </span>&#123;</span><br><span class="line">    Foo *p = &amp;foo;  <span class="comment">// 取foo地址，重载了意思就变了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>C++的链接模型相比C多了一些内容，name mangling和vague linkage，即一个符号多份互不冲突。C中不允许重复定义</li>
+</ul>
+<h4 id="一些名词"><a href="#一些名词" class="headerlink" title="一些名词"></a>一些名词</h4><ul>
+<li>一次定义原则（ODR），C是的，C++不是的</li>
+</ul>
+<h4 id="C-设计"><a href="#C-设计" class="headerlink" title="C++设计"></a>C++设计</h4><ul>
+<li>POD和非POD</li>
+<li>三/五原则：POD类型需要拷贝赋值非平凡类型时，就需要析构函数，而需要析构函数的类也需要拷贝和赋值操作（需要拷贝操作的类也需要赋值操作），否则使用编译器合成的将导致未定义行为或多重析构的危险</li>
+</ul>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><ul>
+<li>程序迁移工具：Porting Advisor，从X86（CISC）到arm kunpeng（RISC）</li>
+<li>数据库测试工具：BenchmarkSQL安装ant -&gt; 创建配置文件 -&gt; 配置数据库连接 -&gt; 场景配置 -&gt; 数据准备 -&gt; 执行测试<ul>
+<li>数据库连接：db、driver、conn、user/password</li>
+<li>场景配置：warehouse仓库数量、loadWorkers数据并发数、Terminals并发用户数、runMins测试时间、runTxnsPerTerminal、limitTxns。。。</li>
+</ul>
+</li>
+<li>大数据测试工具套件：HiBench：评估框架速度、吞吐量和系统资源利用率<ul>
+<li>测试类别：micro、ml、sql、websearch、graph、streaming</li>
+</ul>
+</li>
+</ul>
+<h3 id="C-并发相关错误类型"><a href="#C-并发相关错误类型" class="headerlink" title="C++并发相关错误类型"></a>C++并发相关错误类型</h3><h4 id="不必要的阻塞"><a href="#不必要的阻塞" class="headerlink" title="不必要的阻塞"></a>不必要的阻塞</h4><ul>
+<li>死锁：指第一个线程等待第二个线程执行后才能继续，而第二个线程又在等待第一个线程，构成一个线程等待循环状态。</li>
+<li>活锁：当第一个线程等待第二个线程，第二个线程又在等待第一个线程时，活锁类似死锁。活锁死锁区别在于等待过程不是阻塞状态而是不断循环检测状态，如spinlock。</li>
+<li>在I/O或外部输入上的阻塞：当线程阻塞是因为等待某外部输入而无法继续执行，可能外部输入永远都不到来</li>
+</ul>
+<h4 id="竞争条件"><a href="#竞争条件" class="headerlink" title="竞争条件"></a>竞争条件</h4><ul>
+<li>数据竞争：指没有同步好对某个共享内存的并发访问</li>
+<li>破坏不变量：表现为悬挂指针（线程删除了被访问的数据）、随机存储损坏（线程为局部更新造成读取数据不一致）或者双闲状态（重复释放？）</li>
+<li>生存期问题：线程超时访问的某些数据已经被删除、销毁或访问的内存已经被另一个对象重用</li>
+</ul>
+<h4 id="需要思考的问题"><a href="#需要思考的问题" class="headerlink" title="需要思考的问题"></a>需要思考的问题</h4><ul>
+<li>哪些数据需要保护，防止并行访问？</li>
+<li>如何保证数据是被保护的？</li>
+<li>此时其他线程执行到代码的何处？</li>
+<li>该线程用了哪些信号量？其他线程用了哪些信号量？</li>
+<li>该线程各操作间有先后顺序要求吗？</li>
+<li>线程载入的数据是否有效，是否被其他线程修改？</li>
+</ul>
+<h4 id="假如测试一个队列需要考虑的不同应用场景"><a href="#假如测试一个队列需要考虑的不同应用场景" class="headerlink" title="假如测试一个队列需要考虑的不同应用场景"></a>假如测试一个队列需要考虑的不同应用场景</h4><ul>
+<li>一个线程在自身队列调用push()或pop()验证</li>
+<li>空队列上一个线程调用push()另一个线程pop()</li>
+<li>空队列和满队列上分别多个线程push()</li>
+<li>空队列和慢队列上分别多线程pop()</li>
+<li>空队列和满队列上分别多线程push()和一个线程pop()</li>
+<li>空队列和满队列分别多线程push()和pop()</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Muduo/" rel="tag"># Muduo</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/14/Rust%E8%B7%A8%E8%AF%AD%E8%A8%80/" rel="prev" title="Rust跨语言">
+      <i class="fa fa-chevron-left"></i> Rust跨语言
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/14/PostgreSQL%E6%8F%92%E4%BB%B6%E5%8F%8A%E5%AE%89%E8%A3%85/" rel="next" title="PostgreSQL插件及安装">
+      PostgreSQL插件及安装 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">性能指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test"><span class="nav-number">2.</span> <span class="nav-text">test</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8TCP"><span class="nav-number">3.</span> <span class="nav-text">正确使用TCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#read"><span class="nav-number">4.</span> <span class="nav-text">read</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E6%A0%BC%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">消息格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%A5%9E%E8%AF%9D"><span class="nav-number">6.</span> <span class="nav-text">网络神话</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Reactor%E5%92%8CProactor"><span class="nav-number">6.1.</span> <span class="nav-text">Reactor和Proactor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%88%86%E9%85%8D"><span class="nav-number">6.2.</span> <span class="nav-text">线程分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8A%BF"><span class="nav-number">6.3.</span> <span class="nav-text">多线程的性能优势</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%A8%A1%E5%9E%8B%E7%B2%BE%E8%A6%81"><span class="nav-number">7.</span> <span class="nav-text">C++编译链接模型精要</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E8%AE%B0%E5%BD%95"><span class="nav-number">7.1.</span> <span class="nav-text">一些记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%90%8D%E8%AF%8D"><span class="nav-number">7.2.</span> <span class="nav-text">一些名词</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-%E8%AE%BE%E8%AE%A1"><span class="nav-number">7.3.</span> <span class="nav-text">C++设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">7.4.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-%E5%B9%B6%E5%8F%91%E7%9B%B8%E5%85%B3%E9%94%99%E8%AF%AF%E7%B1%BB%E5%9E%8B"><span class="nav-number">8.</span> <span class="nav-text">C++并发相关错误类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8D%E5%BF%85%E8%A6%81%E7%9A%84%E9%98%BB%E5%A1%9E"><span class="nav-number">8.1.</span> <span class="nav-text">不必要的阻塞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AB%9E%E4%BA%89%E6%9D%A1%E4%BB%B6"><span class="nav-number">8.2.</span> <span class="nav-text">竞争条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E6%80%9D%E8%80%83%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">8.3.</span> <span class="nav-text">需要思考的问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%81%87%E5%A6%82%E6%B5%8B%E8%AF%95%E4%B8%80%E4%B8%AA%E9%98%9F%E5%88%97%E9%9C%80%E8%A6%81%E8%80%83%E8%99%91%E7%9A%84%E4%B8%8D%E5%90%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">8.4.</span> <span class="nav-text">假如测试一个队列需要考虑的不同应用场景</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

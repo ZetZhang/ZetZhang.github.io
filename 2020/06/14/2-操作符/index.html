@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="条款5：对定制的“类型转换函数”保持警觉 条款6：区别increment&#x2F;decrement操作符的前置（prefix）和后置（postfix）形式 条款7：千万不要重载&amp;&amp;，||和，操作符 条款8：了解各种不同意义的new和delete   条款5：对定制的“类型转换函数”保持警觉 C++允许编译器在不同类型之间执行隐式转换（implicit conversions）。它继">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2 操作符">
+<meta property="og:url" content="http://example.com/2020/06/14/2-%E6%93%8D%E4%BD%9C%E7%AC%A6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="条款5：对定制的“类型转换函数”保持警觉 条款6：区别increment&#x2F;decrement操作符的前置（prefix）和后置（postfix）形式 条款7：千万不要重载&amp;&amp;，||和，操作符 条款8：了解各种不同意义的new和delete   条款5：对定制的“类型转换函数”保持警觉 C++允许编译器在不同类型之间执行隐式转换（implicit conversions）。它继">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-14T05:51:50.000Z">
+<meta property="article:modified_time" content="2021-09-09T07:12:12.701Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="More Effecive C++">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/06/14/2-%E6%93%8D%E4%BD%9C%E7%AC%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>2 操作符 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/14/2-%E6%93%8D%E4%BD%9C%E7%AC%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2 操作符
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-14 13:51:50" itemprop="dateCreated datePublished" datetime="2020-06-14T13:51:50+08:00">2020-06-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-09 15:12:12" itemprop="dateModified" datetime="2021-09-09T15:12:12+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2019-03/" itemprop="url" rel="index"><span itemprop="name">2019.03</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#%E6%9D%A1%E6%AC%BE5%EF%BC%9A%E5%AF%B9%E5%AE%9A%E5%88%B6%E7%9A%84%E2%80%9C%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0%E2%80%9D%E4%BF%9D%E6%8C%81%E8%AD%A6%E8%A7%89">条款5：对定制的“类型转换函数”保持警觉</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE6%EF%BC%9A%E5%8C%BA%E5%88%ABincrement/decrement%E6%93%8D%E4%BD%9C%E7%AC%A6%E7%9A%84%E5%89%8D%E7%BD%AE%EF%BC%88prefix%EF%BC%89%E5%92%8C%E5%90%8E%E7%BD%AE%EF%BC%88postfix%EF%BC%89%E5%BD%A2%E5%BC%8F">条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE7%EF%BC%9A%E5%8D%83%E4%B8%87%E4%B8%8D%E8%A6%81%E9%87%8D%E8%BD%BD&&%EF%BC%8C%7C%7C%E5%92%8C%EF%BC%8C%E6%93%8D%E4%BD%9C%E7%AC%A6">条款7：千万不要重载&amp;&amp;，||和，操作符</a></li>
+<li><a href="#%E6%9D%A1%E6%AC%BE8%EF%BC%9A%E4%BA%86%E8%A7%A3%E5%90%84%E7%A7%8D%E4%B8%8D%E5%90%8C%E6%84%8F%E4%B9%89%E7%9A%84new%E5%92%8Cdelete">条款8：了解各种不同意义的new和delete</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h4 id="条款5：对定制的“类型转换函数”保持警觉"><a href="#条款5：对定制的“类型转换函数”保持警觉" class="headerlink" title="条款5：对定制的“类型转换函数”保持警觉"></a>条款5：对定制的“类型转换函数”保持警觉</h4><ol>
+<li>C++允许编译器在不同类型之间执行<font color=red>隐式转换</font>（<font color=green>implicit conversions</font>）。它继承C的传统，允许将char转换为int，将short转换为double。然而还有令人害怕的转型，包括将int转换为short，将double转换为char，这些类型转换会遗失信息。所以我们可以使用自己的类型。两种函数允许编译器执行这样的转换：<strong>单自变量constructors</strong>和<strong>隐式类型转换操作符</strong>。所谓的单自变量constructor是指能够以单一自变量成功调用的constructors： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Name</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// string to Name</span></span><br><span class="line">    <span class="built_in">Name</span>(<span class="keyword">const</span> std::string &amp;s);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Rational to double</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">double</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ ，而隐式类型转换操作符，是一个拥有奇怪名称的member function：关键词operator后面加上一个类型名称，你不能为此函数指定返回值类型，因为其返回值类型已经表现在函数名称上了： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">double</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">Rational <span class="title">r</span><span class="params">(<span class="number">1</span>, <span class="number">2</span>)</span></span>;   <span class="comment">// r == 1/2</span></span><br><span class="line"><span class="keyword">double</span> d = <span class="number">0.5</span> * r; <span class="comment">// 将r转为double，然后执行乘法运算</span></span><br></pre></td></tr></table></figure></li>
+<li>假设有一个class用来表现分数（rational numbers）。你希望像内建类型一样地输出Rational objects内容。 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Rational <span class="title">r</span><span class="params">(<span class="number">1</span>, <span class="number">2</span>)</span></span>;</span><br><span class="line">std::cout &lt;&lt; r;</span><br></pre></td></tr></table></figure>
+ 假设忘了给Rational写一个operator&lt;&lt;，上述打印不但不会出错，编译器在面对上述动作，它会想尽各种办法（包括找出一系列可接受的隐式类型转换）让函数调用动作成功。而之间的代码发现，只要调用了Rational::oeprator double，将r转换为double，调用动作就能成功，却又有隐式类型转换操作符的缺点：它的出现可能到导致错误（非预期）的函数被调用。于是有了解决办法： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rational</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">asDouble</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line">std::cout &lt;&lt; r;             <span class="comment">// error</span></span><br><span class="line">std::cout &lt;&lt; r.<span class="built_in">asDouble</span>();  <span class="comment">// ok, 以double形式输出r</span></span><br></pre></td></tr></table></figure>
+ 必须明白调用类型转换函数虽然有点不便，却可以避免默默调用了不想调用的函数。这也就是为什么标准程序库的string类型并未含有从string object到C-style char*的隐式转换函数，而是提供了一个显式的member function <code>c_str</code>。<br> 在单自变量constructors，这些函数造成的隐式类型转换的情况更难对付： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Array</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Array</span>(<span class="keyword">int</span> lowBound, <span class="keyword">int</span> highBound);</span><br><span class="line">    <span class="built_in">Array</span>(<span class="keyword">int</span> size);</span><br><span class="line">    T&amp; <span class="keyword">operator</span>[](<span class="keyword">int</span> index);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span>==(<span class="keyword">const</span> Array&lt;<span class="keyword">int</span>&gt; &amp;lhs, <span class="keyword">const</span> Array&lt;<span class="keyword">int</span>&gt; &amp;rhs);</span><br><span class="line"><span class="function">Array&lt;<span class="keyword">int</span>&gt; <span class="title">a</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line"><span class="function">Array&lt;<span class="keyword">int</span>&gt; <span class="title">b</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    <span class="keyword">if</span> (a == b[i])      <span class="comment">// 如果打算写a[i] == b[i]</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">do</span> something <span class="keyword">for</span> when a[i] <span class="keyword">and</span> b[i] are equal;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">        <span class="keyword">do</span> something <span class="keyword">for</span> when they<span class="number">&#x27;</span>re <span class="keyword">not</span>;</span><br></pre></td></tr></table></figure>
+ 这样的错误编译器并没有提醒，它一声不吭，编译器注意到它，发现只要调用Array&lt;int&gt; constructor（需要一个int自变量）就可以将int转为Array&lt;int&gt; object。于是它放手去做。<br> 有两种办法阻止编译器这么做：一个是简易法，另一个可在编译器不支持简易法的情况下使用。<br> 简易法是使用C++特征：关键词<font color=red><code>explicit</code></font>。只要将constructors声明为explicit，编译器就能因隐式转换而调用它，不过显式类型转换是允许的（没发现）。有个解决方案： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Array</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">ArraySize</span></span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="built_in">ArraySize</span>(<span class="keyword">int</span> numElements) :  <span class="built_in">theSize</span>(numElements) &#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> theSize; &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">int</span> theSize;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">Array</span>(<span class="keyword">int</span> lowBound, <span class="keyword">int</span> highBound);</span><br><span class="line">    <span class="built_in">Array</span>(ArraySize size);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span>==(<span class="keyword">const</span> Array&lt;<span class="keyword">int</span>&gt; &amp;lhs, <span class="keyword">const</span> Array&lt;<span class="keyword">int</span>&gt; &amp;rhs);</span><br><span class="line"><span class="function">Array&lt;<span class="keyword">int</span>&gt; <span class="title">a</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line"><span class="function">Array&lt;<span class="keyword">int</span>&gt; <span class="title">b</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i)</span><br><span class="line">    <span class="keyword">if</span> (a == b[i])  <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+ 编译器需要一个Array&lt;int&gt;的对象在==右边，但此时没有这样隐式转换的constructor。更不能将int转换一个<strong>临时性</strong>的ArraySize对象，再根据这个临时对象产生必要的Array&lt;int&gt;对象，所以报错。类似ArraySize这样的classes，往往被称为proxy classes，因为它的每一个对象都是为了其他对象而存在的，好像其他对象的<font cololr=red>代理人</font>（<font color=green>proxy</font>）一样。这是一个很值得学习的技术。</li>
+</ol>
+<h4 id="条款6：区别increment-decrement操作符的前置（prefix）和后置（postfix）形式"><a href="#条款6：区别increment-decrement操作符的前置（prefix）和后置（postfix）形式" class="headerlink" title="条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式"></a>条款6：区别increment/decrement操作符的前置（prefix）和后置（postfix）形式</h4><ol>
+<li>重载函数是以其参数类型来区分彼此的，然而不论increment或decrement操作符的前置式或后置式，都没有参数，为了填平这个语言学上的漏洞，只好让后置式有一个int自变量，并且让它被调用时，编译器默默地为该int指定一个<font color=red><strong>0值</strong></font>： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UPInt</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    UPInt&amp; <span class="keyword">operator</span>++();            <span class="comment">// 前置式++</span></span><br><span class="line">    <span class="keyword">const</span> UPInt <span class="keyword">operator</span>++(<span class="keyword">int</span>);    <span class="comment">// 后置式++</span></span><br><span class="line">    UPInt&amp; <span class="keyword">operator</span>--();            <span class="comment">// 前置式--</span></span><br><span class="line">    <span class="keyword">const</span> UPInt <span class="keyword">operator</span>--(<span class="keyword">int</span>);    <span class="comment">// 后置式--</span></span><br><span class="line">    UPInt&amp; <span class="keyword">operator</span>+=(<span class="keyword">int</span>);         <span class="comment">// +=操作符</span></span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line">UPInt i;</span><br><span class="line">++i;    <span class="comment">// i.operator++();</span></span><br><span class="line">i++;    <span class="comment">// i.operator++(0);</span></span><br><span class="line">--i;    <span class="comment">// i.operator--();</span></span><br><span class="line">i--;    <span class="comment">// i.operator--(0);</span></span><br></pre></td></tr></table></figure></li>
+<li>所谓的increment操作符的前置式意义“increment and fetch“（积累然后取出），后置式意义”fetch and increment“（取出然后累加）： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">UPInt&amp; UPInt::<span class="keyword">operator</span>++()</span><br><span class="line">&#123;</span><br><span class="line">    *<span class="keyword">this</span> += <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> UPInt UPInt::<span class="keyword">operator</span>++(<span class="keyword">int</span>)</span><br><span class="line">&#123;</span><br><span class="line">    UPInt oldValue = *<span class="keyword">this</span>;</span><br><span class="line">    ++(*<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">return</span> oldValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ 为什么后置increment操作符返回的对象是const呢？以下： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UPInt i;</span><br><span class="line">i++++;  <span class="comment">//  后置increment操作符两次</span></span><br><span class="line">i.<span class="built_in"><span class="keyword">operator</span></span>(<span class="number">0</span>).<span class="keyword">operator</span>++(<span class="number">0</span>);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="条款7：千万不要重载-amp-amp-，-和，操作符"><a href="#条款7：千万不要重载-amp-amp-，-和，操作符" class="headerlink" title="条款7：千万不要重载&amp;&amp;，||和，操作符"></a>条款7：千万不要重载&amp;&amp;，||和，操作符</h4><ol>
+<li>操作符重载也不是任何都能用来重，它也是有底线的，你不能重载以下操作符： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.       .*      ::      ?:      <span class="keyword">new</span> </span><br><span class="line"><span class="keyword">delete</span>  <span class="keyword">sizeof</span>  <span class="keyword">typeid</span>  <span class="keyword">static_cast</span></span><br><span class="line"><span class="keyword">dynamic_cast</span>    <span class="keyword">const_cast</span>  <span class="keyword">reinterpret_cast</span></span><br></pre></td></tr></table></figure>
+ 可以重载的有： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">operator</span> <span class="keyword">new</span>        <span class="keyword">operator</span> <span class="keyword">delete</span></span><br><span class="line"><span class="keyword">operator</span> <span class="keyword">new</span>[]      <span class="keyword">operator</span> <span class="keyword">delete</span>[]</span><br><span class="line">+   -   *   /   %   ^   &amp;   |   ~   </span><br><span class="line">!   =   &lt;   &gt;   +=  -=  *=  /=  %=</span><br><span class="line">^=  &amp;=  |=  &lt;&lt;  &gt;&gt;  &gt;&gt;= &lt;&lt;= ==  !=</span><br><span class="line">&lt;=  &gt;=  &amp;&amp;  ||  ++  --  ,   -&gt;* -&gt;</span><br><span class="line">()  []</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="条款8：了解各种不同意义的new和delete"><a href="#条款8：了解各种不同意义的new和delete" class="headerlink" title="条款8：了解各种不同意义的new和delete"></a>条款8：了解各种不同意义的new和delete</h4><ol>
+<li><p>new operator和operator new之间是有差别的。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string *ps = <span class="keyword">new</span> <span class="built_in">string</span>(<span class="string">&quot;Memory Management&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p> 所使用的new是所谓的<font color=red>new operator</font>。这个操作符是语言内建的，跟sizeof一样不能改变意义。它的分为两方面：<strong>分配足够的内存用来存放某类型的对象</strong>；<strong>而后调用一个constructor为刚才分配的内存中的那个对象设定初值</strong>。<br> 我们能够重写改函数，改变其行为。这个函数名称叫<font color=red>operator new</font>。它的函数原型是：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> * <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span> size)</span></span>;</span><br></pre></td></tr></table></figure>
+<p> size_t参数表示需要分配多少内存。然后返回一块原始的内存。和malloc一样，operator new唯一任务是分配内存。但它<strong>不知道</strong>什么是constructors。当你想要调用一个constructor，有个特殊版本的operator new，称为<font color=red>placement new</font>，允许你这么做：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Widget</span>(<span class="keyword">int</span> widgetSize);</span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">Widget* <span class="title">constructorWidgetInBuffer</span><span class="params">(<span class="keyword">void</span> *buffer, <span class="keyword">int</span> widgetSize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in"><span class="keyword">new</span></span>(buffer) <span class="built_in">Widget</span>(widgetSize);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 这是new operator的用法之一，指定一个额外自变量（buffer）作为new operator隐式调用operator new时所用。于是，被调用的operator new除了几首size_t变量外，还接受了一个void*参数，这就是所谓的placement new，看起来像这样：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="keyword">operator</span> <span class="title">new</span><span class="params">(<span class="keyword">size_t</span>, <span class="keyword">void</span> *location)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> location;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 如果你希望将对象产生于heap，请使用new operator，它不但分配内存而且为对象调用一个constructor。如果只是打算分配内存，调用operator new，那没有任何constructor被调用。如果打算在heap objects产生时决定内存分配方式，写一个自己的operator new。</p>
+</li>
+<li><p>为了避免<font color=red>resource leaks</font>（<strong>资源泄露</strong>），每一个动态分配行为都必须匹配一个相应但相反的释放动作。内存释放动作是由operator delete执行：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">string *ps;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">delete</span> ps;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *memoryToBeDeallocated)</span></span>;</span><br></pre></td></tr></table></figure>
+<p> 因此，<code>delete</code>动作会产生类似代码：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ps-&gt;~<span class="built_in">string</span>();</span><br><span class="line"><span class="function"><span class="keyword">operator</span> <span class="title">delete</span><span class="params">(ps)</span></span>;</span><br></pre></td></tr></table></figure>
+<p> 这里呈现的暗示是，如果只打算处理原始的、未设初值的内存，应该回避new operator和delete operators。如果使用了placement new产生对象，避免对该内存使用delete operator。因为delete operator会调用operator delete来释放内存，但该内存并非由operator new分配得来的。placement new只是返回它接受的指针而已，所以未了抵消该对象的constructor的影响，应该直接调用该对象的destructor。</p>
+</li>
+<li><p>面对数组情况，也有所不同：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string *ps = <span class="keyword">new</span> string[<span class="number">10</span>];</span><br></pre></td></tr></table></figure>
+<p> 上述的new仍然是new operator，但由于诞生的是数组，所以new operator的行为不再以operator new分配，而是由一个名为operator new[]负责分配（通常称为array new）。同样道理，当delete operator被用于数组，它会针对数组中的每个元素调用其destructor，然后调用operator delete[]释放内存。<br> 总结以下，new operator和delete operator都是内建操作符，无法为你所控制，但是它们所调用的内存分配/释放函数则不然。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/More-Effecive-C/" rel="tag"># More Effecive C++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/14/1-%E5%9F%BA%E7%A1%80%E8%AE%AE%E9%A2%98/" rel="prev" title="1 基础议题">
+      <i class="fa fa-chevron-left"></i> 1 基础议题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/14/3-%E5%BC%82%E5%B8%B8/" rel="next" title="3 异常">
+      3 异常 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE5%EF%BC%9A%E5%AF%B9%E5%AE%9A%E5%88%B6%E7%9A%84%E2%80%9C%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0%E2%80%9D%E4%BF%9D%E6%8C%81%E8%AD%A6%E8%A7%89"><span class="nav-number">1.</span> <span class="nav-text">条款5：对定制的“类型转换函数”保持警觉</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE6%EF%BC%9A%E5%8C%BA%E5%88%ABincrement-decrement%E6%93%8D%E4%BD%9C%E7%AC%A6%E7%9A%84%E5%89%8D%E7%BD%AE%EF%BC%88prefix%EF%BC%89%E5%92%8C%E5%90%8E%E7%BD%AE%EF%BC%88postfix%EF%BC%89%E5%BD%A2%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">条款6：区别increment&#x2F;decrement操作符的前置（prefix）和后置（postfix）形式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE7%EF%BC%9A%E5%8D%83%E4%B8%87%E4%B8%8D%E8%A6%81%E9%87%8D%E8%BD%BD-amp-amp-%EF%BC%8C-%E5%92%8C%EF%BC%8C%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="nav-number">3.</span> <span class="nav-text">条款7：千万不要重载&amp;&amp;，||和，操作符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%A1%E6%AC%BE8%EF%BC%9A%E4%BA%86%E8%A7%A3%E5%90%84%E7%A7%8D%E4%B8%8D%E5%90%8C%E6%84%8F%E4%B9%89%E7%9A%84new%E5%92%8Cdelete"><span class="nav-number">4.</span> <span class="nav-text">条款8：了解各种不同意义的new和delete</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

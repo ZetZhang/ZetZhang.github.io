@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="EXPLAIN语法 EXPLAIN代价因子校准 cpu_tuple_cost因子 random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准   auto_explain？not found   EXPLAIN语法 ANALYZE[boolean]：执行statement，得到真是运行时间和统计信息 VERBOSE[b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PostgreSQL查询优化">
+<meta property="og:url" content="http://example.com/2020/06/14/PostgreSQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="EXPLAIN语法 EXPLAIN代价因子校准 cpu_tuple_cost因子 random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准   auto_explain？not found   EXPLAIN语法 ANALYZE[boolean]：执行statement，得到真是运行时间和统计信息 VERBOSE[b">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-14T08:03:48.000Z">
+<meta property="article:modified_time" content="2021-09-09T07:12:12.701Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Config">
+<meta property="article:tag" content="PostgreSQL">
+<meta property="article:tag" content="Database">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/06/14/PostgreSQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>PostgreSQL查询优化 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/06/14/PostgreSQL%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PostgreSQL查询优化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-06-14 16:03:48" itemprop="dateCreated datePublished" datetime="2020-06-14T16:03:48+08:00">2020-06-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-09 15:12:12" itemprop="dateModified" datetime="2021-09-09T15:12:12+08:00">2021-09-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/2020-04/" itemprop="url" rel="index"><span itemprop="name">2020.04</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- vim-markdown-toc Marked -->
+
+<ul>
+<li><a href="#explain%E8%AF%AD%E6%B3%95">EXPLAIN语法</a></li>
+<li><a href="#explain%E4%BB%A3%E4%BB%B7%E5%9B%A0%E5%AD%90%E6%A0%A1%E5%87%86">EXPLAIN代价因子校准</a><ul>
+<li><a href="#cpu_tuple_cost%E5%9B%A0%E5%AD%90">cpu_tuple_cost因子</a></li>
+<li><a href="#random_page_cost%E5%9B%A0%E5%AD%90%E6%A0%A1%E5%87%86-cpu_index_tuple_cst%E5%9B%A0%E5%AD%90%E6%A0%A1%E5%87%86-cpu_operator_cost%E5%9B%A0%E5%AD%90%E6%A0%A1%E5%87%86">random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准</a></li>
+</ul>
+</li>
+<li><a href="#auto_explain%EF%BC%9Fnot-found">auto_explain？not found</a></li>
+</ul>
+<!-- vim-markdown-toc -->
+<h3 id="EXPLAIN语法"><a href="#EXPLAIN语法" class="headerlink" title="EXPLAIN语法"></a>EXPLAIN语法</h3><ul>
+<li><code>ANALYZE[boolean]</code>：执行statement，得到真是运行时间和统计信息</li>
+<li><code>VERBOSE[boolean]</code>：详细信息</li>
+<li><code>COSTS[boolean]</code>：cost值，默认打开</li>
+<li><code>BUFFERS[boolean]</code>：本次QUERY shared或local buffer的信息，包括命中未命中，脏写</li>
+<li><code>TIMING[boolean]</code>：输出时间开销</li>
+<li><code>FORMAT&#123;TEXT|XML|JSON|YAML&#125;</code>：输出格式</li>
+</ul>
+<h3 id="EXPLAIN代价因子校准"><a href="#EXPLAIN代价因子校准" class="headerlink" title="EXPLAIN代价因子校准"></a>EXPLAIN代价因子校准</h3><h4 id="cpu-tuple-cost因子"><a href="#cpu-tuple-cost因子" class="headerlink" title="cpu_tuple_cost因子"></a>cpu_tuple_cost因子</h4><ol>
+<li>创建测试表 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> tbl_cost_align(id <span class="type">int</span>, info text, crt_time <span class="type">timestamp</span>);</span><br></pre></td></tr></table></figure></li>
+<li>插入测试数据 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tbl_cost_align <span class="keyword">select</span>(random() <span class="operator">*</span> <span class="number">2000000000</span>)::<span class="type">int</span>, md5(random()::text), clock_timestamp() frmo gnerate_series(<span class="number">1</span>, <span class="number">10000000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> tbl_cost_align <span class="keyword">select</span>(random() <span class="operator">*</span> <span class="number">2000000000</span>)::<span class="type">int</span>, md5(random()::text), clock_timestamp() frmo gnerate_series(<span class="number">1</span>, <span class="number">1000000000</span>);</span><br></pre></td></tr></table></figure></li>
+<li>分析表，获得统计信息 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">analyze tbl_cost_align;</span><br></pre></td></tr></table></figure></li>
+<li>可以查看到占用的数据块个数 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> relpages <span class="keyword">from</span> pg_class <span class="keyword">where</span> relname<span class="operator">=</span><span class="string">&#x27;tbl_cost_align&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+<li>执行checkpoint后关闭数据库，为了得到纯粹的物理磁盘的连续io请求cost常量，不能有shared buffer干扰 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checkpoint;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pg_ctl stop -m fast</span><br></pre></td></tr></table></figure></li>
+<li>同时不能有OS Cache干扰，清除系统cachce <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sync; echo 3 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure></li>
+<li>使用systemtab来脚本分析</li>
+</ol>
+<ul>
+<li>为了增加IO响应时间的柱状图输出，首先启动数据库，CPU亲和设置为1  <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ taskset -c 1 postgres &gt;/dev/null 2&amp;&gt;1</span><br><span class="line">$ psql</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="8">
+<li>指定启动脚本 <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ taskset -c 7 stap -e `...`</span><br></pre></td></tr></table></figure></li>
+<li>在psql执行explain analyze <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain (analyze, verbose, costs, buffers, timing) <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tbl_cost_align;</span><br></pre></td></tr></table></figure></li>
+<li>通过数据求得<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- cpu_tuple_cost：total time - actual time = shared read * 块处理时间 + rows * x(xpu_tuple_cost)</span></span><br></pre></td></tr></table></figure>
+<h4 id="random-page-cost因子校准-cpu-index-tuple-cst因子校准-cpu-operator-cost因子校准"><a href="#random-page-cost因子校准-cpu-index-tuple-cst因子校准-cpu-operator-cost因子校准" class="headerlink" title="random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准"></a>random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准</h4></li>
+<li>为了保证公式准确性方面验证，把所有常亮设置为1 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> random_page_cost <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">set</span> cpu_tuple_cost <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">set</span> cpu_index_tuple_cost <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">set</span> cpu_operator_cost <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure></li>
+<li>QUERY PLAN <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> enable_seqscan <span class="operator">=</span> off; </span><br><span class="line"><span class="keyword">set</span> enable_bitmapscan <span class="operator">=</span> off;</span><br><span class="line">explain (analyze, verbose, costs, buffers, timing) <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> tbl_cost_align <span class="keyword">where</span> id <span class="operator">&gt;</span> <span class="number">1998999963</span>;</span><br></pre></td></tr></table></figure></li>
+<li>计算公式为： <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- = blocks * random_page_cost + cpu_tuple_cost * rows + cpu_index_tuple_cost * rows + cpu_operator_cost * ?</span></span><br><span class="line"><span class="comment">-- 其中cpu_index_tuple_cost和cpu_operator_cost的比例默认是2:1</span></span><br><span class="line"><span class="comment">-- 需要设置</span></span><br><span class="line"><span class="keyword">set</span> cpu_operator_cost <span class="operator">=</span> <span class="number">2</span>;</span><br></pre></td></tr></table></figure></li>
+<li>cao，略</li>
+</ol>
+<h3 id="auto-explain？not-found"><a href="#auto-explain？not-found" class="headerlink" title="auto_explain？not found"></a>auto_explain？not found</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 例如，以下设置将执行超过10ms的记录写到日志</span></span><br><span class="line"><span class="keyword">set</span> auto_explain.log_min_duration<span class="operator">=</span><span class="number">10</span>ms;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果需要配置到文件，则写入，然后重启：  <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shared_reload_libraries = <span class="string">&#x27;pg_stat_statements, auto_explain&#x27;</span></span><br><span class="line">auto_explain.log_min_duration = 100ms</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Config/" rel="tag"># Config</a>
+              <a href="/tags/PostgreSQL/" rel="tag"># PostgreSQL</a>
+              <a href="/tags/Database/" rel="tag"># Database</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/14/PostgreSQL%E6%8F%92%E4%BB%B6%E5%8F%8A%E5%AE%89%E8%A3%85/" rel="prev" title="PostgreSQL插件及安装">
+      <i class="fa fa-chevron-left"></i> PostgreSQL插件及安装
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/25/Org-Mode-tutorial/" rel="next" title="Org-Mode tutorial">
+      Org-Mode tutorial <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#EXPLAIN%E8%AF%AD%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">EXPLAIN语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXPLAIN%E4%BB%A3%E4%BB%B7%E5%9B%A0%E5%AD%90%E6%A0%A1%E5%87%86"><span class="nav-number">2.</span> <span class="nav-text">EXPLAIN代价因子校准</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cpu-tuple-cost%E5%9B%A0%E5%AD%90"><span class="nav-number">2.1.</span> <span class="nav-text">cpu_tuple_cost因子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#random-page-cost%E5%9B%A0%E5%AD%90%E6%A0%A1%E5%87%86-cpu-index-tuple-cst%E5%9B%A0%E5%AD%90%E6%A0%A1%E5%87%86-cpu-operator-cost%E5%9B%A0%E5%AD%90%E6%A0%A1%E5%87%86"><span class="nav-number">2.2.</span> <span class="nav-text">random_page_cost因子校准 cpu_index_tuple_cst因子校准 cpu_operator_cost因子校准</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#auto-explain%EF%BC%9Fnot-found"><span class="nav-number">3.</span> <span class="nav-text">auto_explain？not found</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
